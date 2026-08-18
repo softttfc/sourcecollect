@@ -216,7 +216,9 @@ class Spider(Spider):
         for vid in ids:
             it=self.cache.get(vid) or next((x for x in self.fallback if x["vod_id"]==vid),{"vod_id":vid,"vod_name":vid,"vod_pic":"","vod_remarks":"12集","vod_content":""})
             m=re.search(r"(\d+)",it.get("vod_remarks",""));total=max(1,min(int(m.group(1)) if m else 12,80));eps=self._episodes(vid)
-            if eps:play="#".join(["第%d集$%s/%d/%s"%(i,vid,i,(eps[i-1].get("id") if i-1<len(eps) and isinstance(eps[i-1],dict) else "")) for i in range(1,total+1)])
+            if eps:
+                lk=[bool((eps[i-1].get("locked") if i-1<len(eps) and isinstance(eps[i-1],dict) else False) or (eps[i-1].get("isFree") is False if i-1<len(eps) and isinstance(eps[i-1],dict) else False)) for i in range(1,total+1)]
+                play="#".join(["第%d集%s$%s/%d/%s"%(i,"[付费解锁]" if lk[i-1] else "",vid,i,(eps[i-1].get("id") if i-1<len(eps) and isinstance(eps[i-1],dict) else "")) for i in range(1,total+1)])
             else:play="第1集$%s/1/%s"%(vid,it.get("firstEpisodeId",""))
             out.append({"vod_id":vid,"vod_name":it.get("vod_name",vid),"vod_pic":it.get("vod_pic",""),"vod_remarks":it.get("vod_remarks",""),"vod_content":it.get("vod_content",""),"vod_play_from":"直连","vod_play_url":play})
         return {"list":out}
@@ -238,16 +240,19 @@ class Spider(Spider):
         parts=str(id).split("/");vid=parts[0] if parts else "";ep=parts[1] if len(parts)>1 else "1";eid=parts[2] if len(parts)>2 else ""
         url=""
         it=self.cache.get(vid) or next((x for x in self.fallback if x["vod_id"]==vid),{})
+        m=re.search(r"(\d+)",it.get("vod_remarks",""));total=int(m.group(1)) if m else 1
+        if total>=2 and eid:
+            for u in ["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4"]:
+                if self._alive(u):url=u;break
+        html="";locked=False;non_first=True
         try:non_first=int(ep)>1
         except Exception:non_first=True
-        if eid:
-            for u in ["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid+"/master.m3u8","https://raw.shorttv.online/uploads/hls/"+eid+"/master.m3u8"]:
-                if self._alive(u):url=u;break
         if not url:
             try:
                 d=self._api("episode.watch",{"dramaId":vid,"index":int(ep)})
                 if d and isinstance(d,dict):
                     ep_obj=d.get("episode",{}) or {}
+                    locked=bool(ep_obj.get("locked")) or ep_obj.get("isFree") is False
                     hls=ep_obj.get("hlsUrl","") or ""
                     if hls:
                         hls=self._fix(hls) if hls.startswith("/") else hls
@@ -255,19 +260,19 @@ class Spider(Spider):
                     if not url:
                         eid2=ep_obj.get("id","") or ""
                         if eid2:
-                            for u in ["https://raw.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid2+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid2+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid2+"/master.m3u8","https://raw.shorttv.online/uploads/hls/"+eid2+"/master.m3u8"]:
+                            for u in ["https://raw.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid2+"/video.mp4"]:
                                 if self._alive(u):url=u;break
             except Exception:pass
-        if not url and not non_first:
+        if not url and not locked and not non_first:
             try:html=self.session.get(self.host+"/zh/watch/"+vid+"/"+ep,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/watch/"+vid+"/"+ep},timeout=12).text
             except Exception:html=""
             url=self._media(html)
-        if not url and not non_first:
+        if not url and not locked and not non_first:
             eid3=self._eid(html) if html else ""
             if eid3:
                 arr=["https://raw.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid3+"/master.m3u8"]
                 for u in arr:
                     if self._alive(u):url=u;break
-        if not url and not non_first:
+        if not url and not locked and not non_first:
             url=self._fix(it.get("trailerUrl",""))
         return {"parse":0 if url else 1,"url":self._unesc(url),"header":json.dumps({"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/","Origin":self.host})}
