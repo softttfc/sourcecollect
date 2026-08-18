@@ -57,8 +57,8 @@ class Spider(Spider):
     def _list(self,cache_key="t-5jxcit",pg=1,extra=None):
         pg=int(pg)
         tid=extra.get("tid",cache_key) if extra else cache_key
-        ck_map={"t-eb9c3c":"MOVIE","t-k1gwip":"LONG_DRAMA","t-5jxcit":"SHORT_DRAMA"}
-        mp={"t-5jxcit":{"categorySlug":"t-5jxcit"},"adult_short":{"tagSlug":"adult"},"normal_short":{"contentKind":"SHORT_DRAMA"},"short_kind":{"contentKind":"SHORT_DRAMA"}}
+        ck_map={"t-eb9c3c":"MOVIE","t-k1gwip":"LONG_DRAMA","t-5jxcit":"SHORT_DRAMA","t-hebbu9":"VARIETY"}
+        mp={"t-5jxcit":{"contentKind":"SHORT_DRAMA"},"adult_short":{"tagSlug":"adult"},"normal_short":{"contentKind":"SHORT_DRAMA"},"short_kind":{"contentKind":"SHORT_DRAMA"}}
         if tid in ck_map:mp[tid]={"contentKind":ck_map[tid]}
         if pg==1:self.cursor[cache_key]={};self.seen_page[cache_key]=set()
         cur=self.cursor.get(cache_key,{}).get(pg)
@@ -71,13 +71,12 @@ class Spider(Spider):
                 if k and k not in seen:seen.add(k);out.append(x)
         else:
             base=mp.get(tid,{"categorySlug":tid})
-            cats=[]
-            if extra and extra.get("cat"):cats.append(extra["cat"])
-            if extra and extra.get("region"):cats.append(extra["region"])
-            if cats and tid in ck_map:
-                data={"limit":12,"contentKind":ck_map[tid],"categories":cats}
-            elif cats:
-                data={"limit":12,"categories":cats}
+            cat=extra.get("cat","") if extra else ""
+            region=extra.get("region","") if extra else ""
+            if cat:
+                data=dict({"limit":12,"categorySlug":cat})
+            elif region:
+                data=dict({"limit":12,"categorySlug":region})
             else:
                 data=dict({"limit":12},**base)
             if cur:data["cursor"]=cur
@@ -124,42 +123,26 @@ class Spider(Spider):
                 {"n":"双男主","v":"bldrama"},{"n":"双女主","v":"gldrama"},
                 {"n":"女性向","v":"femalelead"},
             ]}],
-            "t-k1gwip":[
-                {"key":"cat","name":"题材","value":[
-                    {"n":"全部","v":""},{"n":"古装","v":"ancient"},{"n":"玄幻","v":"fantasy"},
-                    {"n":"奇幻","v":"fantasydrama"},{"n":"科幻","v":"scifi"},
-                    {"n":"都市","v":"urban"},{"n":"职场","v":"workplace"},
-                    {"n":"校园","v":"campus"},{"n":"青春","v":"youth"},
-                    {"n":"家庭","v":"family"},{"n":"宫廷权谋","v":"palacepower"},
-                    {"n":"家族商战","v":"familybusiness"},{"n":"医疗","v":"medical"},
-                    {"n":"悬疑恋爱","v":"mysteryromance"},{"n":"女性向","v":"femalelead"},
-                    {"n":"双男主","v":"bldrama"},{"n":"双女主","v":"gldrama"},
-                    {"n":"悬疑","v":"mystery"},{"n":"喜剧","v":"comedy"},
-                    {"n":"犯罪","v":"crime"},
-                ]},
-                {"key":"region","name":"地区","value":[
-                    {"n":"全部","v":""},{"n":"国产","v":"t-zuvois"},
-                    {"n":"欧美","v":"t-3m25gq"},{"n":"日本","v":"t-ue8oql"},
-                    {"n":"港台","v":"hktwdrama"},{"n":"韩国","v":"kdrama"},
-                    {"n":"泰国","v":"thaidrama"},{"n":"海外","v":"globaldrama"},
-                ]},
-            ],
-            "t-eb9c3c":[
-                {"key":"cat","name":"题材","value":[
-                    {"n":"全部","v":""},{"n":"动作","v":"action"},{"n":"冒险","v":"adventure"},
-                    {"n":"喜剧","v":"comedy"},{"n":"犯罪","v":"crime"},
-                    {"n":"悬疑","v":"mystery"},{"n":"惊悚","v":"thriller"},
-                    {"n":"恐怖","v":"horror"},{"n":"战争","v":"war"},
-                    {"n":"末世灾难","v":"disaster"},{"n":"科幻","v":"scifi"},
-                    {"n":"爱情","v":"romance"},{"n":"古装","v":"ancient"},
-                ]},
-                {"key":"region","name":"地区","value":[
-                    {"n":"全部","v":""},{"n":"国产","v":"t-zuvois"},
-                    {"n":"欧美","v":"t-3m25gq"},{"n":"日本","v":"t-ue8oql"},
-                    {"n":"港台","v":"hktwdrama"},{"n":"韩国","v":"kdrama"},
-                    {"n":"泰国","v":"thaidrama"},{"n":"海外","v":"globaldrama"},
-                ]},
-            ],
+            "t-k1gwip":[{"key":"cat","name":"题材","value":[
+                {"n":"全部","v":""},{"n":"古装","v":"ancient"},{"n":"玄幻","v":"fantasy"},
+                {"n":"奇幻","v":"fantasydrama"},{"n":"科幻","v":"scifi"},
+                {"n":"都市","v":"urban"},{"n":"职场","v":"workplace"},
+                {"n":"校园","v":"campus"},{"n":"青春","v":"youth"},
+                {"n":"家庭","v":"family"},{"n":"宫廷权谋","v":"palacepower"},
+                {"n":"家族商战","v":"familybusiness"},{"n":"医疗","v":"medical"},
+                {"n":"悬疑恋爱","v":"mysteryromance"},{"n":"女性向","v":"femalelead"},
+                {"n":"双男主","v":"bldrama"},{"n":"双女主","v":"gldrama"},
+                {"n":"悬疑","v":"mystery"},{"n":"喜剧","v":"comedy"},
+                {"n":"犯罪","v":"crime"},
+            ]}],
+            "t-eb9c3c":[{"key":"cat","name":"题材","value":[
+                {"n":"全部","v":""},{"n":"动作","v":"action"},{"n":"冒险","v":"adventure"},
+                {"n":"喜剧","v":"comedy"},{"n":"犯罪","v":"crime"},
+                {"n":"悬疑","v":"mystery"},{"n":"惊悚","v":"thriller"},
+                {"n":"恐怖","v":"horror"},{"n":"战争","v":"war"},
+                {"n":"末世灾难","v":"disaster"},{"n":"科幻","v":"scifi"},
+                {"n":"爱情","v":"romance"},{"n":"古装","v":"ancient"},
+            ]}],
             "t-hebbu9":[{"key":"cat","name":"类型","value":[
                 {"n":"全部","v":""},{"n":"脱口秀","v":"talkshow"},
                 {"n":"真人秀","v":"realityshow"},{"n":"体育","v":"sports"},
@@ -225,7 +208,7 @@ class Spider(Spider):
         return {"page":pg,"pagecount":pg+1 if has_next else pg,"limit":12,"total":pg*12+(12 if has_next else 0),"count":len(li),"list":li}
     def _episodes(self,vid):
         if vid in self.eps:return self.eps[vid]
-        d=self._api("episode.watch",{"dramaId":vid,"episodeNumber":1});arr=d.get("episodes",[]) if isinstance(d,dict) else []
+        d=self._api("episode.watch",{"dramaId":vid,"index":1});arr=d.get("episodes",[]) if isinstance(d,dict) else []
         self.eps[vid]=arr;return arr
     def detailContent(self,ids):
         out=[]
@@ -247,21 +230,42 @@ class Spider(Spider):
         h=self._unesc(h);m=re.search(r'"episode"\s*:\s*\{[^{}]*"id"\s*:\s*"([^"]+)"',h) or re.search(r'"(?:episodeId|id)"\s*:\s*"(cms[a-z0-9]{10,})"',h)
         return m.group(1) if m else ""
     def _alive(self,u):
-        try:return self.session.get(u,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/","Origin":self.host,"Range":"bytes=0-0"},timeout=4,stream=True).status_code in [200,206]
+        try:
+            r=self.session.get(u,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/","Origin":self.host,"Range":"bytes=0-0"},timeout=3,stream=True,allow_redirects=False)
+            return r.status_code in [200,206] and "text/html" not in r.headers.get("content-type","")
         except Exception:return False
     def playerContent(self,flag,id,vipFlags):
-        vid,ep,eid=(str(id).split("/")+["1",""])[ :3];url="";html=""
-        if eid:url="https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4"
-        if not url:
-            try:html=self.session.get(self.host+"/zh/watch/"+vid+"/"+ep,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/watch/"+vid+"/"+ep},timeout=12).text
-            except Exception:pass
-            url=self._media(html)
-        if not url:
-            eid=self._eid(html);arr=[]
-            if eid:arr=["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid+"/master.m3u8"]
-            for u in arr:
+        parts=str(id).split("/");vid=parts[0] if parts else "";ep=parts[1] if len(parts)>1 else "1";eid=parts[2] if len(parts)>2 else ""
+        url=""
+        it=self.cache.get(vid) or next((x for x in self.fallback if x["vod_id"]==vid),{})
+        if eid:
+            for u in ["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4"]:
                 if self._alive(u):url=u;break
         if not url:
-            it=self.cache.get(vid) or next((x for x in self.fallback if x["vod_id"]==vid),{})
+            try:
+                d=self._api("episode.watch",{"dramaId":vid,"index":int(ep)})
+                if d and isinstance(d,dict):
+                    ep_obj=d.get("episode",{}) or {}
+                    hls=ep_obj.get("hlsUrl","") or ""
+                    if hls:
+                        hls=self._fix(hls) if hls.startswith("/") else hls
+                        if self._alive(hls):url=hls
+                    if not url:
+                        eid2=ep_obj.get("id","") or ""
+                        if eid2:
+                            for u in ["https://raw.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid2+"/video.mp4"]:
+                                if self._alive(u):url=u;break
+            except Exception:pass
+        if not url:
+            try:html=self.session.get(self.host+"/zh/watch/"+vid+"/"+ep,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/watch/"+vid+"/"+ep},timeout=12).text
+            except Exception:html=""
+            url=self._media(html)
+        if not url:
+            eid3=self._eid(html) if html else ""
+            if eid3:
+                arr=["https://raw.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid3+"/master.m3u8"]
+                for u in arr:
+                    if self._alive(u):url=u;break
+        if not url:
             url=self._fix(it.get("trailerUrl",""))
         return {"parse":0 if url else 1,"url":self._unesc(url),"header":json.dumps({"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/","Origin":self.host})}
