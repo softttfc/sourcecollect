@@ -238,8 +238,10 @@ class Spider(Spider):
         parts=str(id).split("/");vid=parts[0] if parts else "";ep=parts[1] if len(parts)>1 else "1";eid=parts[2] if len(parts)>2 else ""
         url=""
         it=self.cache.get(vid) or next((x for x in self.fallback if x["vod_id"]==vid),{})
+        try:non_first=int(ep)>1
+        except Exception:non_first=True
         if eid:
-            for u in ["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4"]:
+            for u in ["https://raw.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid+"/master.m3u8","https://raw.shorttv.online/uploads/hls/"+eid+"/master.m3u8"]:
                 if self._alive(u):url=u;break
         if not url:
             try:
@@ -253,19 +255,19 @@ class Spider(Spider):
                     if not url:
                         eid2=ep_obj.get("id","") or ""
                         if eid2:
-                            for u in ["https://raw.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid2+"/video.mp4"]:
+                            for u in ["https://raw.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid2+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid2+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid2+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid2+"/master.m3u8","https://raw.shorttv.online/uploads/hls/"+eid2+"/master.m3u8"]:
                                 if self._alive(u):url=u;break
             except Exception:pass
-        if not url:
+        if not url and not non_first:
             try:html=self.session.get(self.host+"/zh/watch/"+vid+"/"+ep,headers={"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/watch/"+vid+"/"+ep},timeout=12).text
             except Exception:html=""
             url=self._media(html)
-        if not url:
+        if not url and not non_first:
             eid3=self._eid(html) if html else ""
             if eid3:
                 arr=["https://raw.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/direct/"+eid3+"/video.mp4","https://cdn.shorttv.online/uploads/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/lsj/hls/"+eid3+"/master.m3u8","https://cdn.shorttv.online/dc/hls/"+eid3+"/master.m3u8"]
                 for u in arr:
                     if self._alive(u):url=u;break
-        if not url:
+        if not url and not non_first:
             url=self._fix(it.get("trailerUrl",""))
         return {"parse":0 if url else 1,"url":self._unesc(url),"header":json.dumps({"User-Agent":self.headers["User-Agent"],"Referer":self.host+"/zh/","Origin":self.host})}
