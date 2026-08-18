@@ -1,15 +1,145 @@
+globalThis.vod1 = function(ids) {
+    let html1 = request('https://pbaccess.video.qq.com/trpc.videosearch.mobile_search.MultiTerminalSearch/MbSearch?vplatform=2', {
+        body: {
+            "version": "25042201",
+            "clientType": 1,
+            "filterValue": "",
+            "uuid": "B1E50847-D25F-4C4B-BBA0-36F0093487F6",
+            "retry": 0,
+            "query": ids,
+            "pagenum": 0,
+            "isPrefetch": true,
+            "pagesize": 30,
+            "queryFrom": 0,
+            "searchDatakey": "",
+            "transInfo": "",
+            "isneedQc": true,
+            "preQid": "",
+            "adClientInfo": "",
+            "extraInfo": {
+                "isNewMarkLabel": "1",
+                "multi_terminal_pc": "1",
+                "themeType": "1",
+                "sugRelatedIds": "{}",
+                "appVersion": ""
+            }
+        },
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.139 Safari/537.36',
+            'Content-Type': 'application/json',
+            'origin': 'https://v.qq.com',
+            'referer': 'https://v.qq.com/'
+        },
+        'method': 'POST'
+    }, true);
+    return html1;
+}
+
 var rule = {
-    title: '小心儿悠悠',
-    host: 'https://v.qq.com',
+    title: '腾云驾雾[官]',
+    host: 'https://v.%71%71.com',
     homeUrl: '/x/bu/pagesheet/list?_all=1&append=1&channel=cartoon&listpage=1&offset=0&pagesize=21&iarea=-1&sort=18',
-    detailUrl: 'https://node.video.qq.com/x/api/float_vinfo2?cid=fyid',
+    detailUrl: 'https://node.video.%71%71.com/x/api/float_vinfo2?cid=fyid',
+    searchUrl: 'https://pbaccess.video.%71%71.com/trpc.videosearch.smartboxServer.HttpRountRecall/Smartbox?query=**&appID=3172&appKey=lGhFIPeD3HsO9xEp&pageNum=(fypage-1)&pageSize=10',
     searchUrl: '**',
-    searchable: 1,
+    searchable: 2,
     filterable: 1,
     multi: 1,
     url: '/x/bu/pagesheet/list?_all=1&append=1&channel=fyclass&listpage=1&offset=((fypage-1)*21)&pagesize=21&iarea=-1',
     filter_url: 'sort={{fl.sort or 75}}&iyear={{fl.iyear}}&year={{fl.year}}&itype={{fl.type}}&ifeature={{fl.feature}}&iarea={{fl.area}}&itrailer={{fl.itrailer}}&gender={{fl.sex}}',
-    filter: 'H4sIAAAAAAAAA+1YW08TWxR+92fMMySdFlrwEY3RnOT4YnzQ8DDBOaERqamVHGJIWksvXFIoYvEcSuViDxVpKYpYprb+mdl7Zv6Fe9rurrXdqE2OlRd4mvnW7L3u31r0mTIxGQpO6MrV+8+Uh/qsclV5EgpHlAFlWnvEUIVm1oixwt5ntKmn7c+mXTgfteJlF2YvgWFlbqCL01y1g4/4ujgpNuyjeY6ryty4K2krDM7qWhg0krMTs74naSSJkhMvdW4YZDcMXGkLvB6vvwO3HrFgGARgI3sZAnwI4z7AfRj3Au7FuAq4inEP4B6Eq6NdnD0ifATwEYwHAA9gHBxW/RgHf9kji/H4gBKZ6UtuA6Pn59a1B+X2L12LPA3roNM6rpPCUg/ZbeNW+pjGE/xuULnyxt7jMGSEPj+0ctkODAl04g1Se96BId+kckoM7ie4SXJ5srDfgSG65udtUkxx70Fl+T+zuc0LGy5JbtINbiCEim7F7eoSdwdKw9l6S7INjiP3M1VSKXAcebS1Rl8VOQ4uWcsZMFIFn6z9LDmroxRx/F2BLkY5HkB659H3I/1t18tuhW59FJoJXigZR2Yf/49uXTyyGgdyoy0eky8bUrcKjaZ62B8q5HjZ3okimR+0CF3eOgfZEfnClX2vCZhIRcwRW6XRHJZ5kPkla104h0KcfmUaC1gfZFjgl9Y5qArmuGgnqlTWwd/YCXcKdNOSIVLMJMnKe3wnyOxozFpI4XNQDnbxC2QTwZUqabwUT7n9gYrlkgn6xwQzWjioR2b7wgVukC4Z/ffkcUILR0Kh6YvkdC2sayi9+SpZNnrmdJJMsBPSBkY3ijR/KG9gh/tWMyNxCUmcmnVOr0O/cODgPQVNAcz0UGAieSLrkmvOP28loxm30xwfWygDqwXrMCsHJLbEho+0HzrldTDlO4sXqlFxtgVwuEmtJi92dHuHbHZnDLo//9o0DLTA8e8zJWs1KS+O4uxAkayvkETtx/l0x+glm/wmNpkMTj3ozz90aHHBXPLNyH+i/430RfdJ+l3vVFL8QMq8z1ATr38C2Nsn5vLhVjqPucSS/klFO815WvnYsyWeQR95H5McHxr0AwyWBAZHAQa7VQ9DzXrRrC3KG3aiJFjVpqBWxTwITYT6UzAijwcjYS04peM4pQzyIkZzZz3HaWzsmhQkstlwF+l8FXgL/L45dpvHSUV2/nnzDzm/LYZzdrNO7IXE0rfu3OX3DPsQG2d2rZNd4QzTA+rvXb8BMPSPnWjalSM7dUDSpzJlk9W02cjTvEELvMf851fh8K8blMwYa/5Uih+b1c7e6+6CD/ibpvn5X6kE2UihuZRstDA8UP9tmsaSlAg2nGH0AT/aJ7ts2MiTieUAhjP+SaNxQHfSUibFXzTQYrKRoDBAW/09PvcVk1nUEv4UAAA=',
+    filter: {
+        "choice": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "83"},{"n": "好评","v": "81"}]
+        }, {
+            "key": "iyear",
+            "name": "年代",
+            "value": [{"n": "全部","v": "-1"},{"n": "2025","v": "2025"},{"n": "2024","v": "2024"},{"n": "2023","v": "2023"},{"n": "2022","v": "2022"},{"n": "2021","v": "2021"},{"n": "2020","v": "2020"},{"n": "2019","v": "2019"},{"n": "2018","v": "2018"},{"n": "2017","v": "2017"},{"n": "2016","v": "2016"},{"n": "2015","v": "2015"}]
+        }],
+        "tv": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "79"},{"n": "好评","v": "16"}]
+        }, {
+            "key": "feature",
+            "name": "类型",
+            "value": [{"n": "全部","v": "-1"},{"n": "爱情","v": "1"},{"n": "古装","v": "2"},{"n": "悬疑","v": "3"},{"n": "都市","v": "4"},{"n": "家庭","v": "5"},{"n": "喜剧","v": "6"},{"n": "传奇","v": "7"},{"n": "武侠","v": "8"},{"n": "军旅","v": "9"},{"n": "权谋","v": "10"},{"n": "革命","v": "11"},{"n": "现实","v": "13"},{"n": "青春","v": "14"},{"n": "猎奇","v": "15"},{"n": "科幻","v": "16"},{"n": "竞技","v": "17"},{"n": "玄幻","v": "18"}]
+        }, {
+            "key": "iyear",
+            "name": "年代",
+            "value": [{"n": "全部","v": "-1"},{"n": "2025","v": "2025"},{"n": "2024","v": "2024"},{"n": "2023","v": "2023"},{"n": "2022","v": "2022"},{"n": "2021","v": "2021"},{"n": "2020","v": "2020"},{"n": "2019","v": "2019"},{"n": "2018","v": "2018"},{"n": "2017","v": "2017"},{"n": "2016","v": "2016"},{"n": "2015","v": "2015"}]
+        }],
+        "movie": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "83"},{"n": "好评","v": "81"}]
+        }, {
+            "key": "type",
+            "name": "类型",
+            "value": [{"n": "全部","v": "-1"},{"n": "犯罪","v": "4"},{"n": "励志","v": "2"},{"n": "喜剧","v": "100004"},{"n": "热血","v": "100061"},{"n": "悬疑","v": "100009"},{"n": "爱情","v": "100005"},{"n": "科幻","v": "100012"},{"n": "恐怖","v": "100010"},{"n": "动画","v": "100015"},{"n": "战争","v": "100006"},{"n": "家庭","v": "100017"},{"n": "剧情","v": "100022"},{"n": "奇幻","v": "100016"},{"n": "武侠","v": "100011"},{"n": "历史","v": "100021"},{"n": "老片","v": "100013"},{"n": "西部","v": "3"},{"n": "记录片","v": "100020"}]
+        }, {
+            "key": "year",
+            "name": "年代",
+            "value": [{"n": "全部","v": "-1"},{"n": "2025","v": "2025"},{"n": "2024","v": "2024"},{"n": "2023","v": "2023"},{"n": "2022","v": "2022"},{"n": "2021","v": "2021"},{"n": "2020","v": "2020"},{"n": "2019","v": "2019"},{"n": "2018","v": "2018"},{"n": "2017","v": "2017"},{"n": "2016","v": "2016"},{"n": "2015","v": "2015"}]
+        }],
+        "variety": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "23"}]
+        }, {
+            "key": "iyear",
+            "name": "年代",
+            "value": [{"n": "全部","v": "-1"},{"n": "2025","v": "2025"},{"n": "2024","v": "2024"},{"n": "2023","v": "2023"},{"n": "2022","v": "2022"},{"n": "2021","v": "2021"},{"n": "2020","v": "2020"},{"n": "2019","v": "2019"},{"n": "2018","v": "2018"},{"n": "2017","v": "2017"},{"n": "2016","v": "2016"},{"n": "2015","v": "2015"}]
+        }],
+        "cartoon": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "83"},{"n": "好评","v": "81"}]
+        }, {
+            "key": "area",
+            "name": "地区",
+            "value": [{"n": "全部","v": "-1"},{"n": "内地","v": "1"},{"n": "日本","v": "2"},{"n": "欧美","v": "3"},{"n": "其他","v": "4"}]
+        }, {
+            "key": "type",
+            "name": "类型",
+            "value": [{"n": "全部","v": "-1"},{"n": "玄幻","v": "9"},{"n": "科幻","v": "4"},{"n": "武侠","v": "13"},{"n": "冒险","v": "3"},{"n": "战斗","v": "5"},{"n": "搞笑","v": "1"},{"n": "恋爱","v": "7"},{"n": "魔幻","v": "6"},{"n": "竞技","v": "20"},{"n": "悬疑","v": "17"},{"n": "日常","v": "15"},{"n": "校园","v": "16"},{"n": "真人","v": "18"},{"n": "推理","v": "14"},{"n": "历史","v": "19"},{"n": "经典","v": "3"},{"n": "其他","v": "12"}]
+        }, {
+            "key": "iyear",
+            "name": "年代",
+            "value": [{"n": "全部","v": "-1"},{"n": "2025","v": "2025"},{"n": "2024","v": "2024"},{"n": "2023","v": "2023"},{"n": "2022","v": "2022"},{"n": "2021","v": "2021"},{"n": "2020","v": "2020"},{"n": "2019","v": "2019"},{"n": "2018","v": "2018"},{"n": "2017","v": "2017"},{"n": "2016","v": "2016"},{"n": "2015","v": "2015"}]
+        }],
+        "child": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "76"},{"n": "好评","v": "20"}]
+        }, {
+            "key": "sex",
+            "name": "性别",
+            "value": [{"n": "全部","v": "-1"},{"n": "女孩","v": "1"},{"n": "男孩","v": "2"}]
+        }, {
+            "key": "area",
+            "name": "地区",
+            "value": [{"n": "全部","v": "-1"},{"n": "内地","v": "3"},{"n": "日本","v": "2"},{"n": "其他","v": "1"}]
+        }, {
+            "key": "iyear",
+            "name": "年龄段",
+            "value": [{"n": "全部","v": "-1"},{"n": "0-3岁","v": "1"},{"n": "4-6岁","v": "2"},{"n": "7-9岁","v": "3"},{"n": "10岁以上","v": "4"},{"n": "全年龄段","v": "7"}]
+        }],
+        "doco": [{
+            "key": "sort",
+            "name": "排序",
+            "value": [{"n": "最热","v": "75"},{"n": "最新","v": "74"}]
+        }, {
+            "key": "itrailer",
+            "name": "出品方",
+            "value": [{"n": "全部","v": "-1"},{"n": "BBC","v": "1"},{"n": "国家地理","v": "4"},{"n": "HBO","v": "3175"},{"n": "NHK","v": "2"},{"n": "历史频道","v": "7"},{"n": "ITV","v": "3530"},{"n": "探索频道","v": "3174"},{"n": "ZDF","v": "3176"},{"n": "腾讯自制","v": "15"},{"n": "合作机构","v": "6"},{"n": "其他","v": "5"}]
+        }, {
+            "key": "type",
+            "name": "类型",
+            "value": [{"n": "全部","v": "-1"},{"n": "自然","v": "4"},{"n": "美食","v": "10"},{"n": "社会","v": "3"},{"n": "人文","v": "6"},{"n": "历史","v": "1"},{"n": "军事","v": "2"},{"n": "科技","v": "8"},{"n": "财经","v": "14"},{"n": "探险","v": "15"},{"n": "罪案","v": "7"},{"n": "竞技","v": "12"},{"n": "旅游","v": "11"}]
+        }]
+    },
     headers: {
         'User-Agent': 'PC_UA'
     },
@@ -20,46 +150,105 @@ var rule = {
     limit: 20,
     play_parse: true,
     lazy: $js.toString(() => {
-        let d = [];
-        let url1 = JSON.parse(request("" + input)).url;
+        try {
+            let apiUrl = "https://mk1080p.top/zzbh.php?url=" + encodeURIComponent(input);
+            log("解析请求: " + apiUrl);
 
-        function isEncrypted(url) {
-            return url.includes('baidu.con/') && url.length > 16;
-        }
+            let encrypted = fetch(apiUrl, {
+                method: 'get',
+                headers: { 'User-Agent': 'Mozilla/5.0' },
+                timeout: 8000
+            });
+            log("接口原始返回: " + encrypted);
 
-        let url;
-        if (isEncrypted(url1)) {
-            console.log("");
-            var withoutDomain = url1.replace(/^https:\/\/baidu\.con\//, '');
-            var first16Chars = withoutDomain.substring(0, 16);
-            var remainingString = withoutDomain.substring(16);
-            var key = CryptoJS.enc.Utf8.parse(first16Chars);
-            var iv = key;
+            let json = JSON.parse(encrypted);
+            let base64Data = json.url || json.data || json.result;
+            if (!base64Data) {
+                throw new Error("未找到可解码的数据字段");
+            }
+            log("提取的 Base64 数据: " + base64Data);
 
-            function AES_Decrypt(word) {
-                var srcs = word;
-                var decrypt = CryptoJS.AES.decrypt(srcs, key, {
-                    iv: iv,
-                    mode: CryptoJS.mode.CBC,
-                    padding: CryptoJS.pad.Pkcs7
-                });
-                return decrypt.toString(CryptoJS.enc.Utf8);
+            let decodedStr;
+            if (typeof CryptoJS !== 'undefined' && CryptoJS.enc && CryptoJS.enc.Base64) {
+                let wordArray = CryptoJS.enc.Base64.parse(base64Data);
+                decodedStr = wordArray.toString(CryptoJS.enc.Utf8);
+                if (!decodedStr || decodedStr.indexOf('�') !== -1) {
+                    decodedStr = wordArray.toString(CryptoJS.enc.Latin1);
+                    log("第一次 Base64 解码使用 Latin1");
+                }
+            } else {
+                decodedStr = atob(base64Data);
+            }
+            log("第一次 Base64 解码后: " + decodedStr);
+
+            const prefixes = ["https://ldmax.cooom/", "http://ldmax.cooom/", "ldmax.cooom/"];
+            let cleaned = decodedStr;
+            for (let p of prefixes) {
+                if (cleaned.startsWith(p)) {
+                    cleaned = cleaned.substring(p.length);
+                    break;
+                }
+            }
+            if (cleaned === decodedStr) {
+                log("未发现已知前缀，尝试直接处理");
+            }
+            log("去除前缀后: " + cleaned);
+
+            if (cleaned.length < 16) {
+                throw new Error("数据过短，无法提取 key");
+            }
+            let seed = cleaned.substring(0, 16);
+            let cipherTextBase64 = cleaned.substring(16);
+            let keyIv = seed.split('').reverse().join('');
+            log("seed: " + seed + ", keyIv: " + keyIv);
+
+            let ciphertextWordArray;
+            if (typeof CryptoJS !== 'undefined' && CryptoJS.enc && CryptoJS.enc.Base64) {
+                ciphertextWordArray = CryptoJS.enc.Base64.parse(cipherTextBase64);
+            } else {
+                let binaryStr = atob(cipherTextBase64);
+                ciphertextWordArray = CryptoJS.enc.Latin1.parse(binaryStr);
+            }
+            log("密文 Base64 解码完成，长度: " + (ciphertextWordArray.sigBytes || 0));
+
+            if (typeof CryptoJS === 'undefined') {
+                throw new Error("CryptoJS 未定义，请检查运行环境");
+            }
+            let key = CryptoJS.enc.Utf8.parse(keyIv);
+            let iv = CryptoJS.enc.Utf8.parse(keyIv);
+            let decrypted = CryptoJS.AES.decrypt(
+                { ciphertext: ciphertextWordArray },
+                key,
+                { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+            );
+            let playUrl = decrypted.toString(CryptoJS.enc.Utf8);
+            if (!playUrl || playUrl.indexOf('�') !== -1) {
+                playUrl = decrypted.toString(CryptoJS.enc.Latin1);
+            }
+            log("解密后的播放地址: " + playUrl);
+
+            if (playUrl && playUrl.startsWith('http')) {
+                input = {
+                    header: { 'User-Agent': '' },
+                    parse: 0,
+                    url: playUrl,
+                    jx: 0,
+                    danmaku: ' '
+                };
+            } else {
+                throw new Error("解密结果不是有效 URL: " + playUrl);
+            }
+        } catch (e) {
+            log("解析异常: " + e.message);
+            input = {
+                header: { 'User-Agent': '' },
+                parse: 0,
+                url: input.split("?")[0],
+                jx: 1,
+                danmaku: ' '
             };
-
-            url = AES_Decrypt(remainingString);
-        } else {
-            console.log("");
-            url = url1;
         }
-
-        input = {
-            url: url,
-            parse: 0,
-            header: rule.headers
-        }
-        setResult(d);
     }),
-
     推荐: '.list_item;img&&alt;img&&src;a&&Text;a&&data-float',
     一级: '.list_item;img&&alt;img&&src;a&&Text;a&&data-float',
     二级: $js.toString(() => {
@@ -67,11 +256,15 @@ var rule = {
         let d = [];
         let video_list = [];
         let video_lists = [];
+        let list = [];
         let QZOutputJson;
         let html = fetch(input, fetch_params);
         let sourceId = /get_playsource/.test(input) ? input.match(/id=(\d*?)&/)[1] : input.split("cid=")[1];
         let cid = sourceId;
-        let detailUrl = "https://v.qq.com/detail/m/" + cid + ".html";
+        let detailUrl = "https://v.%71%71.com/detail/m/" + cid + ".html";
+        log("详情页:" + detailUrl);
+        pdfh = jsp.pdfh;
+        pd = jsp.pd;
         try {
             let json = JSON.parse(html);
             VOD = {
@@ -84,7 +277,9 @@ var rule = {
                 vod_remarks: json.rec,
                 vod_pic: urljoin2(input, json.c.pic)
             }
-        } catch (e) {}
+        } catch (e) {
+            log("解析片名海报等基础信息发生错误:" + e.message)
+        }
         if (/get_playsource/.test(input)) {
             eval(html);
             let indexList = QZOutputJson.PlaylistItem.indexList;
@@ -96,6 +291,7 @@ var rule = {
                     d.push({
                         title: item.title,
                         pic_url: item.pic,
+                        desc: item.episode_number + "\t\t\t播放量：" + item.thirdLine,
                         url: item.playUrl
                     })
                 });
@@ -107,23 +303,11 @@ var rule = {
             let url = "https://v.qq.com/x/cover/" + sourceId + ".html";
             if (video_lists.length === 1) {
                 let vid = video_lists[0];
-                let o_url = "https://union.video.qq.com/fcgi-bin/data?otype=json&tid=1804&appid=20001238&appkey=6c03bbe9658448a4&union_platform=1&idlist=" + vid;
-                let o_html = fetch(o_url, fetch_params);
-                eval(o_html);
-                if (QZOutputJson.results && QZOutputJson.results.length > 0) {
-                    let it1 = QZOutputJson.results[0].fields;
-                    url = "https://v.qq.com/x/cover/" + cid + "/" + vid + ".html";
-                    d.push({
-                        title: it1.title,
-                        url: url
-                    })
-                } else {
-                    url = "https://v.qq.com/x/cover/" + cid + "/" + vid + ".html";
-                    d.push({
-                        title: "正片播放",
-                        url: url
-                    })
-                }
+                url = "https://v.qq.com/x/cover/" + cid + "/" + vid + ".html";
+                d.push({
+                    title: "在线播放",
+                    url: url
+                })
             } else if (video_lists.length > 1) {
                 for (let i = 0; i < video_lists.length; i += 30) {
                     video_list.push(video_lists.slice(i, i + 30))
@@ -146,130 +330,59 @@ var rule = {
                 })
             }
         }
-
-        let playFrom = [];
-        let playUrl = [];
-
-        let ygKeywords = ["预告", "花絮", "片花", "特辑", "幕后", "采访", "制作", "MV", "主题曲"];
-
         let yg = d.filter(function(it) {
-            return it.type && ygKeywords.some(keyword => it.type.includes(keyword));
+            return it.type && it.type !== "正片"
         });
         let zp = d.filter(function(it) {
-            return !(it.type && ygKeywords.some(keyword => it.type.includes(keyword)));
+            return !(it.type && it.type !== "正片")
         });
-
-        if (zp.length > 0) {
-            playFrom.push("正片");
-            playUrl.push(zp.map(it => it.title + "$" + it.url).join("#"));
-        }
-
-        if (yg.length > 0) {
-            let 预告 = yg.filter(it => it.type && it.type.includes("预告"));
-            let 花絮片花 = yg.filter(it => it.type && (it.type.includes("花絮") || it.type.includes("片花")));
-            let 特辑 = yg.filter(it => it.type && (it.type.includes("特辑") || it.type.includes("幕后")));
-
-            if (预告.length > 0) {
-                playFrom.push("预告");
-                playUrl.push(预告.map(it => it.title + "$" + it.url).join("#"));
-            }
-            if (花絮片花.length > 0) {
-                playFrom.push("花絮片花");
-                playUrl.push(花絮片花.map(it => it.title + "$" + it.url).join("#"));
-            }
-            if (特辑.length > 0) {
-                playFrom.push("特辑");
-                playUrl.push(特辑.map(it => it.title + "$" + it.url).join("#"));
-            }
-        }
-
-        VOD.vod_play_from = playFrom.join("$$$");
-        VOD.vod_play_url = playUrl.join("$$$");
+        VOD.vod_play_from = yg.length < 1 ? "qq" : "qq$$$预告及花絮";
+        VOD.vod_play_url = yg.length < 1 ? d.map(function(it) {
+            return it.title + "$" + it.url
+        }).join("#") : [zp, yg].map(function(it) {
+            return it.map(function(its) {
+                return its.title + "$" + its.url
+            }).join("#")
+        }).join("$$$");
     }),
     搜索: $js.toString(() => {
-        let d = [],
-            keyword = input.split("/")[3];
-        let seenIds = new Set();
+        let d = [];
+        let mame = (input.split("/")[3]);
+        let html = vod1(input.split("/")[3]);
+        let json = JSON.parse(html);
 
-        function vodSearch(keyword, page = 0) {
-            return request('https://pbaccess.video.qq.com/trpc.videosearch.mobile_search.MultiTerminalSearch/MbSearch?vplatform=2', {
-                body: JSON.stringify({
-                    version: "25042201",
-                    clientType: 1,
-                    filterValue: "",
-                    uuid: "B1E50847-D25F-4C4B-BBA0-36F0093487F6",
-                    retry: 0,
-                    query: keyword,
-                    pagenum: page,
-                    isPrefetch: true,
-                    pagesize: 30,
-                    queryFrom: 0,
-                    isneedQc: true,
-                    extraInfo: {
-                        isNewMarkLabel: "1",
-                        multi_terminal_pc: "1",
-                        themeType: "1"
-                    }
-                }),
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.139 Safari/537.36',
-                    'Content-Type': 'application/json',
-                    'Origin': 'https://v.qq.com',
-                    'Referer': 'https://v.qq.com/'
-                },
-                method: 'POST'
-            });
-        }
+        let list = json.data.normalList.itemList;
+        console.log(json);
+        log(list[0].videoInfo.title);
+        list.forEach(function(it) {
+            try {
+                if (it.doc.id.length > 11) {
+                    d.push({
+                        title: it.videoInfo.title,
+                        img: it.videoInfo.imgUrl,
+                        url: it.doc.id,
+                    });
+                }
+            } catch {
 
-        const nonMainContentKeywords = [
-            '：', '#', '特辑', '“', '剪辑', '片花', '独家', '专访', '纯享',
-            '制作', '幕后', '宣传', '看点', '主题曲', '插曲', '彩蛋',
-            '精彩', '集锦', '盘点', '回顾', '解说', '评测', '反应', 'reaction'
-        ];
-
-        function isMainContent(title) {
-            if (!title) return false;
-            if (title.includes('<em>') || title.includes('</em>')) return false;
-            return !nonMainContentKeywords.some(keyword => title.includes(keyword));
-        }
-
-        try {
-            let html = vodSearch(keyword, 0);
-            let json = JSON.parse(html);
-
-            function processItemList(itemList) {
-                if (!itemList) return;
-
-                itemList.forEach(it => {
-                    if (it.doc && it.doc.id && it.videoInfo && isMainContent(it.videoInfo.title)) {
-                        const itemId = it.doc.id;
-                        if (!seenIds.has(itemId)) {
-                            seenIds.add(itemId);
-                            d.push({
-                                title: it.videoInfo.title,
-                                img: it.videoInfo.imgUrl || "",
-                                url: itemId,
-                                desc: it.videoInfo.secondLine || ""
-                            });
-                        }
-                    }
-                });
             }
 
-            if (json.data && json.data.normalList) {
-                processItemList(json.data.normalList.itemList);
+        });
+        let list2 = json.data.areaBoxList[0].itemList;
+        list2.forEach(function(it) {
+            try {
+                if (it.doc.id.length > 11 && it.videoInfo.title.match(mame)) {
+                    d.push({
+                        title: it.videoInfo.title,
+                        img: it.videoInfo.imgUrl,
+                        url: it.doc.id,
+                    });
+                }
+            } catch {
+
             }
 
-            if (json.data && json.data.areaBoxList) {
-                json.data.areaBoxList.forEach(box => {
-                    processItemList(box.itemList);
-                });
-            }
-
-        } catch (e) {
-            log("搜索出错: " + e.message);
-        }
-
+        });
         setResult(d);
     })
-};
+}

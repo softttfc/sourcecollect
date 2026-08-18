@@ -1,8 +1,7 @@
 {
-  "spider": "./spider.jar",
-  "README": "http://rihou.cc:88/README.txt",
-  "README2": "http://rihou.cc:88/README2.txt",
-  "logo": "http://rihou.cc:88/1.gif",
+  "spider": "./jar/vox.jar",
+  //"warningText": "禁止任何商业用途，仅限个人学习爬虫原理使用。",
+  "logo": "./1.gif",
   "wallpaper": "http://饭太硬.top/深色壁纸/api.php",
   "lives": [
     {
@@ -65,14 +64,14 @@
       "name": "🎿玩偶┃[网盘]",
       "type": 3,
       "api": "csp_Nostr",
-      "homePage": "http://rihou.cc:88/html/wo.html"
+      "homePage": "./html/wo.html"
     },
     {
       "key": "Eclipse",
       "name": "🚢Eclipse┃[盘搜]",
       "type": 3,
       "api": "csp_Nostr",
-      "homePage": "http://rihou.cc:88/html/Eclipse.html"
+      "homePage": "./html/Eclipse.html"
     },
     {
       "key": "csp_MakkaPakka",
@@ -92,7 +91,7 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "filters": "http://rihou.cc:88/json/douban.json"
+        "filters": "./json/douban.json"
       }
     },
     {
@@ -108,7 +107,7 @@
       "name": "🐼️电视┃[直播]",
       "type": 3,
       "searchable": 0,
-      "api": "./api/live2vod.js",
+      "api": "./js/live2vod.js",
       "ext": "./json/feimaolive.json"
     },
     {
@@ -120,7 +119,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/quarkshare.txt"
+        "class": "./json/quarkshare.txt"
       }
     },
     {
@@ -132,7 +131,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/ucshare.txt"
+        "class": "./json/ucshare.txt"
       }
     },
     {
@@ -144,7 +143,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/115share.txt"
+        "class": "./json/115share.txt"
       }
     },
     {
@@ -156,7 +155,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/189share.txt"
+        "class": "./json/189share.txt"
       }
     },
     {
@@ -168,7 +167,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/baidushare.txt"
+        "class": "./json/baidushare.txt"
       }
     },
     {
@@ -180,7 +179,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/alishare.txt"
+        "class": "./json/alishare.txt"
       }
     },
     {
@@ -192,7 +191,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/thundershare.txt"
+        "class": "./json/thundershare.txt"
       }
     },
     {
@@ -204,7 +203,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/guangyashare.txt"
+        "class": "./json/guangyashare.txt"
       }
     },
     {
@@ -216,7 +215,7 @@
       "changeable": 0,
       "timeout": 60,
       "ext": {
-        "class": "http://rihou.cc:88/json/123share.txt"
+        "class": "./json/123share.txt"
       }
     },
     {
@@ -229,7 +228,7 @@
       "timeout": 60,
       "ext": {
         "cookie": "",
-        "filters": "http://rihou.cc:88/json/guanying.json",
+        "filters": "./json/guanying.json",
         "sites": "https://www.xn--wcv59z.com/",
         "proxy": "noproxy"
       }
@@ -244,7 +243,7 @@
       "timeout": 60,
       "ext": {
         "cookie": "",
-        "filters": "http://rihou.cc:88/json/pinglian.json",
+        "filters": "./json/pinglian.json",
         "sites": "https://pinglian.lol",
         "proxy": "noproxy"
       }
@@ -276,7 +275,7 @@
       "api": "csp_Pan123Fx",
       "ext": {
         "cookie": "",
-        "filters": "http://rihou.cc:88/json/pan123fx.json",
+        "filters": "./json/pan123fx.json",
         "comment": ""
       }
     },
@@ -320,8 +319,22 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "filters": "http://rihou.cc:88/json/xxzn.json",
+        "filters": "./json/xxzn.json",
         "sites": "https://4kzn.cc"
+      }
+    },
+    {
+      "key": "csp_Zmi",
+      "name": "🐌蜗牛┃[网盘]",
+      "type": 3,
+      "api": "csp_Zmi",
+      "searchable": 1,
+      "changeable": 1,
+      "timeout": 60,
+      "ext": {
+        "cookie": "",
+        "filters": "",
+        "sites": ""
       }
     },
     {
@@ -334,8 +347,8 @@
       "filterable": 1,
       "changeable": 1,
       "ext": {
-        "sites": "https://wogg.xxooo.cf",
-        "filters": "http://rihou.cc:88/json/wogg.json",
+        "sites": "https://woggpan.xxooo.cf",
+        "filters": "./json/wogg.json",
         "proxy": "noproxy"
       }
     },
@@ -350,7 +363,7 @@
       "timeout": 60,
       "ext": {
         "sites": "https://woog.nxog.eu.org",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -364,8 +377,8 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "sites": "http://xiaocgege.shop",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "sites": "http://tvpanpan.site",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -380,7 +393,7 @@
       "timeout": 60,
       "ext": {
         "sites": "http://shandian.blog",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -395,7 +408,7 @@
       "timeout": 60,
       "ext": {
         "sites": "https://www.wexwp.cc",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -410,7 +423,7 @@
       "timeout": 60,
       "ext": {
         "sites": "https://123.666291.xyz",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -424,8 +437,8 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "sites": "https://zhizhen1.top",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "sites": "https://www.mihdr.top",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -440,22 +453,7 @@
       "timeout": 60,
       "ext": {
         "sites": "https://tv.yydsys.top/",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
-        "proxy": "noproxy"
-      }
-    },
-    {
-      "key": "短木网盘",
-      "name": "🙄短木┃[网盘]",
-      "type": 3,
-      "api": "csp_Wobg",
-      "searchable": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 60,
-      "ext": {
-        "sites": "https://duanmu.laozhangone.top",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -470,7 +468,7 @@
       "timeout": 60,
       "ext": {
         "sites": "http://38.76.197.172:16969",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -485,7 +483,7 @@
       "timeout": 60,
       "ext": {
         "sites": "http://38.76.197.172:12521",
-        "filters": "http://rihou.cc:88/json/wogg2.json",
+        "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
     },
@@ -497,7 +495,7 @@
       "searchable": 1,
       "changeable": 1,
       "ext": {
-        "filters": "http://rihou.cc:88/json/jianpian.json",
+        "filters": "./json/jianpian.json",
         "imgUrl": "https://img.zgbkz.com",
         "sites": "https://api.ztcgi.com"
       }
@@ -530,7 +528,7 @@
       "changeable": 0,
       "ext": {
         "api": "https://mov.cenguigui.cn/duanju/api.php",
-        "classes": "http://rihou.cc:88/json/duanjucen.json"
+        "classes": "./json/duanjucen.json"
       }
     },
     {
@@ -555,18 +553,6 @@
         "package": "com.yingfu.mobile.android.pgsp",
         "buildNumber": "2003",
         "buildSignature": "054FA8DDA4319C6B6A9B954CA5777541C993F00B1B0BD4394F7EDE48184C4594"
-      }
-    },
-    {
-      "key": "金牌GET",
-      "name": "🥇金牌┃[APP]",
-      "type": 3,
-      "api": "csp_AppGet",
-      "ext": {
-        "host": "https://qj4.catbb.xyz",
-        "datakey": "eecbio48dsq13kkk",
-        "init": "V122",
-        "api": 2
       }
     },
     {
@@ -609,8 +595,8 @@
       "type": 3,
       "api": "csp_XBPQ",
       "timeout": 60,
-      "ext": "./json/夸克短剧.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/夸克短剧.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "短剧夸克",
@@ -618,40 +604,40 @@
       "type": 3,
       "timeout": 60,
       "api": "csp_XBPQ",
-      "ext": "./json/短剧夸克.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/短剧夸克.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "旺旺影视",
       "name": "🐶旺旺┃[XBPQ]",
       "type": 3,
       "api": "csp_XBPQ",
-      "ext": "./json/旺旺影视.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/旺旺影视.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "韩剧看看",
       "name": "🇰🇷韩剧┃[XBPQ]",
       "type": 3,
       "api": "csp_XBPQ",
-      "ext": "./json/韩剧看看.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/韩剧看看.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "韩剧在线",
       "name": "🇰🇷韩剧┃[XBPQ]",
       "type": 3,
       "api": "csp_XBPQ",
-      "ext": "./json/韩剧在线.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/韩剧在线.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "啊哈DJ网",
       "name": "🎵啊哈┃[音乐]",
       "type": 3,
       "api": "csp_XBPQ",
-      "ext": "./json/啊哈DJ网.json",
-      "jar": "./jars/夸克短剧.jar"
+      "ext": "./xb/啊哈DJ网.json",
+      "jar": "./jar/xbpq.jar"
     },
     {
       "key": "csp_AiWanMusic",
@@ -665,14 +651,14 @@
       "key": "随身评书",
       "name": "📚随身┃[听看]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/随身评书.js"
     },
     {
       "key": "酷我听书",
       "name": "📚酷我┃[听看]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/酷我听书.js"
     },
     {
@@ -680,21 +666,21 @@
       "name": "🦁第一┃[听看]",
       "type": 3,
       "timeout": 60,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/第一故事.js"
     },
     {
       "key": "凤凰FM",
       "name": "📻凤凰┃[听看]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/凤凰FM.js"
     },
     {
       "key": "蜻蜓FM",
       "name": "📻蜻蜓┃[听看]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/蜻蜓FM.js"
     },
     {
@@ -702,28 +688,28 @@
       "name": "👶夸克┃[网盘]",
       "type": 3,
       "timeout": 60,
-      "api": "./api/夸克影院.js"
+      "api": "./js/夸克影院.js"
     },
     {
       "key": "人人电影",
       "name": "👰人人┃[网盘]",
       "type": 3,
       "timeout": 60,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/人人电影.js"
     },
     {
       "key": "泥泥视频",
       "name": "🍋泥泥┃[秒播]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/泥泥视频.js"
     },
     {
       "key": "星辰影院",
       "name": "🪐星辰┃[秒播]",
       "type": 3,
-      "api": "./api/星辰影院.js"
+      "api": "./js/星辰影院.js"
     },
     {
       "key": "官采",
@@ -737,28 +723,28 @@
       "key": "腾腾",
       "name": "🐧腾腾┃[解析]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/腾腾.js"
     },
     {
       "key": "奇奇",
       "name": "🐴奇奇┃[解析]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/奇奇.js"
     },
     {
       "key": "果果",
       "name": "🍋果果┃[解析]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/果果.js"
     },
     {
       "key": "酷酷",
       "name": "😎酷酷┃[解析]",
       "type": 3,
-      "api": "./api/drpy2.min.js",
+      "api": "./js/drpy2.min.js",
       "ext": "./js/酷酷.js"
     },
     {
@@ -836,7 +822,7 @@
       "searchable": 1,
       "changeable": 0,
       "ext": {
-        "type": "http://rihou.cc:88/json/bili.json"
+        "type": "./json/bili.json"
       },
       "style": {
         "type": "rect",
@@ -852,7 +838,7 @@
       "searchable": 0,
       "changeable": 0,
       "ext": {
-        "type": "http://rihou.cc:88/json/biliyy.json"
+        "type": "./json/biliyy.json"
       },
       "style": {
         "type": "rect",
@@ -868,7 +854,7 @@
       "searchable": 0,
       "changeable": 0,
       "ext": {
-        "type": "http://rihou.cc:88/json/mtv.json"
+        "type": "./json/mtv.json"
       },
       "style": {
         "type": "rect",
@@ -884,7 +870,7 @@
       "searchable": 0,
       "changeable": 0,
       "ext": {
-        "type": "http://rihou.cc:88/json/bilirt.json"
+        "type": "./json/bilirt.json"
       },
       "style": {
         "type": "rect",
@@ -908,7 +894,7 @@
       "searchable": 0,
       "changeable": 0,
       "ext": {
-        "type": "http://rihou.cc:88/json/bilims.json"
+        "type": "./json/bilims.json"
       },
       "style": {
         "type": "rect",
@@ -975,13 +961,25 @@
       "ext": "./json/webdav.json"
     },
     {
+      "key": "Samba",
+      "name": "💎Samba┃[本地]",
+      "type": 3,
+      "api": "csp_Samba",
+      "searchable": 0,
+      "quickSearch": 0,
+      "changeable": 0,
+      "filterable": 0,
+      "timeout": 60,
+      "ext": "./json/samba.txt"
+    },
+    {
       "key": "商店",
       "name": "🤡商店┃[更新]",
       "type": 3,
       "api": "csp_Market",
       "searchable": 0,
       "changeable": 0,
-      "ext": "./json/market.json"
+      "ext": "http://jiduo.rihou.cc:6250/jiduo.php/market.json"
     },
     {
       "key": "csp_PanSou",
@@ -1055,7 +1053,7 @@
     {
       "key": "py_盘友圈",
       "name": "🤒盘友┃搜索",
-      "api": "./api/盘友圈.py",
+      "api": "./py/盘友圈.py",
       "filterable": 1,
       "timeout": 60,
       "quickSearch": 1,

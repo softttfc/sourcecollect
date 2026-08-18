@@ -8,7 +8,14 @@
             "key": "网络直播",
             "name": "网络 • 直播",
             "type": 3,
-            "api": "./py/网络直播.py"
+            "api": "csp_ALLLive",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
+            "style": {
+                "type": "rect",
+                "ratio": 1.597
+            }
         },
         {
             "key": "配置中心",
@@ -24,17 +31,13 @@
             }
         },
         {
-            "key": "哔哩直播",
-            "name": "哔哩 • 直播",
-            "type": 3,
-            "api": "./py/哔哩直播.py"
-        },
-        {
             "key": "88看球",
             "name": "88 • 看球",
             "type": 3,
-            "api": "csp_Kanqiu",
-            "gridview": 3,
+            "api": "csp_Sports88",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -43,7 +46,10 @@
             "key": "球通体育",
             "name": "球通 • 体育",
             "type": 3,
-            "api": "csp_QiutongTY",
+            "api": "csp_SportsQiutong",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -52,7 +58,10 @@
             "key": "瓜子体育",
             "name": "瓜子 • 体育",
             "type": 3,
-            "api": "csp_GuaziTY",
+            "api": "csp_SportsGuazi",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -61,16 +70,10 @@
             "key": "咖啡体育",
             "name": "咖啡 • 体育",
             "type": 3,
-            "api": "csp_KafeiTY",
-            "style": {
-                "type": "list"
-            }
-        },
-        {
-            "key": "919体育",
-            "name": "919 • 体育",
-            "type": 3,
-            "api": "csp_919TY",
+            "api": "csp_SportsKafei",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -80,6 +83,9 @@
             "name": "呦呦 • DJ",
             "type": 3,
             "api": "csp_Djuu",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -89,6 +95,9 @@
             "name": "轮回 • DJ",
             "type": 3,
             "api": "csp_Djlh",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -98,6 +107,46 @@
             "name": "蜻蜓 • FM",
             "type": 3,
             "api": "csp_QingtingFM",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
+            "style": {
+                "type": "list"
+            }
+        },
+        {
+            "key": "世界听书",
+            "name": "世界 • 听书",
+            "type": 3,
+            "api": "csp_TingShijie",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
+            "style": {
+                "type": "list"
+            }
+        },
+        {
+            "key": "堇夏听书",
+            "name": "堇夏 • 听书",
+            "type": 3,
+            "api": "csp_TingJinxia",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
+            "ext": "https://m.ting15.com",
+            "style": {
+                "type": "list"
+            }
+        },
+        {
+            "key": "博看听书",
+            "name": "博看 • 听书",
+            "type": 3,
+            "api": "csp_TingBokan",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -107,6 +156,9 @@
             "name": "戏曲 • 多多",
             "type": 3,
             "api": "csp_AppLY",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "list"
             }
@@ -115,33 +167,17 @@
             "key": "爱听音乐",
             "name": "爱听 • 音乐",
             "type": 3,
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
             "api": "./py/爱听音乐.py"
         },
         {
-            "key": "世界听书",
-            "name": "世界 • 听书",
-            "type": 3,
-            "api": "csp_TingShijie",
-            "style": {
-                "type": "list"
-            }
-        },
-        {
-            "key": "博看听书",
-            "name": "博看 • 听书",
+            "key": "好听听书",
+            "name": "好听 • 听书",
             "type": 3,
             "api": "./js/drpy2.min.js",
-            "ext": "./js/博看听书.js",
-            "style": {
-                "type": "list"
-            }
-        },
-        {
-            "key": "有声绘本网",
-            "name": "有声绘本 • 听书",
-            "type": 3,
-            "api": "./js/drpy2.min.js",
-            "ext": "./js/有声绘本网.js",
+            "ext": "./js/好听听书.js",
             "style": {
                 "type": "list"
             }
@@ -163,7 +199,7 @@
             "api": "csp_Bili",
             "searchable": 0,
             "quickSearch": 0,
-            "filterable": 0,
+            "changeable": 0,
             "ext": {
                 "n": "哔哩音乐",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -180,7 +216,7 @@
             "api": "csp_Bili",
             "searchable": 0,
             "quickSearch": 0,
-            "filterable": 0,
+            "changeable": 0,
             "ext": {
                 "n": "哔哩听书",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -197,7 +233,7 @@
             "api": "csp_Bili",
             "searchable": 0,
             "quickSearch": 0,
-            "filterable": 0,
+            "changeable": 0,
             "ext": {
                 "n": "哔哩相声",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -214,7 +250,7 @@
             "api": "csp_Bili",
             "searchable": 0,
             "quickSearch": 0,
-            "filterable": 0,
+            "changeable": 0,
             "ext": {
                 "n": "哔哩小品",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -231,7 +267,7 @@
             "api": "csp_Bili",
             "searchable": 0,
             "quickSearch": 0,
-            "filterable": 0,
+            "changeable": 0,
             "ext": {
                 "n": "哔哩戏曲",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -521,170 +557,5 @@
         "bilibili",
         "哔 哩",
         "哔 哩 哔 哩"
-    ],
-    "ijk": [
-        {
-            "group": "软解码",
-            "options": [
-                {
-                    "category": 4,
-                    "name": "opensles",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "overlay-format",
-                    "value": "842225234"
-                },
-                {
-                    "category": 4,
-                    "name": "framedrop",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "soundtouch",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "start-on-prepared",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "http-detect-range-support",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "fflags",
-                    "value": "fastseek"
-                },
-                {
-                    "category": 2,
-                    "name": "skip_loop_filter",
-                    "value": "48"
-                },
-                {
-                    "category": 4,
-                    "name": "reconnect",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "enable-accurate-seek",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-auto-rotate",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-handle-resolution-change",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-hevc",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "dns_cache_timeout",
-                    "value": "600000000"
-                }
-            ]
-        },
-        {
-            "group": "硬解码",
-            "options": [
-                {
-                    "category": 4,
-                    "name": "opensles",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "overlay-format",
-                    "value": "842225234"
-                },
-                {
-                    "category": 4,
-                    "name": "framedrop",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "soundtouch",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "start-on-prepared",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "http-detect-range-support",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "fflags",
-                    "value": "fastseek"
-                },
-                {
-                    "category": 2,
-                    "name": "skip_loop_filter",
-                    "value": "48"
-                },
-                {
-                    "category": 4,
-                    "name": "reconnect",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "enable-accurate-seek",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-auto-rotate",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-handle-resolution-change",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-hevc",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "dns_cache_timeout",
-                    "value": "600000000"
-                }
-            ]
-        }
-    ],
-    "ads": [
-        "static-mozai.4gtv.tv"
     ]
 }

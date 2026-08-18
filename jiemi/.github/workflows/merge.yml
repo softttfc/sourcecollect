@@ -5,6 +5,7 @@ on:
     workflows: 
       - "自动解密_Spider下载_生成新Jar配置"
       - "自动调用API解密并注入Sites生成moyu.json"
+      - "自动调用API解密并注入Sites生成xiaoyu.json"
     types:
       - completed
 

@@ -99,29 +99,61 @@ class Spider(Spider):
         if tree is None: print("[WARN] %s etree解析为空，长度=%d 片段=%r" % (tag, len(html), html[:80]))
         return tree
 
+    _NOTE_RE = re.compile(r'^(更新HD|HD|第?\d+(?:\.\d+)?集?|全\d+集|正片|完结|全集|国语|中字|播放|立即播放|详情)$')
+
+    def _name_of(self, a):
+        name = (a.get("title") or "").strip()
+        if name:
+            return name if not self._NOTE_RE.match(name) else ""
+        strong = "".join(a.xpath('.//strong//text()')).strip()
+        if strong:
+            return strong
+        txt = "".join(a.xpath('.//text()')).strip()
+        if not txt or self._NOTE_RE.match(txt):
+            return ""
+        return txt
+
     def _regex_list(self, html):
         out, seen = [], set()
-        for vid, title in re.findall(r'href="[^"]*?/voddetail/(\d+)\.html"[^>]*title="([^"]*)"', html):
-            if vid in seen: continue
-            seen.add(vid); out.append({"vod_id": vid, "vod_name": title, "vod_pic": ""})
+        for m in re.finditer(r'href="[^"]*?/voddetail/(\d+)\.html"[^>]*?title="([^"]*)"|href="[^"]*?/voddetail/(\d+)\.html"[^>]*?<strong>([^<]*)</strong>', html):
+            vid = m.group(1) or m.group(3)
+            name = (m.group(2) or m.group(4) or "").strip()
+            if not vid or vid in seen or not name: continue
+            seen.add(vid); out.append({"vod_id": vid, "vod_name": name, "vod_pic": ""})
         return out
+
+    def _cls(self, name):
+        return 'contains(concat(" ", normalize-space(@class), " "), " %s ")' % name
 
     def _parse_list(self, html):
         if not html: return []
         tree = self._tree(html, "列表") if etree else None
         if tree is None: return self._regex_list(html)
         results, seen = [], set()
-        for a in tree.xpath('//a[contains(@href,"/voddetail/")]'):
-            m = re.search(r'/voddetail/(\d+)\.html', a.get("href", ""))
+        cards = tree.xpath('//*[%s or %s]' % (self._cls("module-card-item"), self._cls("module-poster-item")))
+        for card in cards:
+            if card.xpath('.//div[contains(@class,"module-card-item-class")][contains(text(),"福利")]'):
+                continue
+            m = None
+            for a in [card] + card.xpath('.//a[contains(@href,"/voddetail/")]'):
+                mm = re.search(r'/voddetail/(\d+)\.html', a.get("href", ""))
+                if mm and (a.get("title") or a.xpath('.//strong//text()')):
+                    m = mm; break
+            if m is None:
+                for a in [card] + card.xpath('.//a[contains(@href,"/voddetail/")]'):
+                    mm = re.search(r'/voddetail/(\d+)\.html', a.get("href", ""))
+                    if mm: m = mm; break
             if not m or m.group(1) in seen: continue
-            name = (a.get("title") or "".join(a.xpath('.//text()'))).strip()
+            links = card.xpath('.//a[contains(@href,"/voddetail/")][@title]') or card.xpath('.//a[contains(@href,"/voddetail/")][.//strong]') or card.xpath('.//a[contains(@href,"/voddetail/")]')
+            target = links[0] if links else card
+            name = self._name_of(target)
             if not name: continue
             seen.add(m.group(1))
             pic = ""
             for at in ("data-original", "data-src", "src"):
-                v = a.xpath('.//img/@%s' % at)
+                v = card.xpath('.//img/@%s' % at)
                 if v and "load.gif" not in v[0]: pic = v[0]; break
-            note = "".join(a.xpath('.//span//text()')).strip()
+            note = "".join(card.xpath('.//div[contains(@class,"module-item-note")]//text()')).strip()
             results.append({"vod_id": m.group(1), "vod_name": name, "vod_pic": self._fix(pic), "vod_remarks": note})
         return results
 
@@ -182,7 +214,12 @@ class Spider(Spider):
         text = "\n".join(x.strip() for x in tree.xpath('//text()') if x.strip())
         pic = ""
         for v in tree.xpath('//img/@data-original | //img/@src'):
-            if v and "load.gif" not in v: pic = v; break
+            if v and "load.gif" not in v and "logo" not in v and "touxiang" not in v and "dsm.jpg" not in v:
+                pic = v; break
+        intro = "".join(tree.xpath('//div[contains(@class,"module-info-introduction-content")]//p//text() | //div[contains(@class,"module-info-introduction-content")]//text()')).strip()
+        intro = re.sub(r'(?:艾旦影视|海外影院|海外影视|海外华人|海外福利影院|蛋蛋电影网|haiwaiyingyuan)[^<]*$', '', intro)
+        remarks = self._field(text, "备注") or self._field(text, "更新") or self._field(text, "连载")
+        if re.search(r'\d{4}-\d{2}-\d{2}', remarks or ""): remarks = ""
         vod = {"vod_id": vid,
                "vod_name": "".join(tree.xpath('//h1//text()')).strip(),
                "vod_pic": self._fix(pic),
@@ -190,23 +227,37 @@ class Spider(Spider):
                "vod_area": "".join(tree.xpath('//a[contains(@href,"/vodshow/")]/text()')[1:2]).strip(),
                "type_name": "".join(tree.xpath('//a[contains(@href,"/vodshow/")]/text()')[2:3]).strip(),
                "vod_director": self._field(text, "导演"), "vod_actor": self._field(text, "主演"),
-               "vod_remarks": self._field(text, "连载") or self._field(text, "更新"),
-               "vod_content": self._field(text, "剧情") or self._field(text, "简介")}
-        groups, seen = {}, set()
+               "vod_remarks": remarks,
+               "vod_content": intro or self._field(text, "剧情") or self._field(text, "简介")}
+        groups, best = {}, {}
+        tabs = tree.xpath('//*[contains(@class,"module-tab-item")]/@data-dropdown-value')
+        src_order = []
+        for panel in tree.xpath('//*[contains(@class,"module-list")][@id]'):
+            for a in panel.xpath('.//a[contains(@href,"/vodplay/")]'):
+                mm = re.search(r'/vodplay/%s-(\d+)-' % vid, a.get("href", ""))
+                if mm and mm.group(1) not in src_order:
+                    src_order.append(mm.group(1))
+        tab_of = {}
+        for i, tab in enumerate(tabs):
+            if i < len(src_order): tab_of[src_order[i]] = tab
         for a in tree.xpath('//a[contains(@href,"/vodplay/")]'):
             lk = a.get("href", "")
-            if lk in seen: continue
             m = re.search(r'/vodplay/%s-(\d+)-(\d+)\.html' % vid, lk)
             if not m: continue
-            seen.add(lk)
             src, ep = m.group(1), int(m.group(2))
-            nm = (a.get("title") or "".join(a.xpath('.//text()'))).strip()
-            nm = re.sub(r'^播放.*?第|集$', '', nm) or ("第%d集" % ep)
-            groups.setdefault(src, []).append((ep, ("第%s集" % nm if nm.isdigit() else nm), lk))
+            span = "".join(a.xpath('.//span//text()')).strip()
+            cand = (span, lk, a)
+            prev = best.get((src, ep))
+            if prev is None or (span and not prev[0]):
+                best[(src, ep)] = cand
+        for (src, ep), (span, lk, a) in sorted(best.items()):
+            nm = span or (a.get("title") or "").strip()
+            nm = re.sub(r'^播放.{0,40}第|^播放.{0,40}(?:全集|正片)?$|^立即?播放|^立刻播放', '', nm) or ("第%d集" % ep)
+            groups.setdefault(src, []).append((ep, nm, lk))
         froms, urls = [], []
         for src in sorted(groups, key=lambda s: (len(s), s)):
             eps = sorted(groups[src], key=lambda x: x[0])
-            froms.append("线路%s" % src)
+            froms.append(tab_of.get(src) or "线路%s" % src)
             urls.append("#".join(nm.replace("$", "").replace("#", "") + "$" + self._fix(lk) for _, nm, lk in eps))
         vod["vod_play_from"] = "$$$".join(froms) if froms else "蛋蛋魔法影视"
         vod["vod_play_url"] = "$$$".join(urls) if urls else ("正片$%s/voddetail/%s.html" % (self.host, vid))
@@ -225,5 +276,7 @@ class Spider(Spider):
                 except Exception:
                     m2 = re.search(r'"url"\s*:\s*"([^"]+)"', val); val = m2.group(1).replace("\\/", "/") if m2 else ""
             if val: url = self._fix(val); break
-        if not url: return {"parse": 1, "url": pid, "header": self.headers}
-        return {"parse": 0, "url": url, "header": {"User-Agent": self.headers["User-Agent"], "Referer": self.host + "/"}}
+        if not url: return {"parse": 1, "url": pid, "header": {**self.headers, "Referer": pid}}
+        m = re.match(r'https?://[^/]+', url)
+        ref = m.group(0) if m else self.host
+        return {"parse": 0, "url": url, "header": {"User-Agent": self.headers["User-Agent"], "Referer": ref}}

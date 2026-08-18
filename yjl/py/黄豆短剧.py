@@ -50,10 +50,10 @@ class _AESCBC:
 
 class Spider(BaseSpider):
     def __init__(self):
-        self.host = "https://xqjzvcvt.top"
+        self.host = "https://lzlukvca.cc" 
         self.api = self.host + "/api"
         self.name = "黄豆短剧"
-        self.platform_key = "7961beb44246e3012ce228d6b5ced05a"
+        self.platform_key = ""
         self.version = "2.0.0"
         self.device_type = "web"
         self.session_id = uuid.uuid4().hex
@@ -69,7 +69,7 @@ class Spider(BaseSpider):
         if extend:
             try:
                 cfg = json.loads(extend)
-                self.host = (cfg.get("site") or cfg.get("base_url") or self.host).rstrip("/")
+                self.host = (cfg.get("site") or cfg.get("url") or self.host).rstrip("/")
                 self.api = self.host + "/api"
                 self.token = cfg.get("token", self.token)
                 self.headers["Origin"] = self.host

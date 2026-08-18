@@ -96,11 +96,11 @@ class Spider(Spider):
         url = f"{self.host}/index.php/vod/type/id/{tid}.html" if pg == 1 else f"{self.host}/index.php/vod/type/id/{tid}/page/{pg}.html"
         vodList = self._parseList(self._get(url))
         sign = ",".join(v["vod_id"] for v in vodList)
-        if pg == 1:
-            self.pageCache[str(tid)] = sign
-        elif sign and sign == self.pageCache.get(str(tid)):
+        if sign and sign == self.pageCache.get(str(tid)):
             vodList = []
-        return {"page": pg, "pagecount": pg + 1 if vodList else pg, "limit": len(vodList) or 20, "total": 999, "list": vodList}
+        else:
+            self.pageCache[str(tid)] = sign
+        return {"page": pg, "pagecount": 1, "limit": len(vodList) or 20, "total": 999, "list": vodList}
 
     def _episodes(self, tree):
         nodes = tree.xpath(f'//a[{self._cls("module-play-list-link")}]')
@@ -187,6 +187,8 @@ class Spider(Spider):
         return {"list": self._parseList(self._get(url)), "page": pg}
 
     def _play_headers(self, u):
+        """播放请求头：Referer 动态替换为播放链接自身的源站域名。
+        m3u8 CDN 防盗链常校验 Referer 必须匹配自身域名，只用站点域名会被 403。"""
         hdrs = dict(self.playHeaders)
         try:
             if str(u).startswith("http"):

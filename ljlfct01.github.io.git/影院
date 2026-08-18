@@ -350,23 +350,24 @@
   ],
   "lives": [
     {
-      "name": "4K线路",
+      "name": "4K线路1",
       "type": 0,
-      "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/zb",
+      "url": "https://ghfast.top/https://raw.githubusercontent.com/tianze889/vbd/refs/heads/main/tvdsj0505.txt",
       "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
-      "name": "4K线路1",
+      "name": "4K线路",
       "type": 0,
-      "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/m3u",
+      "url": "https://ghfast.top/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/zb",
       "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
+ 
     {
       "name": "哦了tv",
       "type": 0,
-      "url": "https://gh.bugdey.us.kg/http://raw.githubusercontent.com/yihad168/tv/refs/heads/main/live.m3u",
+      "url": "https://ghfast.top/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/%E9%9D%92%E8%8B%B9%E6%9E%9C",
       "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
@@ -375,7 +376,7 @@
             "type": 0,
             "playerType": 2,
             "ua": "okhttp",
-			"url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/fleung49/star/refs/heads/main/mit"
+			"url": "https://ghfast.top/https://raw.githubusercontent.com/fleung49/star/refs/heads/main/mit"
          },
 		{
             "name": "🐬风云源 海豚影视永久免费如有收费的都是骗子",
@@ -387,38 +388,38 @@
             "name": "🐬各大源合集",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/807080747/zv/refs/heads/main/sese.txt"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/807080747/zv/refs/heads/main/sese.txt"
         }, 	
 	     {
             "name": "🐬电视家",
             "type": 0,
             "playerType": 2,
              "ua": "okhttp",
-			 "url": "https://gh.bugdey.us.kg/https://github.com/bang359/dsj/raw/main/dsjcs.txt"
+			 "url": "https://ghfast.top/https://github.com/bang359/dsj/raw/main/dsjcs.txt"
          },
          {
             "name": "🐬地方直播",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt"
         }, 
          {
             "name": "🐬地方直播2",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
         },    
 		{
             "name": "🐬薄荷直播",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/bhmb.m3u"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/bhmb.m3u"
         },   
 		{
             "name": "🐬全球直播",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/%E5%85%A8%E7%90%83%E7%9B%B4%E6%92%AD.m3u"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/%E5%85%A8%E7%90%83%E7%9B%B4%E6%92%AD.m3u"
         },
 		{
             "name": "🐬咪咕直播",
@@ -430,7 +431,7 @@
             "name": "🐬iptv直播",
             "type": 0,
             "ua": "okhttp/5.3.2",
-            "url": "https://wget.la/https://raw.githubusercontent.com/vinkerq/iptv-api/refs/heads/master/iptv.txt"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/vinkerq/iptv-api/refs/heads/master/iptv.txt"
         },
 		{
             "name": "🐬juli",
@@ -466,13 +467,13 @@
             "name": "🐬国际TV",
             "type": 0,
             "ua": "okhttp",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/xJEYDAin/iptv/main/output/all_merged.m3u"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/xJEYDAin/iptv/main/output/all_merged.m3u"
         },
 	    {
             "name": "🐬裤佬TV",
             "type": 0,
             "ua": "okhttp",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg1.m3u"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg1.m3u"
         },
 		{
             "name": "🐬裤佬TV2",
@@ -538,7 +539,7 @@
             "name": "🐬4GTV(梯子台湾节点)720p",
             "type": 0,
             "ua": "okhttp",
-            "url": "https://gh.bugdey.us.kg/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/4gtv.txt"
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/4gtv.txt"
         },
 	    {
             "name": "🐬4GTV怡淳酒店(梯子台湾节点)720p",
@@ -574,8 +575,9 @@
  {
       "name": "4k",
       "type": 1,
-      "url": "https://niubi.69mini.com/api/?key=ce0f08d238a9a94a99635b09c8a6ce31&url="
+      "url": "https://jiexi.69mini.com/api/?key=5b5ca7588218afbe90944ff2f4a5f904&url="
     }
+
 ],
   "ijk": [
     {

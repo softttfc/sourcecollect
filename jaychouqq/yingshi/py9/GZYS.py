@@ -75,12 +75,9 @@ t5lYKfpe8k83ZA==
             'api-ver': '3.0.3.2',
             'Referer': self.host
         }
-
         self.cache = {}
         self.cache_timeout = 300
 
-        # 初始化token
-        self.init_token()
 
     def getName(self):
         return self.name
@@ -357,7 +354,23 @@ t5lYKfpe8k83ZA==
         return result
 
     def homeVideoContent(self):
-        return {'list': []}
+        videos = []
+        try:
+            body = {"area": "0", "year": "0", "pageSize": "30", "sort": "d_id", "page": "1", "tid": "0"}
+            data = self.get_data(body, '/App/IndexList/indexList', use_cache=False)
+            if data and 'list' in data:
+                for item in data['list']:
+                    vod_continu = item.get('vod_continu', 0)
+                    remarks = '电影' if vod_continu == 0 else f'更新至{vod_continu}集'
+                    videos.append({
+                        "vod_id": f"{item.get('vod_id', '')}/{vod_continu}",
+                        "vod_name": item.get('vod_name', ''),
+                        "vod_pic": item.get('vod_pic', ''),
+                        "vod_remarks": remarks
+                    })
+        except Exception as e:
+            print(f"获取首页推荐失败: {e}")
+        return {'list': videos}
 
     def categoryContent(self, tid, pg, filter, extend):
         videos = []

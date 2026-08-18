@@ -19,6 +19,7 @@ YOUTUBE_CLASSES = [
     {'type_id': '最新新聞', 'type_name': '新聞'},
     {'type_id': '新聞直播', 'type_name': '新聞直播'},
     {'type_id': '漫劇', 'type_name': 'AI漫劇'}, 
+    {'type_id': '即時影像', 'type_name': '即時影像'},
     {'type_id': '幼教', 'type_name': '幼兒教育'},    
     {'type_id': '音樂', 'type_name': '音樂'},
     {'type_id': '日漫', 'type_name': '日漫'},
@@ -64,6 +65,7 @@ CATEGORY_QUERY = {
     '音樂': '音樂',
     '新聞': '新聞 時事',
     '新聞直播': '新聞直播 直播',
+    '即時影像': '即時影像 LIVE Cam',  # 新增
     '網紅': '網紅 YouTuber 創作者',
     '靈異': '靈異 鬼故事 恐怖',
     '探險': '探險 冒險 野外 生存',
@@ -121,6 +123,53 @@ CATEGORY_FILTERS = {
             ('星河剧场', '星河剧场'),
         ]),
     ),
+    '即時影像': [  # 增強精準區域與真直播過濾
+        _filter_group('region', '地區選擇', [
+            ('台灣全區', '即時影像 台灣 LIVE Cam 監視器'),
+            ('台北/新北', '即時影像 台北 新北 陽明山 象山 貓空 Livecam'),
+            ('宜蘭/花東', '即時影像 宜蘭 花蓮 台東 龜山島 東海岸 Livecam'),
+            ('阿里山/日月潭', '即時影像 阿里山 日月潭 奮起湖 二延平 Livecam'),
+            ('高雄/墾丁', '即時影像 高雄 墾丁 壽山 旗津 愛河 Livecam'),
+            ('台中/清境', '即時影像 台中 合歡山 武嶺 清境 Livecam'),
+            ('桃園/新竹/苗栗', '即時影像 桃園 新竹 苗栗 石門水庫 Livecam'),
+            ('彰化/雲林/嘉義', '即時影像 彰化 雲林 嘉義 Livecam'),
+            ('澎金馬離島', '即時影像 澎湖 金門 馬祖 離島 Livecam'),
+            ('日本全區', 'Japan Live cam ライブカメラ 日本'),
+            ('富士山', 'Mount Fuji Live cam 富士山 ライブカメラ'),
+            ('東京地標', 'Tokyo Live cam 東京 渋谷 新宿 ライブカメラ'),
+            ('京都/大阪', 'Kyoto Osaka Live cam 京都 大阪 ライブカメラ'),
+            ('北海道/雪景', 'Hokkaido Live cam 北海道 ライブカメラ'),
+            ('沖繩海景', 'Okinawa Live cam 沖縄 ライブカメラ'),
+            ('韓國全區', 'Korea Live cam 韓國 Livecam'),
+            ('首爾/漢江', 'Seoul Live cam 首爾 漢江 Livecam'),
+            ('釜山/濟州島', 'Busan Jeju Live cam 釜山 濟州島 Livecam'),
+            ('美國地標', 'USA Live cam 紐約 Times Square 洛杉磯 Livecam'),
+            ('歐洲景觀', 'Europe Live cam 倫敦 巴黎 阿爾卑斯山 Livecam'),
+            ('泰國/東南亞', 'Thailand Live cam 曼谷 芭達雅 Livecam'),
+            ('全球精選地標', 'EarthCam World Live Cam 全球地標 監視器'),
+        ]),
+        _filter_group('type', '主題類型', [
+            ('風景觀光', '即時影像 風景 景點 觀光 Live Cam'),
+            ('高山氣象雲海', '即時影像 武嶺 阿里山 氣象 雲海 雪景 Live'),
+            ('海灘海洋港口', '即時影像 海灘 墾丁 旗津 港口 海邊 Live'),
+            ('交通車流機場', '即時影像 國道 交通 車流 機場 飛機 起降 Live'),
+            ('動物生態水族', '即時影像 動物 生態 貓咪 鳥巢 水族館 Live'),
+            ('城市夜景街景', '即時影像 城市 夜景 街景 360 Live Cam'),
+        ]),
+        _filter_group('quality', '畫質規格', [
+            ('4K超高清', '4K 即時影像 2160p Live Stream'),
+            ('8K全景VR', '8K 360 VR 即時影像 Live'),
+        ]),
+        _filter_group('channel', '熱門官方頻道', [
+            ('阿里山國家風景區', '阿里山國家風景區管理處 Live'),
+            ('台北觀光即時影像', '台北觀光即時影像 象山 Live'),
+            ('高雄市政府觀光局', '高雄市政府觀光局 Live'),
+            ('Japan Live Camera', 'Japan Live Camera'),
+            ('EarthCam', 'EarthCam World Live Cam'),
+            ('SkylineWebcams', 'SkylineWebcams Live'),
+            ('東海岸國家風景區', '東海岸國家風景區管理處 Live'),
+        ])
+    ],    
 '日漫': _with_year(
     _filter_group('title', '熱門作品', [
         ('海賊王', 'onepiece ワンピース'),
@@ -1058,19 +1107,45 @@ class YouTubeLite:
     def _is_risky_best_video(self, item):
         codecs = (item.get('codecs') or '').lower()
         return 'av01' in codecs
-
     def choose_video_tracks(self, formats, quality=None):
         videos = [x for x in formats if x.get('vcodec') != 'none' and x.get('acodec') == 'none']
-        cap = 2160 if quality in ('best', '4k') else 1440 if quality == '2k' else 1080
-        videos = [x for x in videos if int(x.get('height') or 0) <= cap] or videos
+    
+        # 根據 quality 設定畫質過濾
+        if quality == '4k':
+            videos = [x for x in videos if int(x.get('height') or 0) >= 2160]
+        elif quality == '2k':
+            videos = [x for x in videos if 1440 <= int(x.get('height') or 0) < 2160]
+        elif quality == '1080p':
+            videos = [x for x in videos if 1000 <= int(x.get('height') or 0) < 1440]
+        elif quality == 'best':
+            # 選最高畫質，沒有上限
+            pass
+        else:
+            # 默認至少 1080p
+            videos = [x for x in videos if int(x.get('height') or 0) >= 1080]
+
+        if not videos:
+            # 如果沒有符合條件的，取所有視頻
+            videos = [x for x in formats if x.get('vcodec') != 'none' and x.get('acodec') == 'none']
+
+        # 按畫質從高到低排序
+        videos.sort(key=lambda x: int(x.get('height') or 0), reverse=True)
+
+        # 優先選擇 VP9，如果沒有則選擇 H264，最後才是 AV1
         vp9 = [x for x in videos if self._video_codec_priority(x) >= 3]
-        if vp9:
-            videos = vp9
-        sdr = [x for x in videos if not self._is_hdr_video(x)]
-        hdr = [x for x in videos if self._is_hdr_video(x)]
-        sort_key = lambda x: (int(x.get('height') or 0), int(x.get('bitrate') or 0))
-        sdr.sort(key=sort_key, reverse=True)
-        hdr.sort(key=sort_key, reverse=True)
+        h264 = [x for x in videos if self._video_codec_priority(x) == 2]
+        av1 = [x for x in videos if self._video_codec_priority(x) == 1]
+
+        # 選擇最高畫質的 VP9，如果沒有則選擇 H264
+        selected_videos = vp9 if vp9 else (h264 if h264 else videos)
+
+        # 按畫質排序
+        selected_videos.sort(key=lambda x: (int(x.get('height') or 0), int(x.get('bitrate') or 0)), reverse=True)
+
+        # 分離 SDR 和 HDR
+        sdr = [x for x in selected_videos if not self._is_hdr_video(x)]
+        hdr = [x for x in selected_videos if self._is_hdr_video(x)]
+
         tracks = []
         if sdr:
             item = sdr[0].copy()
@@ -1082,13 +1157,16 @@ class YouTubeLite:
             item['track_name'] = 'HDR'
             item['is_hdr'] = True
             tracks.append(item)
+    
         if not tracks:
+            # 如果還是沒有，取第一個可用的
             item = self.choose_playable(formats, quality)
             if item:
                 item = item.copy()
                 item['track_name'] = 'HDR' if self._is_hdr_video(item) else 'SDR'
                 item['is_hdr'] = self._is_hdr_video(item)
                 tracks.append(item)
+    
         debug_log('video tracks selected', [{'name': x.get('track_name'), 'itag': x.get('itag'), 'height': x.get('height'), 'codecs': x.get('codecs')} for x in tracks])
         return tracks
 
@@ -1576,6 +1654,13 @@ class Spider(Spider):
         filters = ext if isinstance(ext, dict) else {}
         query = self._build_category_keyword(cid, filters)
         videos, has_more = self._search_youtube_page(query, page)
+        
+        # 對於即時影像與新聞直播，強制進行真直播二次過濾
+        if cid in ('即時影像', '新聞直播') or any(kw in query.lower() for kw in ['即時影像', 'livecam', 'live cam', 'cctv', '直播']):
+            live_only = [v for v in videos if v.get('is_live') or '🔴' in v.get('vod_remarks', '') or 'LIVE' in v.get('vod_name', '').upper() or '直播' in v.get('vod_name', '')]
+            if live_only:
+                videos = live_only
+
         return {'list': videos, 'page': page, 'pagecount': page + 1 if has_more else page, 'limit': len(videos), 'total': len(videos)}
 
     def searchContent(self, key, quick, pg=1):
@@ -1627,26 +1712,43 @@ class Spider(Spider):
             video_id, quality = raw_pid.rsplit('@', 1)
         else:
             video_id, quality = raw_pid, '1080p'
+
+        # 支持更多畫質選項
         if quality not in ('best', 'hdr', '4k', '2k', '1080p'):
             quality = 'best'
+
         debug_log('playerContent', {'flag': flag, 'pid': pid, 'video_id': video_id, 'quality': quality})
+
         try:
             data = self.yt.extract(video_id)
-            all_tracks = self.yt.choose_video_tracks(data['formats'], 'best')
-            wanted_name = 'HDR' if quality == 'hdr' else 'SDR'
+
+            # 傳入正確的 quality 參數
+            all_tracks = self.yt.choose_video_tracks(data['formats'], quality)
+
+            # 如果請求 HDR 但沒有 HDR 軌道，使用 SDR
+            if quality == 'hdr':
+                wanted_name = 'HDR'
+            else:
+                wanted_name = 'SDR'
+
             video_tracks = [x for x in all_tracks if x.get('track_name') == wanted_name]
             if not video_tracks and all_tracks:
                 video_tracks = [all_tracks[0]]
+
             if video_tracks:
+                # 處理直播
                 hls_track = next((t for t in data['formats'] if t.get('itag') == 'hls'), None)
                 if data.get('is_live') and hls_track:
                     headers = self.header.copy()
                     headers.update(hls_track.get('headers') or {})
                     return {'parse': 0, 'jx': 0, 'url': hls_track['url'], 'header': headers, 'format': 'application/x-mpegURL'}
-                
+
+                # 獲取音頻
                 audio = self.yt.choose_audio(data['formats'])
                 debug_log('selected track', {'requested': wanted_name, 'track': {'name': video_tracks[0].get('track_name'), 'itag': video_tracks[0].get('itag'), 'height': video_tracks[0].get('height'), 'mime': video_tracks[0].get('mimeType')}, 'audio': audio.get('itag') if audio else None})
+
                 if audio:
+                    # 有音頻，使用 DASH 模式
                     cache_key = f'yt_{video_id}_{quality}'
                     self.setCache(cache_key, {
                         'video_tracks': video_tracks,
@@ -1658,11 +1760,15 @@ class Spider(Spider):
                         'expires': time.time() + 300,
                     })
                     return {'parse': 0, 'jx': 0, 'url': f'http://127.0.0.1:9978/proxy?do=py&type=mpd&vid={video_id}&quality={quality}', 'format': 'application/dash+xml'}
+            
+                # 沒有音頻，直接播放視頻
                 playable = video_tracks[0]
                 headers = self.header.copy()
                 headers.update(playable.get('headers') or {})
                 return {'parse': 0, 'jx': 0, 'url': playable['url'], 'header': headers}
+        
             raise Exception(f'沒有可直接播放的 {quality} 視頻流格式')
+
         except Exception as e:
             debug_log('playerContent error', repr(e))
             print(f'[YouTubeLite] 解析失敗: {e}')
@@ -1670,7 +1776,7 @@ class Spider(Spider):
             if self.proxy_str:
                 res['proxy'] = self.proxy_str
             return res
-
+    
     def localProxy(self, params):
         if params.get('do') != 'py':
             return None
@@ -1849,7 +1955,8 @@ class Spider(Spider):
 
     def _fetch_search_first_page(self, key):
         search_url = f'https://www.youtube.com/results?search_query={quote(str(key or ""))}'
-        if '直播' in str(key or ''):
+        key_lower = str(key or '').lower()
+        if any(kw in key_lower for kw in ['直播', '即時影像', 'livecam', 'live cam', 'live camera', 'cctv', ' 4k live', '8k live', ' live']):
             search_url += '&sp=EgJAAQ%3D%3D'
         r = self.session.get(search_url, timeout=10)
         html_str = r.text
@@ -1951,8 +2058,55 @@ class Spider(Spider):
                 return None
             title_obj = renderer.get('title') or renderer.get('headline') or {}
             title = title_obj.get('simpleText') or ''.join([x.get('text', '') for x in title_obj.get('runs', [])]) or 'YouTube Video'
-            dur = (renderer.get('lengthText') or {}).get('simpleText') or 'YouTube'
-            return {'vod_id': vid, 'vod_name': html.unescape(title), 'vod_pic': f'https://img.youtube.com/vi/{vid}/hqdefault.jpg', 'vod_remarks': dur}
+            
+            # 判斷是否為真實直播 (Live)
+            is_live = False
+            
+            # 1. 檢查 badges (如 LIVE / 直播)
+            badges = renderer.get('badges') or []
+            for b in badges:
+                b_ren = b.get('metadataBadgeRenderer') or {}
+                label = str(b_ren.get('label') or '').upper()
+                if 'LIVE' in label or '直播' in label:
+                    is_live = True
+                    break
+            
+            # 2. 檢查 thumbnailOverlays
+            if not is_live:
+                overlays = renderer.get('thumbnailOverlays') or []
+                for ov in overlays:
+                    time_status = ov.get('thumbnailOverlayTimeStatusRenderer') or {}
+                    if time_status.get('style') == 'LIVE':
+                        is_live = True
+                        break
+                    text_runs = (time_status.get('text') or {}).get('runs') or []
+                    for r in text_runs:
+                        txt = str(r.get('text') or '').upper()
+                        if 'LIVE' in txt or '直播' in txt:
+                            is_live = True
+                            break
+            
+            # 3. 檢查 viewCountText (如 "1,234 人正在觀看" / "watching now")
+            if not is_live:
+                view_text_obj = renderer.get('viewCountText') or {}
+                view_str = view_text_obj.get('simpleText') or ''.join([x.get('text', '') for x in view_text_obj.get('runs', [])])
+                if '正在觀看' in view_str or 'watching' in view_str.lower():
+                    is_live = True
+
+            dur = (renderer.get('lengthText') or {}).get('simpleText')
+            
+            if is_live:
+                dur = '🔴 4K 直播中' if '4K' in title.upper() else '🔴 直播中'
+            elif not dur:
+                dur = 'YouTube'
+
+            return {
+                'vod_id': vid,
+                'vod_name': html.unescape(title),
+                'vod_pic': f'https://img.youtube.com/vi/{vid}/hqdefault.jpg',
+                'vod_remarks': dur,
+                'is_live': is_live
+            }
         except Exception:
             return None
 

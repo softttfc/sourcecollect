@@ -10,14 +10,12 @@ https://github.catvod.com/https://raw.githubusercontent.com/tushen6/Tomorrow/mas
 
 https://github.catvod.com/https://raw.githubusercontent.com/tushen6/Tomorrow/master/tvbox.json
 
-## ⚙️GitHub加速站 
+## ⚙️GitHub镜像加速站 
 - https://gh-proxy.com/
 - https://github.catvod.com/      
 - https://gh.xxooo.cf/
 - https://gh.llkk.cc/
 - https://github.ednovas.xyz/
-- https://gitdl.cn/         
-- https://cf.ghproxy.cc/
 - https://ghproxy.net/
 - https://gh.aptv.app/
 - https://gitpr.xmcom.us.kg/
@@ -30,7 +28,7 @@ https://github.catvod.com/https://raw.githubusercontent.com/tushen6/Tomorrow/mas
 - （4）饭太硬：https://www.饭太硬.cc/tv
 - （5）肥猫：http://肥猫.net/tv
 - （6）vox：http://rihou.cc:88/demo.php
-- （7）小米：https://gh-proxy.org/https://raw.githubusercontent.com/ggrrttyyiii/CatVodSpider/refs/heads/main/json/demo.json
+- （7）小米：https://www.tangsan.fun/tv
 - （8）摸鱼儿：https://6800.kstore.vip/fish.json
 - （9）讴歌：https://欧歌.v.nxog.top/m
 - （10）PG： https://tvbox.catvod.com/jsm.json
@@ -39,18 +37,7 @@ https://github.catvod.com/https://raw.githubusercontent.com/tushen6/Tomorrow/mas
 - （13）王二小：https://9280.kstore.vip/newwex.json
 - （14）东篱：https://16151.kstore.space
 - （15）嗷呜：http://www.英格里希嗷呜.top/tv
-- （16）潇洒：https://9877.kstore.space/single.json
-
-## 🔰影视软件下载地址
-- [OK影视下载地址](https://pan.quark.cn/s/de15b29d06ab)
-- [蜂蜜影视下载地址](https://pan.quark.cn/s/dbb8599d1a0d)
-- [影视仓下载地址](https://pan.quark.cn/s/5b22c647669d)
-- [Easybox下载地址](https://pan.quark.cn/s/e26f04897443)
-- [peekpili下载地址](https://pan.quark.cn/s/fac3791a0c24)
-- [TVBox_黑盒和白盒下载地址](https://pan.quark.cn/s/4670b8ee41a0)
-- [影視+下载地址](https://pan.quark.cn/s/d004fc6d8d36)
-- [宝盒下载地址](https://pan.quark.cn/s/6eef2fa1b59a)
-
+- （16）潇洒：https://9877.kstore.space/one.json
  
 ## 🫶使用说明
 - 所有资源均收集于互联网，仅供测试研究使用，切勿商用；

@@ -8,21 +8,10 @@
             "key": "兔小贝",
             "name": "兔小贝 • 首页",
             "type": 3,
-            "api": "./js/drpy2.min.js",
-            "ext": "./js/兔小贝.js",
-            "style": {
-                "type": "rect",
-                "ratio": 1.597
-            }
-        },
-        {
-            "key": "配置中心",
-            "name": "配置 • 中心",
-            "type": 3,
-            "api": "csp_Config",
-            "searchable": 0,
+            "api": "csp_TuXiaoBei",
+            "searchable": 1,
+            "quickSearch": 0,
             "changeable": 0,
-            "indexs": 0,
             "style": {
                 "type": "rect",
                 "ratio": 1.597
@@ -32,8 +21,23 @@
             "key": "贝乐虎",
             "name": "贝乐虎 • 儿童",
             "type": 3,
-            "api": "./js/drpy2.min.js",
-            "ext": "./js/贝乐虎.js",
+            "api": "csp_BeiLeHu",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
+            "style": {
+                "type": "rect",
+                "ratio": 1.597
+            }
+        },
+        {
+            "key": "童趣",
+            "name": "童趣 • 儿童",
+            "type": 3,
+            "api": "csp_TongQu",
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "style": {
                 "type": "rect",
                 "ratio": 1.597
@@ -45,8 +49,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童拼音.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -62,8 +66,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童识字.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -79,8 +83,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童英语.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -96,8 +100,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童硬笔.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -113,8 +117,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童思维.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -130,8 +134,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童口才.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -147,8 +151,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童编程.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -164,8 +168,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/儿童武术.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -266,8 +270,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/小灯塔百科.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -283,8 +287,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/小灯塔科学.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -300,8 +304,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/小灯塔地理.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -317,8 +321,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/小灯塔国学.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -334,8 +338,8 @@
             "type": 3,
             "api": "csp_Bili",
             "searchable": 0,
-            "quickSearch": 1,
-            "filterable": 1,
+            "quickSearch": 0,
+            "changeable": 0,
             "ext": {
                 "json": "./json/小灯塔人文.json",
                 "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
@@ -409,168 +413,6 @@
             "ips": [
                 "9.9.9.9",
                 "149.112.112.112"
-            ]
-        }
-    ],
-    "ijk": [
-        {
-            "group": "软解码",
-            "options": [
-                {
-                    "category": 4,
-                    "name": "opensles",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "overlay-format",
-                    "value": "842225234"
-                },
-                {
-                    "category": 4,
-                    "name": "framedrop",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "soundtouch",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "start-on-prepared",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "http-detect-range-support",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "fflags",
-                    "value": "fastseek"
-                },
-                {
-                    "category": 2,
-                    "name": "skip_loop_filter",
-                    "value": "48"
-                },
-                {
-                    "category": 4,
-                    "name": "reconnect",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "enable-accurate-seek",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-auto-rotate",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-handle-resolution-change",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-hevc",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "dns_cache_timeout",
-                    "value": "600000000"
-                }
-            ]
-        },
-        {
-            "group": "硬解码",
-            "options": [
-                {
-                    "category": 4,
-                    "name": "opensles",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "overlay-format",
-                    "value": "842225234"
-                },
-                {
-                    "category": 4,
-                    "name": "framedrop",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "soundtouch",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "start-on-prepared",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "http-detect-range-support",
-                    "value": "0"
-                },
-                {
-                    "category": 1,
-                    "name": "fflags",
-                    "value": "fastseek"
-                },
-                {
-                    "category": 2,
-                    "name": "skip_loop_filter",
-                    "value": "48"
-                },
-                {
-                    "category": 4,
-                    "name": "reconnect",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "enable-accurate-seek",
-                    "value": "0"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-auto-rotate",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-handle-resolution-change",
-                    "value": "1"
-                },
-                {
-                    "category": 4,
-                    "name": "mediacodec-hevc",
-                    "value": "1"
-                },
-                {
-                    "category": 1,
-                    "name": "dns_cache_timeout",
-                    "value": "600000000"
-                }
             ]
         }
     ]

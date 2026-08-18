@@ -1,5 +1,6 @@
 {
   "spider": "./jar/vox.jar",
+  //"warningText": "禁止任何商业用途，仅限个人学习爬虫原理使用。",
   "logo": "./1.gif",
   "wallpaper": "http://饭太硬.top/深色壁纸/api.php",
   "lives": [
@@ -323,6 +324,20 @@
       }
     },
     {
+      "key": "csp_Zmi",
+      "name": "🐌蜗牛┃[网盘]",
+      "type": 3,
+      "api": "csp_Zmi",
+      "searchable": 1,
+      "changeable": 1,
+      "timeout": 60,
+      "ext": {
+        "cookie": "",
+        "filters": "",
+        "sites": ""
+      }
+    },
+    {
       "key": "csp_Wogg",
       "name": "😁玩偶┃[网盘]",
       "type": 3,
@@ -332,7 +347,7 @@
       "filterable": 1,
       "changeable": 1,
       "ext": {
-        "sites": "https://wogg.xxooo.cf",
+        "sites": "https://woggpan.xxooo.cf",
         "filters": "./json/wogg.json",
         "proxy": "noproxy"
       }
@@ -362,7 +377,7 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "sites": "http://xiaocgege.shop",
+        "sites": "http://tvpanpan.site",
         "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
@@ -422,7 +437,7 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "sites": "https://zhizhen1.top",
+        "sites": "https://www.mihdr.top",
         "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
@@ -438,21 +453,6 @@
       "timeout": 60,
       "ext": {
         "sites": "https://tv.yydsys.top/",
-        "filters": "./json/wogg2.json",
-        "proxy": "noproxy"
-      }
-    },
-    {
-      "key": "短木网盘",
-      "name": "🙄短木┃[网盘]",
-      "type": 3,
-      "api": "csp_Wobg",
-      "searchable": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 60,
-      "ext": {
-        "sites": "https://duanmu.laozhangone.top",
         "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
@@ -553,18 +553,6 @@
         "package": "com.yingfu.mobile.android.pgsp",
         "buildNumber": "2003",
         "buildSignature": "054FA8DDA4319C6B6A9B954CA5777541C993F00B1B0BD4394F7EDE48184C4594"
-      }
-    },
-    {
-      "key": "金牌GET",
-      "name": "🥇金牌┃[APP]",
-      "type": 3,
-      "api": "csp_AppGet",
-      "ext": {
-        "host": "https://qj4.catbb.xyz",
-        "datakey": "eecbio48dsq13kkk",
-        "init": "V122",
-        "api": 2
       }
     },
     {
@@ -991,7 +979,7 @@
       "api": "csp_Market",
       "searchable": 0,
       "changeable": 0,
-      "ext": "http://rihou.cc:88/json/market.json"
+      "ext": "http://jiduo.rihou.cc:6250/jiduo.php/market.json"
     },
     {
       "key": "csp_PanSou",

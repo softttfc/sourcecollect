@@ -1,8 +1,18 @@
 {
  "sites": [
   {
+   "key": "py_sszzyy",
+   "name": "西瓜影视[py]",
+   "type": 3,
+   "api": "./py/sszzyy.py",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "ext": {}
+  },
+  {
    "key": "py_fqdm",
-   "name": "影视|PY",
+   "name": "番茄动漫[py]",
    "type": 3,
    "api": "./py/fqdm.py",
    "searchable": 1,
@@ -10,8 +20,17 @@
    "filterable": 1
   },
   {
+   "key": "py_ss",
+   "name": "影视|PY",
+   "type": 3,
+   "api": "./py/四色.py",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1
+  },
+  {
    "key": "py_xlys",
-   "name": "雪落影视|PY",
+   "name": "雪落影视[py]",
    "type": 3,
    "api": "./py/xlys.py",
    "searchable": 1,
