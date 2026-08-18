@@ -21,7 +21,7 @@
             "indexs": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
         {
@@ -148,9 +148,7 @@
                 "site": [
                     "http://tvpanpan.site",
                     "http://feimo.fun",
-                    "http://xiaocgege.shop",
-                    "http://www.xiaocgege.shop",
-                    "https://www.xiaocge.fun"
+                    "https://www.mmpanpan.site"
                 ]
             },
             "timeout": 60
@@ -182,8 +180,9 @@
             "changeable": 1,
             "ext": {
                 "site": [
-                    "https://mihdr.top",
-                    "https://www.miqk.cc",
+                    "https://sp.zzzy.shop",
+                    "https://www.zhizhen8.click",
+                    "https://www.zhizhen1.top",
                     "https://www.mihdr.top"
                 ]
             },
@@ -237,11 +236,9 @@
             "changeable": 1,
             "ext": {
                 "site": [
-                    "https://www.2xiaopan.top",
-                    "https://2xiaopan.top",
-                    "https://www.erxiaozhan.top",
-                    "https://www.2xiaozhan.top",
-                    "https://wexwp.cc"
+                    "http://www.wexwp.cc",
+                    "https://www.2xiaopan.one",
+                    "https://www.wexwp.cc"
                 ]
             },
             "timeout": 60

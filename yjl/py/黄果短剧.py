@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # coding=utf-8
-import re, json, requests, base64
+import re, json, requests, base64, socket
 from urllib.parse import quote, unquote, urlencode
 from base.spider import Spider
 try:
@@ -9,6 +9,80 @@ try:
 except Exception:
     AES = None
     b64encode = None
+
+
+_PIN_MAP = {}
+_PIN_SEEN = set()
+_PIN_INSTALLED = [False]
+_DOH_LIST = [
+    'https://doh.pub/dns-query',
+    'https://dns.alidns.com/resolve',
+    'https://dns.google/resolve',
+    'https://cloudflare-dns.com/dns-query',
+]
+
+
+def _install_pin():
+    if _PIN_INSTALLED[0]:
+        return
+    _PIN_INSTALLED[0] = True
+    _orig = socket.getaddrinfo
+
+    def _pinned(host, port, *args, **kwargs):
+        _ips = _PIN_MAP.get(host)
+        if _ips:
+            return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (ip, port)) for ip in _ips]
+        return _orig(host, port, *args, **kwargs)
+
+    socket.getaddrinfo = _pinned
+
+
+def _doh_resolve(hostname):
+    picked = []
+    for _u in _DOH_LIST:
+        try:
+            _r = requests.get(_u, params={'name': hostname, 'type': 'A'},
+                              headers={'accept': 'application/dns-json'}, timeout=6, verify=False)
+            _j = _r.json()
+            for _a in _j.get('Answer', []):
+                if _a.get('type') == 1 and _a.get('data'):
+                    _d = _a['data']
+                    if _d and not _d.startswith('0.'):
+                        picked.append(_d)
+            if picked:
+                break
+        except Exception:
+            continue
+    return picked
+
+
+def _doh_pin_domain(hostname, fallback=None):
+    """设备系统 DNS 被劫持时,通过 DoH 解析真实 IP 并钉扎,requests 即可直连真实 IP。
+    仅对指定 hostname 生效,不影响其他域名。DoH 全失败时用 fallback IP 兜底。"""
+    try:
+        if not hostname:
+            return
+        if hostname in _PIN_SEEN:
+            return
+        _install_pin()
+        picked = _doh_resolve(hostname)
+        if not picked and fallback:
+            picked = list(fallback)
+        if picked:
+            _PIN_MAP[hostname] = picked
+        _PIN_SEEN.add(hostname)
+    except Exception:
+        pass
+
+
+def _pin_url_host(url):
+    try:
+        _m = re.match(r'https?://([^/:]+)', url or '')
+        if _m:
+            _doh_pin_domain(_m.group(1))
+    except Exception:
+        pass
+
 
 class Spider(Spider):
     def __init__(self):
@@ -60,9 +134,14 @@ class Spider(Spider):
         return self.name
 
     def init(self, extend=""):
-        pass
+        _doh_pin_domain(self.host.split('//')[-1].split('/')[0],
+                        fallback=['43.228.232.200', '43.230.113.204', '43.230.112.202'])
+        _doh_pin_domain('pic.yrfmba.cn')
+        _doh_pin_domain('yd-hls.utxxds.cn')
+        _doh_pin_domain('tp4.yrfmba.cn')
 
     def getHtml(self, url):
+        _pin_url_host(url)
         for attempt in range(3):
             for kw in ({"verify": False}, {}):
                 try:
@@ -286,6 +365,11 @@ class Spider(Spider):
 
     def get_tab(self, filter, extend):
         for d in (filter, extend):
+            if isinstance(d, str):
+                try:
+                    d = json.loads(d)
+                except Exception:
+                    d = None
             if isinstance(d, dict):
                 if d.get("sub"):
                     return d.get("sub")
@@ -381,6 +465,11 @@ class Spider(Spider):
 
     def detailContent(self, ids):
         result = {"list": []}
+        if isinstance(ids, str):
+            try:
+                ids = json.loads(ids)
+            except Exception:
+                pass
         vid = ids[0] if isinstance(ids, list) else ids
         if isinstance(vid, str) and vid.startswith("folder_topic_"):
             return self.topicFolderDetail(vid)
@@ -564,13 +653,25 @@ class Spider(Spider):
         result["page"] = page
         return result
 
+    def _local_url(self, typ, url):
+        try:
+            b = self.getProxyUrl()
+            if '?' not in b:
+                b += '?do=py'
+            return b + '&type=' + typ + '&url=' + quote(url, safe='')
+        except Exception:
+            return url
+
     def playerContent(self, flag, id, vipFlags):
         result = {"parse": 0, "playUrl": "", "url": "", "header": ""}
         if isinstance(id, str) and id.startswith("folder_topic_"):
             return {"parse": 1, "url": id, "header": {}}
         play_url = self.fix_url(id) if id else ""
         if play_url.endswith('.m3u8') or 'm3u8' in play_url or '.mp4' in play_url:
-            result["url"] = play_url
+            if '.m3u8' in play_url:
+                result["url"] = self._local_url('m3u8', play_url)
+            else:
+                result["url"] = play_url
             result["header"] = json.dumps({"User-Agent": self.header["User-Agent"], "Referer": self.host})
             return result
         if re.fullmatch(r'\d+', play_url):
@@ -594,18 +695,53 @@ class Spider(Spider):
             m = re.search(r'(https?://[^\s"<>\\]*\.m3u8[^\s"<>\\]*)', html)
             if m:
                 m3u8 = m.group(1).replace("\\u0026", "&")
-        result["url"] = m3u8
+        result["url"] = self._local_url('m3u8', m3u8) if m3u8 else ""
         result["header"] = json.dumps({"User-Agent": self.header["User-Agent"], "Referer": self.host})
         return result
 
     def localProxy(self, param):
-        pic = ""
-        if param:
-            pic = param.get("url") or param.get("pic") or ""
-        if not pic:
-            return [404, "text/plain", "nf"]
-        pic = unquote(pic)
         try:
+            if isinstance(param, str):
+                try:
+                    param = json.loads(param)
+                except Exception:
+                    param = {}
+            if not isinstance(param, dict):
+                param = {}
+            pt = param.get("type") or ""
+            pic = param.get("url") or param.get("pic") or ""
+            if isinstance(pic, list):
+                pic = pic[0] if pic else ""
+            if not pic:
+                return [404, "text/plain", "nf"]
+            pic = unquote(pic)
+            _pin_url_host(pic)
+            if pt == "m3u8":
+                r = requests.get(pic, headers=self.header, timeout=20, verify=False)
+                if r.status_code != 200:
+                    return [404, "text/plain", "nf"]
+                body = r.text
+                b = self.getProxyUrl()
+                if '?' not in b:
+                    b += '?do=py'
+
+                def _proxy(url):
+                    return b + '&type=ts&url=' + quote(url, safe='')
+
+                body = re.sub(r'(URI=")([^"]+)(")',
+                              lambda m: m.group(1) + _proxy(m.group(2)) + m.group(3), body)
+                lines = []
+                for line in body.splitlines():
+                    s = line.strip()
+                    if s.startswith('http://') or s.startswith('https://'):
+                        line = _proxy(s)
+                    lines.append(line)
+                return [200, "application/vnd.apple.mpegurl;charset=UTF-8", '\n'.join(lines).encode('utf-8')]
+            if pt == "ts":
+                r = requests.get(pic, headers=self.header, timeout=20, verify=False)
+                if r.status_code != 200:
+                    return [404, "text/plain", "nf"]
+                return [200, "video/mp2t", r.content]
             r = requests.get(pic, headers=self.header, timeout=15, verify=False)
             ct = r.content
             if ct[:3] == b"\xff\xd8\xff":

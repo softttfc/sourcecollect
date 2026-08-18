@@ -407,7 +407,7 @@
       "changeable": 1,
       "timeout": 60,
       "ext": {
-        "sites": "https://www.wexwp.cc",
+        "sites": "https://wexwp.cc",
         "filters": "./json/wogg2.json",
         "proxy": "noproxy"
       }
