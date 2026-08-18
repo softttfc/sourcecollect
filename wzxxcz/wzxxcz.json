@@ -275,7 +275,7 @@
             "indexs": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
         {
@@ -519,7 +519,7 @@
             },
             "timeout": 60
         },
-        {
+		{
             "key": "二小",
             "name": "🐂二小4K弹幕",
             "type": 3,
@@ -530,11 +530,9 @@
             "changeable": 1,
             "ext": {
                 "site": [
-                    "https://www.2xiaopan.top",
-                    "https://2xiaopan.top",
-                    "https://www.erxiaozhan.top",
-                    "https://www.2xiaozhan.top",
-                    "https://wexwp.cc"
+                    "http://www.wexwp.cc",
+                    "https://www.2xiaopan.one",
+                    "https://www.wexwp.cc"
                 ]
             },
             "timeout": 60
@@ -587,8 +585,9 @@
             "changeable": 1,
             "ext": {
                 "site": [
-                    "https://mihdr.top",
-                    "https://www.miqk.cc",
+                    "https://sp.zzzy.shop",
+                    "https://www.zhizhen8.click",
+                    "https://www.zhizhen1.top",
                     "https://www.mihdr.top"
                 ]
             },
@@ -607,9 +606,7 @@
                 "site": [
                     "http://tvpanpan.site",
                     "http://feimo.fun",
-                    "http://xiaocgege.shop",
-                    "http://www.xiaocgege.shop",
-                    "https://www.xiaocge.fun"
+                    "https://www.mmpanpan.site"
                 ]
             },
             "timeout": 60
@@ -1684,22 +1681,6 @@
                 "deviceModel": "V2309A",
                 "pkg": "com.damahou.tv",
                 "sk": "SK-woniu-thanks",
-                "ver": "1"
-            }
-        },
-		{
-            "key": "云朵影视",
-            "name": "🌥️云朵影视",
-            "type": 3,
-            "api": "csp_App3Q",
-            "ext": {
-                "host": "https://ds3xy2yunsa.xyz",
-                "finger": "SF-F5F11CB15897115AE6BCFE063C288F730CA865588F572C780A3E8477D0DD3776",
-                "updateId": "175070c3-075c-468b-950a-bf575769f4f1",
-                "deviceBrand": "vivo",
-                "deviceModel": "V2309A",
-                "pkg": "com.tvcloud.io",
-                "sk": "SK-sk_13oXDZ7u9j2Tk1c0cawWVFfO",
                 "ver": "1"
             }
         },
@@ -4829,21 +4810,6 @@
             }
         },
 		{
-            "key": "爱影",
-            "name": "🎞️爱影影视",
-            "type": 3,
-            "api": "csp_AppQi",
-            "searchable": 1,
-            "changeable": 1,
-            "ext": {
-                "site": "https://aysappto.oss-cn-chengdu.aliyuncs.com/q26.txt",
-                "dataKey": "0UKM8jkasM8tdzgW",
-                "dataIv": "0UKM8jkasM8tdzgW",
-                "init": "initV122",
-                "ua": "okhttp/3.10.0"
-            }
-        },
-		{
             "key": "怀桑",
             "name": "🌱怀桑影视",
             "type": 3,
@@ -4856,6 +4822,19 @@
                 "dataIv": "kj37zs29q22jk96t",
                 "init": "initV122",
                 "ua": "okhttp/3.10.0"
+            }
+        },
+		{
+            "key": "世界",
+            "name": "🗺️世界影视",
+            "type": 3,
+            "api": "csp_AppGet",
+            "searchable": 1,
+            "changeable": 1,
+            "ext": {
+                "url": "https://appcms.4ksj.app",
+                "dataKey": "O3K6rYx75Q4xtiIE",
+                "dataIv": "O3K6rYx75Q4xtiIE"
             }
         },
 		{
@@ -35644,6 +35623,22 @@
             }
         },
 		{
+            "key": "双星99",
+            "name": "🤣双星动漫",
+            "type": 3,
+            "api": "csp_App99",
+            "ext": {
+                "host": "http://175.178.65.250:19987/app/bn",
+                "LoginPath": "/app/log",
+                "appkey": "f66f65db127e48449f073c2c6eb0f993",
+                "versionName": "6.4.5",
+                "name": "双子星动漫",
+                "package": "com.yingfu.mobile.android.pgsp",
+                "buildNumber": "2003",
+                "buildSignature": "054FA8DDA4319C6B6A9B954CA5777541C993F00B1B0BD4394F7EDE48184C4594"
+            }
+        },
+		{
             "key": "喵呜动漫",
             "name": "🐈喵呜动漫",
             "type": 3,
@@ -35932,7 +35927,7 @@
             "changeable": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36021,7 +36016,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36038,7 +36033,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36055,7 +36050,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36072,7 +36067,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36089,7 +36084,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36102,7 +36097,7 @@
             "changeable": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36115,7 +36110,7 @@
             "changeable": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36128,7 +36123,7 @@
             "changeable": 0,
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36145,7 +36140,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36162,7 +36157,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36179,7 +36174,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
 		{
@@ -36196,7 +36191,7 @@
             },
             "style": {
                 "type": "rect",
-                "ratio": 1.597
+                "ratio": 1.618
             }
         },
         {
