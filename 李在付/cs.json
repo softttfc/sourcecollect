@@ -1408,7 +1408,13 @@
     ],
     "parses": [],
     "lives": [
-    ],
+        {
+            "name": "📺辽宁直播",
+            "type": 0,
+            "url": "assets://iptv/辽宁直播.m3u",
+            "epg": "http://igtv.top:2132?ch={name}&date={date}"
+        }
+	],
     "flags": [
         "youku",
         "优酷",

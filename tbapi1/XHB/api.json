@@ -71,19 +71,6 @@
       "api": "csp_HBTangDou"
     },
     {
-      "key": "muxi",
-      "name": "人人|弹幕",
-      "type": 3,
-      "api": "csp_HBrenren"
-    },
-    {
-      "key": "fishhxq",
-      "name": "韩圈|弹幕",
-      "type": 3,
-      "api": "csp_FishHxq",
-      "ext": "DyoqWQInJUMuGFdcDzo2Bjg3KgUuDwoENzYhHDhdUQEuUzRBDVAfHzsCBA8DJgYFDTFNHgAnKUg"
-    },
-    {
       "key": "巴士",
       "name": "巴士|弹幕",
       "type": 3,
@@ -302,36 +289,7 @@
         "appiv": "123456789abcdefg"
       }
     },*/
-    {
-      "key": "枫叶电影",
-      "name": "枫叶|弹幕",
-      "type": 3,
-      "api": "csp_HBPQ",
-      "ext": {
-        "请求头": "手机",
-        "简介": "剧情介绍:+text cor3\">[*],&&</div>",
-        "图片": "data-src=\"&&\"[替换:amp;>>空]",
-        "主页url": "https://www.cd-zj.com/label/qq.html",
-        "副标题": "ft2\">&&</i>",
-        "线路数组": "<i class=\"fa ds-dianying\">&&</span>",
-        "播放数组": "anthology-list-play size\">&&</ul>",
-        "分类url": "https://www.cd-zj.com/cupfox-list/{cateId}-{area}--{class}-----{catePg}---{year}.html",
-        "分类": "短剧$5#电视剧$2#电影$1#动漫$4#综艺$3"
-      }
-    },
-    {
-      "key": "茉莉",
-      "name": "茉莉|弹幕",
-      "type": 3,
-      "searchable": 1,
-      "changeable": 1,
-      "api": "csp_HBgetapp",
-      "ext": {
-        "host": "https://gitee.com/wmmoliill/wimg/raw/master/img/bk/9.txt",
-        "appkey": "88689667dce61725",
-        "appiv": "88689667dce61725"
-      }
-    },
+
     {
       "key": "灵虎",
       "name": "灵虎|弹幕",
