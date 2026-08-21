@@ -37,6 +37,16 @@
       "api": "csp_YGP",
       "searchable": 0
     },
+   {
+  "key": "汽水音乐",
+  "name": "汽水｜音乐",
+  "type": 3,
+  "api": "./py/汽水音乐.py",
+  "searchable": 1,
+  "quickSearch": 1,
+  "filterable": 0
+},
+
     {
       "key": "热播影视",
       "name": "热播｜APP",
@@ -58,7 +68,6 @@
       "quickSearch": 1,
       "filterable": 0
     },
-
      {
       "key": "枫叶影视",
       "name": "枫叶 ｜秒播",
