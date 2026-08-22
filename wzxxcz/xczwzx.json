@@ -16,6 +16,12 @@
             "url": "https://gh-proxy.org/https://raw.githubusercontent.com/adminouyang/231006/refs/heads/main/py/%E4%BC%98%E8%B4%A8%E6%BA%90/output/ipv4/result.txt"
         },
 		{
+            "name": "内地港台",
+            "type": 0,
+            "ua": "okhttp/5.3.2",
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/内地港台"
+        },
+		{
             "name": "MIT",
             "type": 0,
             "playerType": 2,
@@ -846,18 +852,6 @@
             "ext": "http://m51.gotto.top/api.php/v1.vod"
         },
         {
-            "key": "鬼片",
-            "name": "🥇鬼片影视",
-            "type": 3,
-            "api": "./js/鬼片影视.js"
-        },
-        {
-            "key": "apple",
-            "name": "🥇苹果影视",
-            "type": 3,
-            "api": "./js/苹果影视.js"
-        },
-        {
             "key": "老丫",
             "name": "🍞老雅影视",
             "type": 3,
@@ -1002,6 +996,42 @@
             "name": "🐝采集聚合",
             "type": 3,
             "api": "./py/采集聚合.py"
+        },
+		{
+            "key": "飞快TV1",
+            "name": "🕊️飞快TV1",
+            "type": 3,
+            "api": "./py/飞快TV🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "Auete影视",
+            "name": "🍊Auete影视",
+            "type": 3,
+            "api": "./py/Auete影视🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "大马猴影视",
+            "name": "🐒大马猴影视",
+            "type": 3,
+            "api": "./py/大马猴🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "pomo影视",
+            "name": "🍊pomo影视",
+            "type": 3,
+            "api": "./py/pomo🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "枫叶影院",
+            "name": "🍁枫叶影院",
+            "type": 3,
+            "api": "./py/枫叶影院🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "泡泡影院1",
+            "name": "🐳泡泡影院1",
+            "type": 3,
+            "api": "./py/泡泡影院🍀TG @hshsjk9.py"
         },
 		{
             "key": "看剧AI",
@@ -1238,7 +1268,7 @@
         },
         {
             "key": "苹果",
-            "name": "🍎苹果影视1",
+            "name": "🍎苹果影视",
             "type": 3,
             "api": "csp_AppDrama",
             "searchable": 1,
