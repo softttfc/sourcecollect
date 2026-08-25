@@ -10,7 +10,7 @@
     
     "lives": [
     {
-        "name": "咪咕",
+        "name": "咪咕HD-1",
         "type": 0,
         "url": "http://2015888.xyz/ysp/hb/hbgd.txt",
         "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
@@ -179,24 +179,6 @@
         "timeout": 10
     },
     {
-        "key": "华谊",
-        "name": "华谊🔹App",
-        "type": 3,
-        "api": "csp_AppDrama",
-        "ext": {
-            "appName": "华谊",
-            "publicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp9Ek4wIlQAtwFnuBRlsFiow2tr+4UOciGeNKbY7nL74etUqUb6fvpOSOHhFEfaWlfwUpOB17x3JEL3No19nfjCeVYrYPjlJcgoqUWH/tfIfFAQWvtxBIBlKazkhw8d3ChysWmeWRikKqkBsVRY4oqNPuj4sjm6Zult0U4I4prRQIDAQAB",
-            "dataKey": "NDBYSZR1DMRRZ05NSUCWEJNIYWLBPT0=",
-            "dataIv": "OC1A06E197EF10CF3F6058CA7A803B5E",
-            "pkg": "com.muyue.tool",
-            "host": "",
-            "site": "https://vip.123pan.cn/1851089669/oss/az5.txt",
-            "version": "1.0.0.4",
-            "decrypt": "1"
-        },
-        "timeout": 10
-    },
-    {
         "key": "天堂",
         "name": "天堂🔹App",
         "type": 3,
@@ -264,14 +246,6 @@
             "init": "initV120",
             "ua": "okhttp/3.10.0"
         },
-        "timeout": 10
-    },
-    {
-        "key": "农民影视",
-        "name": "农民🔹影视",
-        "type": 3,
-        "api": "csp_Wwys",
-        "ext": "https://vip.wwgz.cn:5200",
         "timeout": 10
     },
     {

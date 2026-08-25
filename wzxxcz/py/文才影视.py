@@ -222,4 +222,3 @@ class Spider(Spider):
 
     def getvod(self, array):
         return [{self.convert_field_name(k): v for k, v in item.items()} for item in array]
-
