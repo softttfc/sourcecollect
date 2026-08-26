@@ -74,6 +74,7 @@ jobs:
                 [tianjitop/llllo4k]="https://github.com/tianjitop/llllo.git"
                 [潇洒]="https://github.com/PizazzGY/NewTVBox.git"
                 [qist_tvbox工具]="https://github.com/qist/tvbox.git"
+                [dlgt7_TVbox-interface教程]="https://github.com/dlgt7/TVbox-interface.git"
                 
                  
                [TB18]="https://github.com/LIUJEI/TB.git" 
