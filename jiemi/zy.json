@@ -12,7 +12,7 @@
       "ext": "Douban"
     },
     {
-      "name": "更新日期:【20260816】",
+      "name": "更新日期:【20260825】",
       "key": "Y360",
       "type": 3,
       "api": "csp_Y360Amns",
@@ -37,6 +37,15 @@
       "key": "MyConfig",
       "type": 3,
       "api": "csp_AAConfigAmns",
+      "searchable": 0,
+      "quickSearch": 0,
+      "changeable": 0
+    },
+    {
+      "name": "📁资源┃中心",
+      "key": "MyAll",
+      "type": 3,
+      "api": "csp_MyAllAmns",
       "searchable": 0,
       "quickSearch": 0,
       "changeable": 0
@@ -804,78 +813,6 @@
       "quickSearch": 1,
       "changeable": 0,
       "genre": "music"
-    },
-    {
-      "name": "📁本地┃我的",
-      "key": "MyLocal",
-      "type": 3,
-      "api": "csp_MyLocalAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁夸夸┃我的",
-      "key": "MyQuark",
-      "type": 3,
-      "api": "csp_MyQuarkAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁摆渡┃我的",
-      "key": "MyBaidu",
-      "type": 3,
-      "api": "csp_MyBaiduAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁优汐┃我的",
-      "key": "MyUc",
-      "type": 3,
-      "api": "csp_MyUcAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁光雅┃我的",
-      "key": "MyGuangya",
-      "type": 3,
-      "api": "csp_MyGuangyaAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁阿狸┃我的",
-      "key": "Myali",
-      "type": 3,
-      "api": "csp_MyaliAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁115┃我的",
-      "key": "My115",
-      "type": 3,
-      "api": "csp_My115Amns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
-    },
-    {
-      "name": "📁123┃我的",
-      "key": "My123",
-      "type": 3,
-      "api": "csp_My123Amns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
     },
     {
       "name": "🔍fish┃盘搜",

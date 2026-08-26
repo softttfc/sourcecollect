@@ -205,7 +205,7 @@
     },
     {
       "key": "苹果",
-      "name": "苹果 • App",
+      "name": "苹果🔹App",
       "type": 3,
       "api": "csp_AppDrama",
       "ext": {
@@ -1007,6 +1007,48 @@
       "style": {
         "type": "rect",
         "ratio": 1.755
+      },
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;8281042cdce31230d61ce9e6f6e8b003"
+    },
+    {
+      "key": "阿里云盘",
+      "name": "💾阿里🔹云盘",
+      "type": 3,
+      "api": "csp_PanAli",
+      "searchable": 0,
+      "filterable": 0,
+      "changeable": 0,
+      "style": {
+        "type": "list",
+        "ratio": 1.433
+      },
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;8281042cdce31230d61ce9e6f6e8b003"
+    },
+    {
+      "key": "夸克网盘",
+      "name": "💾夸克🔹网盘",
+      "type": 3,
+      "api": "csp_PanQuark",
+      "searchable": 0,
+      "filterable": 0,
+      "changeable": 0,
+      "style": {
+        "type": "list",
+        "ratio": 1.433
+      },
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;8281042cdce31230d61ce9e6f6e8b003"
+    },
+    {
+      "key": "UC网盘",
+      "name": "💾UC🔹网盘",
+      "type": 3,
+      "api": "csp_PanUC",
+      "searchable": 0,
+      "filterable": 0,
+      "changeable": 0,
+      "style": {
+        "type": "list",
+        "ratio": 1.433
       },
       "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;8281042cdce31230d61ce9e6f6e8b003"
     },

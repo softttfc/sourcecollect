@@ -198,7 +198,7 @@
     },
     {
         "key": "苹果",
-        "name": "苹果 • App",
+        "name": "苹果🔹App",
         "type": 3,
         "api": "csp_AppDrama",
         "ext": {
@@ -558,6 +558,12 @@
 {"key": "斗鱼直播","name": "🐬斗鱼🔹直播","type": 3,"api": "./douban/drpy3.min.js","style": {"type": "rect","ratio": 1.755},"quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"ext": "./js/douyuzb.js"},
 {"key": "快手直播","name": "🎦快手🔹直播","type": 3,"api": "./douban/drpy3.min.js","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.755},"ext": "./js/kuaishouzb.js"},
 {"key": "咖啡体育直播","name": "🏀咖啡🔹直播","type": 3,"api": "./js/咖啡体育直播.js","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.755}},
+
+{"key":"阿里云盘","name":"💾阿里🔹云盘","type":3,"api":"csp_PanAli","searchable":0,"filterable":0,"changeable":0,"style":{"type":"list","ratio":1.433}},
+
+{"key":"夸克网盘","name":"💾夸克🔹网盘","type":3,"api":"csp_PanQuark","searchable":0,"filterable":0,"changeable":0,"style":{"type":"list","ratio":1.433}},
+
+{"key":"UC网盘","name":"💾UC🔹网盘","type":3,"api":"csp_PanUC","searchable":0,"filterable":0,"changeable":0,"style":{"type":"list","ratio":1.433}},
 
 {"key": "百酷","name": "🔍百酷🔹搜索","type": 3,"api": "csp_Baiku","changeable": 0,"timeout": 30},
 {"key": "酷乐","name": "🔍酷乐🔹搜索","type": 3,"api": "csp_KuLe","changeable": 0,"timeout": 30},

@@ -1144,6 +1144,24 @@
             "type": 3,
             "api": "./py/厂长影视.py"
         },
+		{
+            "key": "厂长资源",
+            "name": "🍊厂长资源",
+            "type": 3,
+            "api": "./py/厂长资源🍀TG @hshsjk9.py"
+        },
+        {
+            "key": "多多影视1",
+            "name": "💵多多影视1",
+            "type": 3,
+            "api": "./py/多多影视🍀TG @hshsjk9.py"
+        },
+		{
+            "key": "VS影院2",
+            "name": "🍊VS影院2",
+            "type": 3,
+            "api": "./py/VS影院🍀TG @hshsjk9.py"
+        },
         {
             "key": "JP",
             "name": "🏅金牌",
@@ -1187,6 +1205,12 @@
             "name": "💡泥巴影视",
             "type": 3,
             "api": "./py/泥巴影视.py"
+        },
+		{
+            "key": "电影侠",
+            "name": "💡电影侠",
+            "type": 3,
+            "api": "./py/电影侠🍀TG @hshsjk9.py"
         },
 		{
             "key": "爬虫影视",
@@ -1258,13 +1282,35 @@
             "api": "./py/猎手.py"
         },
 		{
+            "key": "星河",
+            "name": "🌌星河影视",
+            "type": 3,
+            "api": "./js/get.js",
+            "ext": {
+                "host": "http://110.42.67.130:1226",
+                "key": "kj37zs29q22jk96t",
+                "init": "V122",
+                "api": 2,
+                "ua": "okhttp/3.10.0"
+            }
+        },
+		{
+            "key": "戒",
+            "name": "💡视界影视",
+            "type": 3,
+            "api": "./js/jys.js",
+            "searchable": 1,
+            "quickSearch": 0,
+            "filterable": 0,
+            "changeable": 0
+        },
+		{
             "key": "剧圈99",
             "name": "🥨剧圈影视",
             "type": 3,
             "api": "csp_App99",
             "ext": {
                 "host": "http://124.221.3.182:19987/app/bn",
-                "appkey": "d1f0c269eab74d93821fffc9befdbbba",
                 "versionName": "1.2.0",
                 "name": "剧圈圈",
                 "package": "com.qingtangxiaozhuan.xyz",
@@ -1279,7 +1325,6 @@
             "api": "csp_App99",
             "ext": {
                 "host": "http://103.217.190.91:19987/app/bn",
-                "appkey": "24d625a8a29b4700a1a294c6f3b29e2c",
                 "versionName": "3.5.8",
                 "name": "半日闲",
                 "package": "com.yf.lelian",
@@ -1490,8 +1535,8 @@
             }
         },
         {
-            "key": "酷影聚",
-            "name": "🦘酷影聚",
+            "key": "酷客影视1",
+            "name": "🍊酷客影视1",
             "type": 3,
             "api": "csp_XBPQ",
             "searchable": 1,
@@ -1500,22 +1545,22 @@
             "filterable": 1,
             "timeout": 120,
             "ext": {
-                "作者": "🍊小橙子/20260206",
-                "站名": "酷影聚",
-                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； ASUS_I003DD Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.70 Mobile Safari/537.36&&Cookie@__51cke__=；； PHPSESSID=n2b9krsqklj2c1p500j5dm7sna；； __tins__21993815=%7B%22sid%22%3A%201770339433832%2C%20%22vd%22%3A%2036%2C%20%22expires%22%3A%201770342799688%7D；； __51laig__=36&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
+				"作者": "🍊小橙子/20260825",
+                "站名": "酷客影视1",
+                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； NX809J Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.70 Mobile Safari/537.36&&Cookie@PHPSESSID=n5he15lsqhkqr9k4crnlvcb8tb&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
                 "编码": "UTF-8",
-                "图片代理": "0",
+				"图片代理": "0",
                 "直接播放": "0",
                 "播放请求头": "",
                 "嗅探词": ".mp4#.m3u8#.flv#hcts-m3u8#index.m3u8",
                 "免嗅": "1",
                 "过滤词": "",
-                "主页url": "https://kuyingju.com/",
-                "首页": "120",
+                "主页url": "https://m.dachibafang.com/",
+				"首页": "120",
                 "起始页": "1",
-                "分类url": "https://kuyingju.com/index.php/vod/show/id/{cateId}/page/{catePg}/year/{year}.html",
-                "分类": "电影$1#连续剧$2#综艺$3#动漫$4#短剧$46#",
-                "二次截取": "",
+				"分类url": "https://m.dachibafang.com/vodshow/{cateId}--------{catePg}---{year}.html",
+                "分类": "电影$1#电视剧$2#综艺$3#动漫$4#短剧$20#动画片$36#",
+				"二次截取": "",
                 "数组": "lazyload&&</a>",
                 "标题": "title=\"&&\"",
                 "图片": "data-original=\"&&\"",
@@ -1527,21 +1572,21 @@
                 "状态": "状态：&&</p>",
                 "导演": "导演：&&</p>",
                 "主演": "主演：&&</p>",
-                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+简介：&&</div>",
-                "线路二次截取": "",
-                "线路数组": "data-toggle&&</a>",
-                "线路标题": "tab\">&&</a>",
+                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+detail col-pd\">&&</div>",
+				"线路二次截取": "",
+                "线路数组": "nore text-muted pull-right&&</div>",
+                "线路标题": "title\">&&</h3>",
                 "播放二次截取": "",
-                "播放数组": "stui-content__playlist clearfix sort-list&&</ul>",
+                "播放数组": "<ul class=\"stui-content__playlist clearfix&&</ul>",
                 "倒序": "0",
                 "播放列表": "<a&&</a>",
                 "播放标题": ">&&</a>",
                 "播放链接": "href=\"&&\"",
-                "解析": "",
+				"解析": "",
                 "跳转播放链接": "var player_*\"url\":\"&&\"",
                 "跳转解析": "",
                 "搜索请求头": "User-Agent$MOBILE_UA",
-                "搜索url": "https://kuyingju.com/index.php/vod/search/page/{pg}/wd/{wd}.html",
+                "搜索url": "https://m.dachibafang.com/vodsearch/{wd}----------{pg}---.html",
                 "搜索模式": "1",
                 "搜索后缀": "",
                 "搜索二次截取": "",
@@ -1567,8 +1612,8 @@
             }
         },
         {
-            "key": "爱看影视网",
-            "name": "🧿爱看影视网",
+            "key": "爱看影视1",
+            "name": "🧿爱看影视1",
             "type": 3,
             "api": "csp_XBPQ",
             "searchable": 1,
@@ -1577,22 +1622,22 @@
             "filterable": 1,
             "timeout": 120,
             "ext": {
-                "作者": "🍊小橙子/250802",
-                "站名": "爱看影视网",
-                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； ASUS_I005DA Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.70 Mobile Safari/537.36&&Cookie@PHPSESSID=h92f4op475cngf1teadnesjqh6；； Hm_lvt_70682c04837f574f114c94756ed3fe25=1754114336；； HMACCOUNT=B9F6EFF9C1725FA2；； Hm_lpvt_70682c04837f574f114c94756ed3fe25=1754115460&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
+				"作者": "🍊小橙子/20260825",
+                "站名": "爱看影视1",
+                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； NX809J Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.70 Mobile Safari/537.36&&Cookie@PHPSESSID=nas188um5fc25fhtujo84iad3f&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
                 "编码": "UTF-8",
-                "图片代理": "0",
+				"图片代理": "0",
                 "直接播放": "0",
                 "播放请求头": "",
                 "嗅探词": ".mp4#.m3u8#.flv#hcts-m3u8#index.m3u8",
                 "免嗅": "1",
                 "过滤词": "",
-                "主页url": "https://www.vsyinyuan.com/",
-                "首页": "120",
+                "主页url": "https://www.ourente.com/",
+				"首页": "120",
                 "起始页": "1",
-                "分类url": "https://www.vsyinyuan.com/search.php?page={catePg}&searchtype=5&tid={cateId}&area={area}&year={year}",
-                "分类": "电影$1#电视剧$2#综艺$3#动漫$4#纪录片$25#微电影$26#",
-                "二次截取": "",
+				"分类url": "https://www.ourente.com/enteso/{cateId}--------{catePg}---{year}.html",
+                "分类": "电影$1#电视剧$2#综艺$3#动漫$4#短剧$5#",
+				"二次截取": "",
                 "数组": "lazyload&&</a>",
                 "标题": "title=\"&&\"",
                 "图片": "data-original=\"&&\"",
@@ -1604,21 +1649,21 @@
                 "状态": "状态：&&</p>",
                 "导演": "导演：&&</p>",
                 "主演": "主演：&&</p>",
-                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+left text-muted\">&&</div>",
-                "线路二次截取": "",
-                "线路数组": "id=\"dywz_play_item&&</div>",
-                "线路标题": "title\">&&<sup",
+                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+简介：&&</div>",
+				"线路二次截取": "",
+                "线路数组": "<li&&/li>",
+                "线路标题": "javascript:;\">&&<",
                 "播放二次截取": "",
-                "播放数组": "<ul class=\"dywz-content__playlist clearfix&&</ul>",
-                "倒序": "1",
-                "播放列表": "<a&&/a>[不包含:1080]",
+                "播放数组": "<ul class=\"stui-content__playlist clearfix&&</ul>",
+                "倒序": "0",
+                "播放列表": "<a&&/a>",
                 "播放标题": ">&&</a>",
                 "播放链接": "href=\"&&\"",
-                "解析": "",
+				"解析": "",
                 "跳转播放链接": "var player_*\"url\":\"&&\"",
                 "跳转解析": "",
                 "搜索请求头": "User-Agent$MOBILE_UA",
-                "搜索url": "https://www.vsyinyuan.com/search.php?page={pg}&searchword={wd}&searchtype=",
+                "搜索url": "https://www.ourente.com/entesc/{wd}----------{pg}---.html",
                 "搜索模式": "1",
                 "搜索后缀": "",
                 "搜索二次截取": "",
@@ -1685,54 +1730,6 @@
                 "ratio": 1
             },
             "changeable": 1
-        },
-        {
-            "key": "片喵",
-            "name": "🐈片喵影视",
-            "type": 3,
-            "api": "csp_AppNox",
-            "ext": {
-                "url": "https://svip.2video.cc",
-                "header": {
-                    "content-type": "application/json",
-                    "x-app-signature": "70:DF:B1:2A:AE:C3:E3:73:6E:23:0F:67:B9:3B:C5:63:2D:EA:2A:2C:9E:9D:52:82:1D:3F:3C:3C:B9:10:9E:EE",
-                    "x-app-package": "com.ds.wlss",
-                    "x-app-version-code": "56",
-                    "x-app-version-name": "1.2.6"
-                }
-            }
-        },
-        {
-            "key": "幕悦",
-            "name": "🍊幕悦影视",
-            "type": 3,
-            "api": "csp_AppNox",
-            "ext": {
-                "url": "http://111.170.7.114:8989",
-                "header": {
-                    "content-type": "application/json",
-                    "x-app-signature": "3D:D7:7B:07:B0:81:49:AF:90:5E:39:2B:B8:59:A9:99:89:EB:D5:35:6E:06:C0:A4:BE:44:B6:16:43:33:C4:C3",
-                    "x-app-package": "com.muyuesg.app",
-                    "x-app-version-code": "12",
-                    "x-app-version-name": "0.1.2"
-                }
-            }
-        },
-        {
-            "key": "随看",
-            "name": "🍊随看影视",
-            "type": 3,
-            "api": "csp_AppNox",
-            "ext": {
-                "url": "https://skapp.tpmbt.cn",
-                "header": {
-                    "content-type": "application/json",
-                    "x-app-signature": "28:FA:41:C9:95:6D:9A:36:0A:FC:FC:22:12:78:80:10:B7:47:0B:8F:CE:AB:A9:49:85:22:B3:EA:57:35:C2:D1",
-                    "x-app-package": "com.mfbrjy.aqb",
-                    "x-app-version-code": "320",
-                    "x-app-version-name": "3.2.0"
-                }
-            }
         },
         {
             "key": "孜然影视",
@@ -4480,18 +4477,34 @@
             }
         },
 		{
-            "key": "怀桑",
-            "name": "🌱怀桑影视",
+            "key": "蓝鸟",
+            "name": "🐦‍🔥蓝鸟影视",
             "type": 3,
             "api": "csp_AppQi",
             "searchable": 1,
             "changeable": 1,
             "ext": {
-                "site": "https://daen-1256234123.cos.ap-shanghai.myqcloud.com/MuQi/mqxhqj.txt",
-                "dataKey": "kj37zs29q22jk96t",
-                "dataIv": "kj37zs29q22jk96t",
+                "site": "https://lanyingjisu.oss-cn-wuhan-lr.aliyuncs.com/lyjszx.txt",
+                "dataKey": "oW5UxZ5kWVr1DI69",
+                "dataIv": "oW5UxZ5kWVr1DI69",
                 "init": "initV122",
                 "ua": "okhttp/3.10.0"
+            }
+        },
+		{
+            "key": "奇奇",
+            "name": "🐎奇奇影视",
+            "type": 3,
+            "api": "csp_AppQi",
+            "searchable": 1,
+            "changeable": 1,
+            "ext": {
+                "site": "https://yun-1316442804.cos.ap-guangzhou.myqcloud.com/603.txt",
+                "dataKey": "FTgP4Gq8zPiqbt7M",
+                "dataIv": "FTgP4Gq8zPiqbt7M",
+                "init": "initV122",
+                "ua": "okhttp/3.10.0",
+                "search": "searchList8"
             }
         },
 		{
@@ -4505,19 +4518,6 @@
                 "url": "https://appcms.4ksj.app",
                 "dataKey": "O3K6rYx75Q4xtiIE",
                 "dataIv": "O3K6rYx75Q4xtiIE"
-            }
-        },
-		{
-            "key": "不戳",
-            "name": "💉不戳影视",
-            "type": 3,
-            "api": "csp_AppGet",
-            "searchable": 1,
-            "changeable": 1,
-            "ext": {
-                "url": "https://appcmszbc.zbc4k.app",
-                "dataKey": "pYrEkiWRYhBLTUTC",
-                "dataIv": "pYrEkiWRYhBLTUTC"
             }
         },
 		{
@@ -10936,13 +10936,6 @@
             "api": "csp_AppYsV2",
             "playerType": 2,
             "ext": "http://99cms.jj99.icu:8199/api.php/app/"
-        },
-        {
-            "key": "小镇影视",
-            "name": "🏙️小镇影视",
-            "type": 3,
-            "api": "csp_XBPQ",
-            "ext": "./XBPQ/小镇影视.json"
         },
         {
             "key": "面包影视",
@@ -35324,29 +35317,15 @@
             "type": 3,
             "api": "csp_App99",
             "ext": {
-                "host": "http://175.178.65.250:19987/app/bn",
+                "host": "http://111.180.139.119:19987/app/bn",
                 "LoginPath": "/app/log",
                 "appkey": "f66f65db127e48449f073c2c6eb0f993",
-                "versionName": "6.4.5",
+                "versionName": "6.4.9",
                 "name": "双子星动漫",
-                "package": "com.yingfu.mobile.android.pgsp",
-                "buildNumber": "2003",
-                "buildSignature": "054FA8DDA4319C6B6A9B954CA5777541C993F00B1B0BD4394F7EDE48184C4594"
+                "package": "com.haiwang.liangxia.my.ym",
+                "buildNumber": "2001",
+                "buildSignature": "A40DA80A59D170CAA950CF15C18C454D47A39B26989D8B640ECD745BA71BF5DC"
             }
-        },
-		{
-            "key": "喵呜动漫",
-            "name": "🐈喵呜动漫",
-            "type": 3,
-            "searchable": 1,
-            "api": "csp_MiaoWu"
-        },
-        {
-            "key": "魔都动漫",
-            "name": "🤣魔都动漫",
-            "type": 3,
-            "searchable": 1,
-            "api": "csp_MoDu"
         },
         {
             "key": "番社动漫",
@@ -35374,6 +35353,15 @@
             "style": {
                 "type": "list"
             }
+        },
+		{
+            "key": "魔都资源",
+            "name": "🤣魔都动漫",
+            "type": 1,
+            "api": "https://caiji.moduapi.cc/api.php/provide/vod/?ac=list",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1
         },
         {
             "key": "Anime1",
