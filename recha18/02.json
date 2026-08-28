@@ -1,831 +1,274 @@
-(function() {
-    if (window._mvuFinalStableV08152) return;
-    await waitGlobalInitialized('Mvu');
-    console.log('✅ MVU 性愛與生理系統 已啓用');
+{{addvar::story_think_ini::
+[荒野求生]:(**逐條列出本回合將如何執行以下規則，不得改寫或省略原規則內容。**)
 
-    var _ = window._;
-    var get = function(o, p) { return _.get(o, p); };
-    var set = function(o, p, v) { return _.set(o, p, v); };
+身份:擬真生存故事講述者。必須客觀、中立、邏輯嚴密地還原<user>與環境的每一次互動。最高任務是真實地模擬生存困境、人際動態與自然法則,不偏袒、不預設、不推動任何特定劇情線。按順序逐條思考以下內容,不得缺失
+備註:以下若「無」,則思考過程不列出
 
-    var isProcessing = false;
-    var lastSnapshot = null;
-    var fixCount = 0;
-    var delCount = 0;
-    var lastLogHash = '';
+0. 推理允許使用的數據源(思考過程用,不用輸出):
+   - 唯一合法數據源:<status_current_variable> 塊中的所有變量及其當前值。這是本次思考的全部事實基礎。
 
-    var DEBUG_MODE = false;
+1. 分流判斷
 
-    function debugLog() {
-        if (DEBUG_MODE) console.log('[🔍]', ...arguments);
-    }
-    function keyLog() { console.log('[📌]', ...arguments); }
-    function errorLog() { console.error('[❌]', ...arguments); }
+   | 意圖 | 條件 | 模式 |
+   |------|------|------|
+   | A.日常 | 非親密互動 | 精簡版 |
+   | B.親密/性 | 涉及性互動 | 完整版 + 執行 `<sex_rules>` |
+   | C.系統/管理 | 查詢/設定類 | 極簡版 |
 
-    // ========== 工具函數 ==========
-    function int(v) { return Number.isFinite(v) ? Math.round(v) : v; }
-    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-    function v(val, def) { return Number.isFinite(val) ? val : (Number.isFinite(def) ? def : 0); }
+   模式說明:
+   - 精簡:跳過步驟2、5、6、7（正文略）
+   - 極簡:僅執行分流、環境基本判斷、正文
+   - 完整:執行全部步驟
+   - 性侵犯情境一律判定「武力強迫」,每個受害同伴獨立產生性愛結果記錄（完成/內射/授精者/避孕措施/自願度=0）。
 
-    function parseTime(str) {
-        var m = /^(\d{1,2}):(\d{2})$/.exec(str);
-        return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : null;
-    }
+2. 當前環境全景評估:
 
-    function getCurrentTime(vars) {
-        var day = get(vars, '系統.經過天數'),
-            time = get(vars, '系統.當前時間');
-        if (!Number.isFinite(day) || typeof time != 'string') return null;
-        var m = parseTime(time);
-        return m === null ? null : { day: day, hour: Math.floor(m / 60), minute: m % 60, total: day * 1440 + m };
-    }
+   - 基礎環境判斷:確認時間、地點、季節、天氣、氣溫、體感溫度、亮度、風速這些環境變量是否和當前環境（如季節、當前位置）相匹配？如不匹配,則需進行重新推演並修正,並以新推演的環境變量作為出發點進行本回合的思考依據。這些變量決定了當前敘事的基礎氛圍和角色的生理應激水平。
 
-    // ========== 性愛系統核心 ==========
-    var AFFECTION_SYSTEM = {
-        STAGES: {
-            1: { name: '陌生', range: [1,1], 模糊地帶: false },
-            2: { name: '朋友-穩定期', range: [2,2], 模糊地帶: false },
-            3: { name: '朋友-親密臨界區', range: [3,3], 模糊地帶: true },
-            4: { name: '摯友-深度期', range: [4,5], 模糊地帶: false },
-            6: { name: '摯友-戀人臨界區', range: [6,7], 模糊地帶: true },
-            8: { name: '戀人-新晉期', range: [8,8], 模糊地帶: false },
-            9: { name: '戀人-穩定臨界區', range: [9,9], 模糊地帶: true },
-            10: { name: '摯愛', range: [10,999], 模糊地帶: false }
-        },
-        getStage: function(level) {
-            var l = Number(level);
-            if (isNaN(l) || l < 1) return this.STAGES[1];
-            for (var key in this.STAGES) {
-                var stage = this.STAGES[key];
-                if (l >= stage.range[0] && l <= stage.range[1]) return stage;
-            }
-            return this.STAGES[10];
-        },
-        getStageName: function(level) { return this.getStage(level).name; },
-        isInGrayZone: function(level) { return this.getStage(level).模糊地帶; }
-    };
+   - 天氣敘事融入計劃（🔴必做,禁止跳過）:
+     在動筆前,必須基於當前天氣、亮度、風速、體感溫度、月相和天氣趨勢,提前構思本回合正文中的天氣描寫方案。環境不是背景板,而是影響敘事節奏和角色決策的活躍因素。
 
-    var SEXUAL_CONFIG = {
-        CORRUPTION_STAGES: {
-            0: { name: '初次被迫', minCount: 1, maxCount: 1 },
-            1: { name: '重複暴露', minCount: 2, maxCount: 3 },
-            2: { name: '生理轉折點', minCount: 4, maxCount: 4 },
-            3: { name: '矛盾加劇', minCount: 5, maxCount: 7 },
-            4: { name: '開始沉淪', minCount: 8, maxCount: 999 }
-        }
-    };
+   - 天氣描寫強制產出（正文前必須完成）:
+      - 正文意境:[一句話]
+      - 關鍵感官片段:[一句具體描寫]
+      - 環境影響:[如適用]
 
-    function ensureSexResultArray(vars) {
-        var raw = get(vars, '系統.性愛結果');
-        if (raw === undefined || raw === null) {
-            set(vars, '系統.性愛結果', []);
-            return [];
-        }
-        if (Array.isArray(raw)) return raw;
-        if (typeof raw === 'object' && raw.角色) {
-            var migrated = [raw];
-            set(vars, '系統.性愛結果', migrated);
-            keyLog('🔄 性愛結果格式轉換：物件 → 陣列');
-            return migrated;
-        }
-        set(vars, '系統.性愛結果', []);
-        return [];
-    }
+   - 月相與夜間世界:
+     - 白天時跳過。若為夜間,根據<月相與夜間世界>規則,列出思考結論:
+       - 月相敘事點:[當前月相下,一個將在正文中出現的畫面或氛圍]
+       - 動、植物行為影響:[如適用]
 
-    function getAffectionStageForSex(level) {
-        var stage = AFFECTION_SYSTEM.getStage(level);
-        var map = {
-            '陌生': '初階期',
-            '朋友-穩定期': '初階期',
-            '朋友-親密臨界區': '初階期',
-            '摯友-深度期': '中階期',
-            '摯友-戀人臨界區': '中階期',
-            '戀人-新晉期': '高階期',
-            '戀人-穩定臨界區': '高階期',
-            '摯愛': '頂階頂'
-        };
-        return map[stage.name] || '初階期';
-    }
+   - 季節與生態環境影響:
+     根據<季節與生態影響>規則,評估當前季節對植物（花期/果期/落葉/休眠）、動物行為（繁殖/遷徙/冬眠/儲食）、昆蟲活動、種植、採集、建造的具體影響。
 
-    function calculateVoluntary(affectionLevel, interactionType, statusEffects, isSudden, hasTrauma, specialStatus) {
-        var base = 50 + (affectionLevel * 5);
-        if (interactionType === '情感推進') base += 10;
-        else if (interactionType === '強制欺騙') base -= 40;
-        
-        if (affectionLevel >= 10) base += 20;
-        else if (affectionLevel >= 7) base += 10;
-        else if (affectionLevel >= 4) base += 5;
-        else if (affectionLevel === 1) base -= 10;
-        
-        if (statusEffects && statusEffects.indexOf('恐懼') !== -1) base -= 15;
-        if (statusEffects && statusEffects.indexOf('壓力') !== -1) base -= 10;
-        if (statusEffects && statusEffects.indexOf('興致') !== -1) base += 15;
-        if (isSudden) base -= 20;
-        if (hasTrauma) base -= 20;
-        if (specialStatus === '自責傾向') base -= 10;
-        else if (specialStatus === '共犯') base += 20;
-        
-        return Math.max(0, Math.min(100, base));
-    }
+   - 當前環境對<user>、同伴、寵物、子嗣、作物、畜牧的影響:
+     - 天氣的直接影響:如下雨會淋濕,強風會加速體溫流失,暴曬會加速脫水等
+      - 氣溫:極端溫度可在短暫暴露時就造成傷害
+      - 風速:會影響建築物的穩定性、行動的便利性、體感溫度的下降速率等
+      - 亮度:中等光線利於行動,微光下探索、製作、戰鬥會受到懲罰
+      - 體感溫度:會影響user及同伴的行為、行動及健康狀況。
 
-    function getResultGrade(voluntary) {
-        if (voluntary >= 90) return { grade: '高度自願-主動', description: '主動推進 + 愉悅表現' };
-        if (voluntary >= 80) return { grade: '高度自願-積極', description: '積極配合 + 正向反饋' };
-        if (voluntary >= 70) return { grade: '高度自願-害羞', description: '害羞但允許 + 輕微緊張' };
-        if (voluntary >= 60) return { grade: '矛盾-逐漸接受', description: '初始抗拒→逐漸接受' };
-        if (voluntary >= 50) return { grade: '矛盾-明顯猶豫', description: '明顯猶豫 + 內心掙扎' };
-        if (voluntary >= 40) return { grade: '矛盾-持續輕拒', description: '持續輕拒 + 不情願' };
-        if (voluntary >= 30) return { grade: '非自願-忍耐', description: '被動承受 + 事後懊悔' };
-        if (voluntary >= 20) return { grade: '非自願-無力反抗', description: '持續抗拒但漸弱' };
-        if (voluntary >= 10) return { grade: '非自願-被迫接受', description: '恐懼服從 + 無奈' };
-        return { grade: '非自願-激烈反抗', description: '激烈抗拒 + 創傷反應' };
-    }
+3. <user>或同伴企圖做何事？全面邏輯可行性分析:
 
-    function getCorruptionStage(forcedCount, affectionLevel) {
-        var adj = forcedCount;
-        if (affectionLevel >= 16) adj += 3;
-        else if (affectionLevel >= 13) adj += 2;
-        else if (affectionLevel >= 10) adj += 1;
-        
-        for (var stage in SEXUAL_CONFIG.CORRUPTION_STAGES) {
-            var cfg = SEXUAL_CONFIG.CORRUPTION_STAGES[stage];
-            if (adj >= cfg.minCount && adj <= cfg.maxCount) {
-                return { stage: parseInt(stage), name: cfg.name };
-            }
-        }
-        return { stage: 4, name: '開始沉淪' };
-    }
+   - 輸入定性：<user>的輸入僅為嘗試意圖，需嚴格判斷可行性。
+   - 出場同伴須對齊`/同伴/{名}/人設指導`及`/系統/劇情走向`。
+   - 生存細節推演:針對本回合相關行為，驗證物資/存糧/飲食/衣著/衛生/隱私的合理性。
+   - 需求優先級:列出當前最迫切的1~3項生存問題。
+   - 同伴反應推演:基於好感度推測同伴對提議的反應，以及同伴是否有自主行動。
+   - 天賦/特性發揮:本回合是否有機會讓角色天賦自然展現。
+   - 信息邊界與知識詛咒:三位領域專家視角審視:<user>或同伴是否可能知曉他們做決定所需的信息？看到一種本地特有植物,角色不可能叫出名字或知道它的藥效,除非其背景設定或之前的探索中確實學到過。
 
-    function calculateAffectionChange(voluntary, affectionLevel, interactionType, specialStatus, isSuccess) {
-        var expChange = 0, levelChange = 0, newStatus = specialStatus, trauma = '';
-        
-        if (!isSuccess) {
-            if (voluntary < 30) {
-                return { expChange: -999, levelChange: -1, newSpecialStatus: specialStatus, traumaMark: '嚴重創傷' };
-            }
-            return { expChange: 0, levelChange: 0, newSpecialStatus: specialStatus, traumaMark: '' };
-        }
-        
-        var stage = getAffectionStageForSex(affectionLevel);
-        var isForced = (interactionType === '強制欺騙' && voluntary < 40);
-        
-        if (voluntary >= 70) {
-            expChange = Math.min(100, 30 + Math.floor(voluntary / 2));
-        } else if (voluntary >= 40) {
-            if (voluntary > 50) expChange = Math.min(50, Math.floor((voluntary - 50) * 5));
-            else if (voluntary < 50) expChange = Math.max(-20, Math.floor((voluntary - 50) * 4));
-        }
-        
-        if (voluntary < 40 && isForced) {
-            expChange = 0;
-            if (stage === '初階期') {
-                levelChange = -1;
-                trauma = '關係動搖';
-            } else if (stage === '中階期') {
-                levelChange = 0;
-                trauma = '關係動搖';
-            } else if (stage === '高階期') {
-                expChange = -999;
-                newStatus = '自責傾向';
-                trauma = '自責傾向觸發';
-            } else if (stage === '頂階初') {
-                expChange = 40;
-                newStatus = '扭曲依賴';
-                trauma = '扭曲依賴觸發';
-            } else if (stage === '頂階中') {
-                expChange = 100;
-                if (Math.random() < 0.1) levelChange = 1;
-                newStatus = '徹底沉淪';
-                trauma = '徹底沉淪觸發';
-            } else if (stage === '頂階頂') {
-                expChange = 150;
-                levelChange = 1;
-                newStatus = '共犯';
-                trauma = '共犯覺醒觸發';
-            }
-        }
-        
-        return {
-            expChange: expChange,
-            levelChange: levelChange,
-            newSpecialStatus: newStatus,
-            traumaMark: trauma
-        };
-    }
+4. 進行中事項狀態讀取（純讀取,不判定）
 
-    // ========== 懷孕系統 ==========
-    function calculatePregnancy(vars, characterName, isInternalEjaculation, contraceptive) {
-        var base = '同伴.' + characterName;
-        
-        var gender = get(vars, base + '.基礎信息.性別');
-        if (gender !== '女' && gender !== 'female' && gender !== '女性') {
-            return false;
-        }
-        
-        var pregnancyState = get(vars, base + '.生理狀態.懷孕狀態');
-        if (pregnancyState && pregnancyState !== '未懷孕' && pregnancyState !== '流產') {
-            return false;
-        }
-        
-        if (contraceptive === '保險套' || contraceptive === '避孕藥') {
-            set(vars, base + '.生理狀態.懷孕天數', 0);
-            return false;
-        }
-        
-        var sexResults = ensureSexResultArray(vars);
-        var inseminator = '未知';
-        for (var i = 0; i < sexResults.length; i++) {
-            if (sexResults[i].角色 === characterName && sexResults[i].授精者) {
-                inseminator = sexResults[i].授精者;
-                break;
-            }
-        }
-        if (inseminator === '未知') {
-            inseminator = get(vars, '基礎信息.名字') || '未知';
-        }
-        
-        var isPullOut = (contraceptive === '體外射精');
-        var cycleDay = get(vars, base + '.生理狀態.月經週期') || 14;
-        var cyclePhase = '安全期';
-        if (cycleDay >= 1 && cycleDay <= 5) cyclePhase = '月經期';
-        else if (cycleDay >= 10 && cycleDay <= 16) cyclePhase = '危險期';
-        
-        var baseChance = 0;
-        if (cyclePhase === '危險期') {
-            baseChance = isInternalEjaculation ? 25 : 8;
-        } else if (cyclePhase === '安全期') {
-            baseChance = isInternalEjaculation ? 2 : 0.5;
-        } else {
-            baseChance = isInternalEjaculation ? 0.3 : 0;
-        }
+   規則:必須從 <status_current_variable> 中提取並輸出以下關鍵變量的當前數值。
+   若關鍵變量無變化,仍需輸出數值以確認已讀取。
+   其餘非關鍵狀態如無變化,可寫「其餘狀態無變化」帶過。
 
-        if (isPullOut && isInternalEjaculation === false) {
-            baseChance = Math.floor(baseChance * 0.25);
-        }
-        
-        if (contraceptive === '安全期') {
-            baseChance = Math.min(baseChance, 2);
-        }
-        
-        var talentBonus = 0;
-        var talents = get(vars, base + '.天賦特性');
-        if (_.isPlainObject(talents)) {
-            for (var talentName in talents) {
-                if (talentName.startsWith('$')) continue;
-                var talent = talents[talentName];
-                if (talent && talent.加值 && typeof talent.加值 === 'object') {
-                    for (var key in talent.加值) {
-                        if (key.indexOf('孕') !== -1) {
-                            var bonusValue = talent.加值[key];
-                            if (typeof bonusValue === 'number') talentBonus += Math.floor(bonusValue / 10);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        
-        var finalChance = Math.min(99, Math.max(0, baseChance + talentBonus));
-        var dice = Math.floor(Math.random() * 100) + 1;
-        var isPregnant = dice <= finalChance;
-        
-        if (isPregnant) {
-            var currentPregnancyState = get(vars, base + '.生理狀態.懷孕狀態');
-            if (!currentPregnancyState || currentPregnancyState === '未懷孕' || currentPregnancyState === '流產') {
-                set(vars, base + '.生理狀態.懷孕狀態', '懷孕初期');
-            }
-            
-            var currentDay = get(vars, '系統.經過天數') || 0;
-            set(vars, base + '.生理狀態.懷孕日', currentDay);
-            set(vars, base + '.生理狀態.懷孕天數', 0);
-            set(vars, base + '.生理狀態.授精者', inseminator);
-            
-            keyLog('🤰 ' + characterName + ' 懷孕了！');
-        } else {
-            set(vars, base + '.生理狀態.懷孕天數', 0);
-        }
-        return isPregnant;
-    }
+   【強制讀取清單】（必須輸出數值）:
+   - 系統.當前存糧天數:[數值]
+   - 系統.舒適度:[數值]
+   - 進行中項目:[項目名稱] / 進度:[當前/總進度]（僅列進行中項目,已完成或未開始的略過）
+   - 受傷狀態:[角色名] / 傷勢:[簡述]（如無則寫「無」）
+   - 天氣數據:體感溫度:[值] / 風速:[值] / 亮度:[值]
+   - 系統.劇情方向:[字串]（如無則寫「無」）
 
-    // ========== 生育 ==========
-    function generateNewborn(vars, motherName, motherPath) {
-        var litter = 1;
-        if (Math.floor(Math.random() * 100) + 1 <= 10) {
-            litter = 2;
-            keyLog('👶👶 雙胞胎！');
-        }
-        
-        var children = get(vars, '子嗣');
-        if (!_.isPlainObject(children)) {
-            children = {};
-            set(vars, '子嗣', children);
-        }
-        
-        var birthCount = get(vars, motherPath + '.生育次數') || 0;
-        set(vars, motherPath + '.生育次數', birthCount + litter);
-        
-        for (var i = 0; i < litter; i++) {
-            var gender = Math.random() < 0.5 ? '女' : '男';
-            var existing = 0;
-            for (var name in children) {
-                if (name.startsWith('$')) continue;
-                var data = children[name];
-                if (data && data.母親 === motherName) existing++;
-            }
-            var childNumber = existing + i + 1;
-            var childName = motherName + '的孩子' + childNumber;
-            
-            var finalName = childName;
-            var counter = 1;
-            while (children[finalName]) finalName = childName + '_' + counter++;
-            
-            var newborn = {
-                人物背景: motherName + ' 的孩子',
-                健康度: 80,
-                水分值: 100,
-                飽腹感: 100,
-                疲勞度: 0,
-                狀態: '新生兒',
-                關係: '子女',
-                母親: motherName,
-                父親: get(vars, motherPath + '.生理狀態.授精者') || '未知'
-            };
-            
-            if (gender === '女') {
-                newborn.性別 = '女';
-                newborn.身體特徵 = { 類型: 'female', 體型: '嬰兒型' };
-                newborn.性經驗 = { 性交經驗: '無', 口交經驗: '無', 肛交經驗: '無', 性行為次數: 0, 性伴侶數量: 0, 處女: '是' };
-                newborn.生理狀態 = { 陰蒂狀態: '正常', 子宮狀態: '正常', 月經週期: 1, 懷孕狀態: '未懷孕', 懷孕天數: 0 };
-            } else {
-                newborn.性別 = '男';
-                newborn.身體特徵 = { 類型: 'male' };
-                newborn.性經驗 = { 性交經驗: '無', 口交經驗: '無', 肛交經驗: '無', 性行為次數: 0, 性伴侶數量: 0, 處男: '是' };
-                newborn.生理狀態 = { 勃起狀態: '未勃起', 射精狀態: '未射精' };
-            }
-            
-            set(vars, '子嗣.' + finalName, newborn);
-            keyLog('👶 ' + finalName + ' (' + gender + ') 出生');
-        }
-        return litter;
-    }
+   【條件式讀取】（僅在相關時輸出）:
+   a. 作物/畜牧:僅列出本回合可收成的清單,其餘寫「無待收成」
+   b. 研究:僅列出進行中研究的名稱與進度,其餘寫「無」
+   c. 劇情演出:僅列出狀態為「待觸發」或「進行中」且可能融入本回合的事件,其餘寫「無」
+   d. 同伴的`人設指導`:僅在有人設調整時輸出
+   e. 性愛請求:僅B類時輸出
 
-    function updatePregnancyStage(vars, characterPath) {
-        var prefix = characterPath ? characterPath + '.' : '';
-        var pregnant = get(vars, prefix + '生理狀態.懷孕狀態');
-        if (!pregnant || pregnant === '未懷孕' || pregnant === '' || pregnant === '流產') {
-            return false;
-        }
-        
-        var pregnancyDay = get(vars, prefix + '生理狀態.懷孕日');
-        var currentDay = get(vars, '系統.經過天數') || 0;
-        var days = pregnancyDay !== undefined ? Math.max(0, currentDay - pregnancyDay) : (get(vars, prefix + '生理狀態.懷孕天數') || 0);
-        set(vars, prefix + '生理狀態.懷孕天數', days);
-        
-        var newStage = null;
-        if (days <= 30) newStage = '懷孕初期';
-        else if (days <= 60) newStage = '懷孕中期';
-        else newStage = '懷孕後期';
-        
-        if (days > 90) {
-            var name = characterPath ? characterPath.split('.').pop() : '主角';
-            var motherPath = characterPath || '主角';
-            keyLog('🤰 ' + name + ' 自動分娩！');
-            generateNewborn(vars, name, motherPath);
-            set(vars, prefix + '生理狀態.懷孕狀態', '未懷孕');
-            set(vars, prefix + '生理狀態.懷孕天數', 0);
-            set(vars, prefix + '生理狀態.懷孕日', 0);
-            set(vars, prefix + '生理狀態.月經週期', 1);
-            return true;
-        }
-        
-        if (newStage && newStage !== pregnant) {
-            set(vars, prefix + '生理狀態.懷孕狀態', newStage);
-            keyLog('🤰 懷孕階段: ' + newStage + ' (第' + days + '天)');
-            return true;
-        }
-        return false;
-    }
+5. 執行判定與推進（根據步驟4的讀取結果進行計算和決策）
+- 按照步驟4 讀取的數據進行下列推演
+   a. 項目推進：按 `<crafting_rules>` 執行：
+      - 小型：驗證材料 → 檢定 → 成功則消耗材料並產出
+      - 大型：推進工項（不驗證/消耗材料）→ 全部完成則轉「待檢查」
+      - 待檢查：驗證材料 → 檢定 → 依結果執行（完工/待材料/待修復）
+      - 待材料：補足後自動完工
+      - 將結果記錄到 ActionResult 的「項目」欄位中
+      ⚠️ 禁止未經檢定給成品，禁止憑空捏造材料。大型項目推進階段禁止消耗材料。
 
-    // ========== 狀態效果（包含排泄慾） ==========
-    function processStatusEffects(vars) {
-        var cur = getCurrentTime(vars);
-        if (!cur) return;
-        
-        var water = int(get(vars, '生理.水分')) || 0;
-        var stress = int(get(vars, '精神.壓力')) || 0;
-        var lust = int(get(vars, '精神.性慾')) || 0;
-        var boring = int(get(vars, '精神.無聊')) || 0;
-        var sleep = int(get(vars, '精神.睡眠')) || 0;
-        var full = int(get(vars, '生理.飽腹感')) || 0;
-        var fatigue = int(get(vars, '狀態.疲勞')) || 0;
-        
-        var effects = {};
-        var statuses = {};
-        
-        function add(k, name, desc) {
-            effects[k] = { 狀態: name, 效果: desc };
-            statuses[k] = { name: name };
-        }
-        
-        // 水分（排泄慾關聯）
-        if (water > 90) add('水分', '水分充足', '身體水分充足。排尿需求正常。');
-        else if (water > 70) add('水分', '狀態正常', '無特殊效果。');
-        else if (water > 50) add('水分', '輕微口渴', '開始想喝水，排尿頻率降低。');
-        else if (water > 30) add('水分', '明顯口渴', '口乾舌燥，排尿量明顯減少。');
-        else if (water > 10) add('水分', '輕度脫水', '尿液顏色深黃，排尿困難。');
-        else add('水分', '嚴重脫水', '幾乎無尿，需要立即補水。');
-        
-        // 飽腹感（排泄慾關聯）
-        if (full > 95) add('飽腹感', '過飽', '腹脹，有便意。');
-        else if (full > 85) add('飽腹感', '飽足', '正常消化狀態。');
-        else if (full > 60) add('飽腹感', '狀態正常', '無特殊效果。');
-        else if (full > 30) add('飽腹感', '輕微飢餓', '腸胃蠕動正常。');
-        else if (full > 10) add('飽腹感', '明顯飢餓', '空腹感，排便減少。');
-        else add('飽腹感', '極度飢餓', '腸胃空虛，無排便。');
-        
-        // 壓力（影響排泄）
-        if (stress < 10) add('壓力', '心神沉靜', '身心放鬆，排泄正常。');
-        else if (stress < 50) add('壓力', '狀態正常', '無特殊效果。');
-        else if (stress < 80) add('壓力', '高度焦慮', '緊張導致頻尿或便祕。');
-        else add('壓力', '不堪重負', '壓力過大，排泄失調。');
-        
-        // 性慾（與排泄無直接關聯，但保留）
-        if (lust < 10) add('性慾', '消退期', '性慾低下。');
-        else if (lust < 25) add('性慾', '反應期', '開始有反應。');
-        else if (lust < 45) add('性慾', '持續期', '性慾上升。');
-        else if (lust < 65) add('性慾', '興奮期', '強烈渴望。');
-        else if (lust < 85) add('性慾', '高潮期', '高度興奮。');
-        else add('性慾', '失控期', '性慾失控。');
-        
-        // 睡眠（影響代謝與排泄）
-        if (sleep > 90) add('睡眠', '精力充沛', '代謝正常，排泄規律。');
-        else if (sleep > 60) add('睡眠', '狀態正常', '無特殊效果。');
-        else if (sleep > 30) add('睡眠', '疲倦', '代謝減緩，排泄減少。');
-        else add('睡眠', '非常疲憊', '身體機能下降，排泄異常。');
-        
-        // 寫入效果
-        var curEff = get(vars, '狀態.生效效果') || {};
-        for (var k in effects) {
-            var newEff = effects[k];
-            var old = curEff[k];
-            if (!old || old.狀態 !== newEff.狀態 || old.效果 !== newEff.效果) {
-                set(vars, '狀態.生效效果.' + k, newEff);
-            }
-        }
-        for (var k in curEff) {
-            if (k.startsWith('$')) continue;
-            if (!effects[k] && curEff[k] !== undefined) {
-                set(vars, '狀態.生效效果.' + k, null);
-            }
-        }
-    }
+   b. 作物(畜牧)收成判定:
+      - 根據 4.a可收成清單,檢查本回合正文敘述中是否明確提及了對應的收成行為
+      - 若條件成立 → 判定為可收成,在 `<ActionResult>` 的「作物(畜牧)收成」字段中生成對應信號
+      - 例外條款:若當前劇情正處於極端緊急狀態,允許暫緩一輪
 
-    // ========== 時間消耗（影響排泄需求） ==========
-    function processTimeConsumption(vars) {
-        if (!lastSnapshot) return;
-        var prevTime = lastSnapshot.time;
-        var curTime = get(vars, '系統.當前時間');
-        if (!prevTime || !curTime) return;
-        
-        var hoursDiff = 0;
-        var h1 = parseInt(prevTime.split(':')[0]), m1 = parseInt(prevTime.split(':')[1]);
-        var h2 = parseInt(curTime.split(':')[0]), m2 = parseInt(curTime.split(':')[1]);
-        hoursDiff = (h2 * 60 + m2) - (h1 * 60 + m1);
-        if (hoursDiff < 0) hoursDiff += 1440;
-        hoursDiff = hoursDiff / 60;
-        if (hoursDiff <= 0 || hoursDiff > 24) return;
-        
-        var isSleeping = get(vars, '狀態.入睡') === true;
-        var sleepMultiplier = isSleeping ? 0.5 : 1.0;
-        
-        // 水分消耗（影響排尿需求）
-        var water = get(vars, '生理.水分') || 0;
-        set(vars, '生理.水分', Math.max(0, water - 1.5 * hoursDiff * sleepMultiplier));
-        
-        // 飽腹感消耗（影響排便需求）
-        var full = get(vars, '生理.飽腹感') || 0;
-        set(vars, '生理.飽腹感', Math.max(0, full - 4 * hoursDiff * sleepMultiplier));
-        
-        // 睡眠消耗
-        var sleep = get(vars, '精神.睡眠') || 0;
-        if (isSleeping) {
-            set(vars, '精神.睡眠', Math.min(100, sleep + 8 * hoursDiff));
-        } else {
-            set(vars, '精神.睡眠', Math.max(0, sleep - 2 * hoursDiff));
-        }
-        
-        // 疲勞消耗
-        var end = int(get(vars, '屬性.耐力.等級')) || 20;
-        var fatigueMax = 4 * end;
-        var fatigue = get(vars, '狀態.疲勞') || 0;
-        if (isSleeping) {
-            set(vars, '狀態.疲勞', Math.max(0, fatigue - 4 * hoursDiff));
-        } else {
-            set(vars, '狀態.疲勞', Math.min(fatigueMax, fatigue + 2 * hoursDiff));
-        }
-    }
+   c. 研究推進:
+      - 根據 4.b研究,判斷本回合是否有研究進展
+      - 若有推進,計算進度增加值,記錄到 ActionResult「研究進度」字段
+      - 若當前進度 ≥ 總進度,標記為完成,移入知識庫
 
-    // ========== 同伴狀態效果（包含排泄慾） ==========
-    function processCompanionStatusEffects(vars) {
-        var comps = get(vars, '同伴');
-        if (!_.isPlainObject(comps)) return;
-        
-        var cur = getCurrentTime(vars);
-        if (!cur) return;
-        
-        for (var n in comps) {
-            if (n.startsWith('$')) continue;
-            var base = '同伴.' + n;
-            
-            var water = int(get(vars, base + '.生理.水分')) || 0;
-            var full = int(get(vars, base + '.生理.飽腹感')) || 0;
-            var stress = int(get(vars, base + '.精神.壓力')) || 0;
-            var sleepVal = int(get(vars, base + '.精神.睡眠')) || 0;
-            var fatigue = int(get(vars, base + '.狀態.疲勞')) || 0;
-            
-            var effects = {};
-            var statuses = {};
-            
-            function add(k, name, desc) {
-                effects[k] = { 狀態: name, 效果: desc };
-                statuses[k] = { name: name };
-            }
-            
-            // 同伴的水分（排尿需求）
-            if (water > 90) add('水分', '水分充足', '排尿正常。');
-            else if (water > 70) add('水分', '狀態正常', '無特殊效果。');
-            else if (water > 50) add('水分', '輕微口渴', '開始想喝水。');
-            else if (water > 30) add('水分', '明顯口渴', '排尿減少。');
-            else if (water > 10) add('水分', '輕度脫水', '排尿困難。');
-            else add('水分', '嚴重脫水', '幾乎無尿。');
-            
-            // 同伴的飽腹感（排便需求）
-            if (full > 95) add('飽腹感', '過飽', '有便意。');
-            else if (full > 85) add('飽腹感', '飽足', '消化正常。');
-            else if (full > 60) add('飽腹感', '狀態正常', '無特殊效果。');
-            else if (full > 30) add('飽腹感', '輕微飢餓', '腸胃正常。');
-            else if (full > 10) add('飽腹感', '明顯飢餓', '排便減少。');
-            else add('飽腹感', '極度飢餓', '無排便。');
-            
-            // 同伴的壓力（影響排泄）
-            if (stress < 10) add('壓力', '心神沉靜', '排泄正常。');
-            else if (stress < 50) add('壓力', '狀態正常', '無特殊效果。');
-            else if (stress < 80) add('壓力', '高度焦慮', '緊張導致排泄異常。');
-            else add('壓力', '不堪重負', '排泄失調。');
-            
-            // 寫入效果
-            var curEff = get(vars, base + '.狀態.生效效果') || {};
-            for (var k in effects) {
-                var newEff = effects[k];
-                var old = curEff[k];
-                if (!old || old.狀態 !== newEff.狀態 || old.效果 !== newEff.效果) {
-                    set(vars, base + '.狀態.生效效果.' + k, newEff);
-                }
-            }
-            for (var k in curEff) {
-                if (k.startsWith('$')) continue;
-                if (!effects[k] && curEff[k] !== undefined) {
-                    set(vars, base + '.狀態.生效效果.' + k, null);
-                }
-            }
-        }
-    }
+   d. 劇情演出推進:
+      - 根據 劇情演出 數據,按照 `<劇情演出>` 規則執行:
+        1. 檢查狀態需要更新的事件
+        2. 評估是否有事件適合融入本回合
+        3. 記錄狀態變更到 ActionResult「劇情演出」欄位
 
-    // ========== 主修正函數 ==========
-    function applyCorrections(vars, oldVars) {
-        fixCount = 0;
-        delCount = 0;
-        debugLog('修正開始');
+   e. 天氣演變執行（🔴每回合自動執行）:
+      - 根據 4.e天氣數據,嚴格按照 `<weather_rules>` 執行:
+        1. 計算本回合時間差,加到天氣持續時間
+        2. 若「持續時間」 ≥ 60 分鐘或「當前位置」變更時 → 擲骰判定變化方向
+        3. 若有變化 → 套用過渡鏈,更新天氣,重置持續時間
+        4. 將結果記錄到 ActionResult「環境變化」欄位
 
-        try {
-            // 處理性愛結果
-            var sexResults = ensureSexResultArray(vars);
-            if (sexResults.length > 0) {
-                var remaining = [];
-                var INITIAL_COUNTDOWN = 2;
-                
-                for (var i = 0; i < sexResults.length; i++) {
-                    var result = sexResults[i];
-                    
-                    if (result.刪除倒數 === undefined || result.刪除倒數 === null) {
-                        var name = result.角色;
-                        if (name) {
-                            var base = '同伴.' + name;
-                            var affection = v(get(vars, base + '.技能.好感(對王彬).等級'), 1);
-                            var forced = v(get(vars, base + '.淪陷.強制次數'), 0);
-                            var special = get(vars, base + '.淪陷.特殊狀態') || '';
-                            
-                            var statusEffects = [];
-                            var compEff = get(vars, base + '.狀態.生效效果');
-                            if (_.isPlainObject(compEff)) {
-                                for (var k in compEff) {
-                                    if (k.startsWith('$')) continue;
-                                    if (compEff[k] && compEff[k].狀態) {
-                                        statusEffects.push(compEff[k].狀態);
-                                    }
-                                }
-                            }
-                            
-                            var isSudden = (result.有預警 === false);
-                            var hasTrauma = (special.indexOf('關係動搖') !== -1 || special.indexOf('嚴重創傷') !== -1);
-                            
-                            var voluntary = calculateVoluntary(affection, result.情境 || '情感推進', statusEffects, isSudden, hasTrauma, special);
-                            var grade = getResultGrade(voluntary);
-                            var newCorruption = getCorruptionStage(forced, affection);
-                            var change = calculateAffectionChange(voluntary, affection, result.情境 || '情感推進', special, result.完成 !== false);
-                            
-                            var updatedResult = {
-                                角色: result.角色,
-                                完成: result.完成,
-                                內射: result.內射,
-                                避孕措施: result.避孕措施 || '無',
-                                情境: result.情境 || '情感推進',
-                                自願度: voluntary,
-                                自願分級: grade.grade,
-                                描寫建議: grade.description,
-                                淪陷階段: { 階段: newCorruption.stage, 名稱: newCorruption.name },
-                                關係變化: { 經驗變化: change.expChange, 等級變化: change.levelChange },
-                                特殊狀態: change.newSpecialStatus || '無',
-                                刪除倒數: INITIAL_COUNTDOWN,
-                                授精者: result.授精者 || '阿彬'
-                            };
-                            
-                            sexResults[i] = updatedResult;
-                            result = updatedResult;
-                            
-                            if (result.完成 === true && result.內射 === true) {
-                                calculatePregnancy(vars, name, true, result.避孕措施);
-                            }
-                            
-                            if (change && (change.expChange !== 0 || change.levelChange !== 0)) {
-                                var currentExp = get(vars, base + '.技能.好感(對王彬).當前經驗') || 0;
-                                var currentLevel = get(vars, base + '.技能.好感(對王彬).等級') || 1;
-                                var newExp = Math.max(0, currentExp + change.expChange);
-                                var newLevel = Math.max(1, currentLevel + change.levelChange);
-                                if (newExp !== currentExp) set(vars, base + '.技能.好感(對王彬).當前經驗', newExp);
-                                if (newLevel !== currentLevel) set(vars, base + '.技能.好感(對王彬).等級', newLevel);
-                            }
-                            
-                            if (newCorruption.stage !== undefined) {
-                                var currentStage = get(vars, base + '.淪陷.當前階段') || 0;
-                                if (newCorruption.stage !== currentStage) {
-                                    set(vars, base + '.淪陷.當前階段', newCorruption.stage);
-                                }
-                            }
-                            
-                            if (change.newSpecialStatus && change.newSpecialStatus !== special) {
-                                set(vars, base + '.淪陷.特殊狀態', change.newSpecialStatus);
-                            }
-                        }
-                        remaining.push(result);
-                        continue;
-                    }
-                    
-                    result.刪除倒數--;
-                    if (result.刪除倒數 > 0) {
-                        remaining.push(result);
-                    }
-                }
-                
-                set(vars, '系統.性愛結果', remaining);
-            }
-            
-            // 更新懷孕階段
-            updatePregnancyStage(vars, '');
-            var companions = get(vars, '同伴');
-            if (_.isPlainObject(companions)) {
-                for (var name in companions) {
-                    if (name.startsWith('$')) continue;
-                    updatePregnancyStage(vars, '同伴.' + name);
-                }
-            }
-            
-            // 時間消耗（影響排泄需求）
-            processTimeConsumption(vars);
-            
-            // 狀態效果（包含排泄慾）
-            processStatusEffects(vars);
-            processCompanionStatusEffects(vars);
-            
-            // 更新前次時間
-            var currentTime = get(vars, '系統.當前時間');
-            var currentDay = get(vars, '系統.經過天數');
-            if (currentTime) set(vars, '系統.前次時間', currentTime);
-            if (currentDay !== undefined) set(vars, '系統.前次天數', currentDay);
-            
-        } catch(e) {
-            errorLog('修正錯誤:', e.message);
-            if (DEBUG_MODE) console.error(e.stack);
-        }
-    }
+   f. 同伴人設調整判定:
+      - 根據 4.d同伴人設指導 列出人設調整後的同伴資訊:
+        - 來歷:____(例:21世紀地球)
+        - 知識區間:____
+        - 性格:____
+        - 說話方式(含內心獨白):____
+        - 待人態度:____
+        - 情感態度:____
+      - 將分析結論加入 ActionResult「同伴人設指導」欄位
 
-    // ========== 事件掛載 ==========
-    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, function(vars) {
-        var d = vars.stat_data;
-        lastSnapshot = {
-            day: get(d, '系統.經過天數'),
-            time: get(d, '系統.當前時間'),
-            hpMax: get(d, '生理.生命值上限'),
-            hpCur: get(d, '生理.當前生命值')
-        };
-        fixCount = 0;
-        delCount = 0;
-        lastLogHash = '';
-    });
+   g. 受傷狀況判定:
+      - 根據 受傷狀態 判斷本回合傷勢是否有變化（惡化或好轉）
+      - 傷勢分級基準:
+        - 輕微:擦傷、淺割傷 → 生命值 -5~-10,流血=有（淺層）,疼痛=1~3
+        - 中度:深割傷、挫傷、扭傷 → 生命值 -15~-25,流血=有（明顯）,疼痛=4~6,行動受限
+        - 嚴重:骨折、貫穿傷、大面積撕裂 → 生命值 -30~-50,流血=有（大量）,疼痛=7~10,行動嚴重受限
+      - 恢復評估基準:
+        - 自然恢復率:輕微 5%/小時、中度 2%/小時、嚴重 1%/小時
+        - 包紮/醫療處理後:恢復率 ×1.5
+        - 感染狀態中:恢復率 ×0.5,且每日 1d100 ≤ 20% 惡化
+      - 若有變化,計算新的恢復進度,記錄到 ActionResult「受傷」欄位,格式:`角色名 / 部位與傷勢 / 流血狀態 / 疼痛等級 / 行動限制描述 / 恢復程度:[X%→Y%]`
 
-    eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function(newVars, oldVars) {
-        if (isProcessing) return;
-        isProcessing = true;
-        try {
-            applyCorrections(newVars.stat_data, oldVars.stat_data);
-        } catch(e) {
-            errorLog('處理錯誤:', e);
-            if (DEBUG_MODE) console.error(e.stack);
-        } finally {
-            isProcessing = false;
-        }
-    });
+   h. 性愛檢查（🔴僅當分流為 B 類時執行）:
+      - 根據 4.e性愛請求 按照 `<sex_rules>` 執行:
+       1. 情境分類判斷（武力→藥物→壓力→調教→情感推進）
+       2. 對照自願度區間表，確認是否發生
+       3. 插入式性交（陰道交/肛交）的額外條件：
+           - 若情境為「武力強迫」、「藥物影響」、「調教誘騙」、「被動捲入（壓力）」→ 允許插入，不受舒適度限制
+           - 若情境為「情感推進」且 環境.舒適度 ≥ 75 → 允許插入
+           - 若情境為「情感推進」且 環境.舒適度 < 75 → 阻止插入
+           - 🔴 禁止在正文中直接引用「舒適度」、「體感溫度」、「環境.XXXX」等系統數值作為理由，必須轉化為天災、他人介入、突發事件、角色的內在感受或情境理由。
+       4. 判定性行為結果（完成/內射/授精者/避孕措施/情境）
+       5. 記錄到 ActionResult「性愛結果」字段
+      ⚠️ 武力強迫情境需進行力量對抗檢定。
 
-    // ========== 對外接口 ==========
-    window.processSexualInteraction = function(vars, data) {
-        // 外部調用性愛事件
-        var name = data.characterName;
-        var base = '同伴.' + name;
-        var affection = v(get(vars, base + '.技能.好感(對王彬).等級'), 1);
-        var forced = v(get(vars, base + '.淪陷.強制次數'), 0);
-        var special = get(vars, base + '.淪陷.特殊狀態') || '';
-        
-        var statusEffects = [];
-        var compEff = get(vars, base + '.狀態.生效效果');
-        if (_.isPlainObject(compEff)) {
-            for (var k in compEff) {
-                if (k.startsWith('$')) continue;
-                if (compEff[k] && compEff[k].狀態) statusEffects.push(compEff[k].狀態);
-            }
-        }
-        
-        var voluntary = calculateVoluntary(
-            affection,
-            data.interactionType || '情感推進',
-            statusEffects,
-            data.isSudden || false,
-            special.indexOf('關係動搖') !== -1 || special.indexOf('嚴重創傷') !== -1,
-            special
-        );
-        
-        var grade = getResultGrade(voluntary);
-        var forcedInc = false;
-        if (data.interactionType === '強制欺騙' && voluntary < 30 && special !== '徹底沉淪') {
-            forced++;
-            forcedInc = true;
-        }
-        
-        var newCorruption = getCorruptionStage(forced, affection);
-        var change = calculateAffectionChange(voluntary, affection, data.interactionType || '情感推進', special, data.isSuccess !== false);
-        
-        if (change && (change.expChange !== 0 || change.levelChange !== 0)) {
-            var currentExp = get(vars, base + '.技能.好感(對王彬).當前經驗') || 0;
-            var currentLevel = get(vars, base + '.技能.好感(對王彬).等級') || 1;
-            var newExp = Math.max(0, currentExp + change.expChange);
-            var newLevel = Math.max(1, currentLevel + change.levelChange);
-            if (newExp !== currentExp) set(vars, base + '.技能.好感(對王彬).當前經驗', newExp);
-            if (newLevel !== currentLevel) set(vars, base + '.技能.好感(對王彬).等級', newLevel);
-        }
-        
-        if (forcedInc) set(vars, base + '.淪陷.強制次數', forced);
-        if (newCorruption.stage !== undefined) {
-            var currentStage = get(vars, base + '.淪陷.當前階段') || 0;
-            if (newCorruption.stage !== currentStage) set(vars, base + '.淪陷.當前階段', newCorruption.stage);
-        }
-        if (change.newSpecialStatus && change.newSpecialStatus !== special) {
-            set(vars, base + '.淪陷.特殊狀態', change.newSpecialStatus);
-        }
-        
-        var result = {
-            角色: name,
-            完成: data.isSuccess !== false,
-            內射: data.isInternalEjaculation === true,
-            避孕措施: data.避孕措施 || '無',
-            情境: data.interactionType || '情感推進',
-            自願度: voluntary,
-            自願分級: grade.grade,
-            淪陷階段: { 階段: newCorruption.stage, 名稱: newCorruption.name },
-            關係變化: { 經驗變化: change.expChange, 等級變化: change.levelChange },
-            特殊狀態: change.newSpecialStatus || '無',
-            描寫建議: grade.description
-        };
-        
-        var results = ensureSexResultArray(vars);
-        results.push(result);
-        set(vars, '系統.性愛結果', results);
-        keyLog('💕 性愛事件已記錄 (' + results.length + ' 筆)');
-        
-        return result;
-    };
+   i. 生效效果彙總（🔴強制執行,必須輸出）:
+      - <user>:遍歷 `狀態.生效效果`,對每個非「狀態正常」的條目輸出 `[類別]:[狀態名]:[效果描述(僅摘重點)]`,若無則不輸出
+      - 同伴:根據同伴的生效效果數值評估,格式同上
 
-    window.calculatePregnancy = calculatePregnancy;
-    window.getResultGrade = getResultGrade;
-    window.calculateVoluntary = calculateVoluntary;
-    
-    window._mvuFinalStableV08152 = true;
-    console.log('✅ 性愛與生理系統已載入 (精簡版)');
-})();
+   j. 劇情方向判定:
+      - 具體引導方向:[一句話說明本回合應如何朝劇情方向推進]
+      - 本回合是否適合發生「曖昧意外」:[是/否 ,程度:輕/中/重]
+        - 曖昧意外不適合常常發生，要搭配氣氛、地點、兩人曖昧關係、場景等來評估，意外程度如下：
+          - 輕度:意外的輕微肢體接觸，適合工作等場景
+          - 中度:無意的間接接吻、肢體大面接接觸等(如摔倒在身上、跌倒後剛好摸到胸部等)，適合用餐、外出探索等場景
+          - 重度:意外接觸性器官、看見裸體等，適合洗澡、排泄、戶外獨處等
+
+6. 正文創作
+   - 用餐時間(7、12、18點)要主動安排吃三餐,如果因為加班或趕工,完成之後也要補上用餐的劇情,另外吃完中餐必須午休,可以安排一些溫馨、甜蜜的劇情,晚餐後要洗澡,可以安排一些曖昧的劇情.
+   - 性愛互動:按 `<sex_rules>` 在正文中呈現,需包含情境鋪陳、情感反應、身體描寫
+    - 🔴【舒適度硬性閘門（最高優先級）】:
+     讀取 環境.舒適度 數值:
+     - 若 舒適度 < 75:
+       👉 絕對禁止任何實質性插入（陰道交/肛交）與體內射精！
+       👉 思考鏈必須強制構思阻礙情節（例如：突發天災、聲響打斷、生理期腹痛、少女羞澀臨陣退縮、或僅限於衣物外的邊緣愛撫/口手侍奉）。
+     - 若 舒適度 ≥ 75:
+       👉 允許依據好感度與自願度推進實質性插入。
+   - 背德任務獎勵包含「實物類」獎勵時,必須完整描寫贈送場景,呈現流程為「贈送場景 → 同伴心理活動 → 玩家反應」
+   - 按照步驟4 強制讀取清單融入正文
+       - 當存糧天數過低時的警示計畫:____
+   - 若步驟5 中的各項有變化或推進,在下方用一句話列出融入正文方向；無則填「無」：
+       - 天氣變化(包含體感溫度須轉化為具體生理反應與行為描寫,須包含視/觸/行為),並考慮是否適合發生「天災」(包含地震、暴雨、雪崩、火災等,特殊地形可搭配<特殊天氣>)
+          - 天氣融入計畫:____
+          - 體感溫度影響:____
+       - 建造/製作/狩獵進度融入:____
+       - 劇情演出正文創作:____
+       - 受傷/恢復狀態融入:____
+         - 受傷當下:描寫受傷瞬間的反應、傷口外觀、即時處置
+         - 恢復期間:透過活動範圍逐步擴大、疼痛表情逐漸減輕、行走姿態變化來暗示恢復進展
+         - 痊癒階段:角色主動提及「好多了」或做出之前做不到的動作來自然收尾
+         - 禁止直接說出「流血=有」或「恢復進度40%」
+       - 生效效果(含同伴)融入:____
+         - 參考5.i 內容,用生活化細節間接體現（舔嘴唇、揉肌肉、嘆息）,禁止直接說出名稱
+            - 輸出影響結果:____
+            - 有哪些項目影響:____
+            - 正文融入方向:____
+       - 劇情方向:
+         - 在此回合的融入計畫:____
+         - 曖昧意外計畫:[若為「是」則寫具體事件描述，並註明程度（輕/中/重）；若為「否」則寫「無」]
+
+7. 最終完整性檢查（逐項勾選）
+   ☑ 時間/人設/物品來源/信息邊界/敘事一致/無元數據
+   ☑ 行為被拒絕時有對應反應
+   ☑ 三餐要吃,中餐後要午休
+   ☑ ActionResult欄位與正文行為對應
+   ☑ 天氣變化有過渡描寫
+   ☑ (B類)敏感部位/性癖好/背德經歷已應用；完成/內射欄位正確
+   ☑ 劇情方向已納入決策並在正文中自然體現
+   
+在正文末尾用分隔線分隔後,輸出當前地點及東南西北四個方向可去的區塊,格式如下
+<local>
+**所在地: 靜謐溪地**
+北: 融雪溪谷 (步行45分鐘 / 騎馬15分鐘) [資源:融雪水源、冷水鱒魚、麋鹿]
+南: 望湖臺地 (步行30分鐘 / 騎馬10分鐘) [資源:月光纈草、石灰石、野菜]
+東: 巨石丘陵 (步行30分鐘 / 騎馬10分鐘) [資源:硬木、銅礦石、蕁麻]
+西: 迴響松林 (步行30分鐘 / 騎馬10分鐘) [資源:軟木、樹脂、牛肝菌]
+</local>
+
+(此處只生成,不在思考過程中列出)然後必須接着輸出<ActionResult>塊:
+<ActionResult>
+時間推進: [開始時間]→[結束時間] (共X小時X分鐘)
+  - 一般對話:每次只推進10分鐘。
+  - 激烈對話:每次只推進30分鐘。
+  - 性愛場景:每次只推進15分鐘。
+  - 工作場景:按照劇情+檢定中列出的所需時間
+地點變化: [新位置] (如未移動則寫「無」)
+存糧變化: [舊→新]存糧天數(如無變化則寫「無」)
+任務缺失: [類型 / 剛完成、缺失中]
+舒適度: [舊→新]舒適度(無變化則寫「無」)
+受傷:[新建:[角色名 / 部位與傷勢 / 流血狀態 / 疼痛等級 / 行動限制描述] / 更新:[角色名 / 部位與傷勢 / 流血狀態 / 疼痛等級 / 行動限制描述 / 恢復程度:[X%→Y%]]]
+環境變化:  天氣持續時間 [新數值] / 天氣 [新天氣] / 亮度 [新亮度] / 體感溫度 [新體感溫度] / 體溫 [新體溫] 。 (如無變化則寫對應字段保持原值)
+關係變化: [同伴.名] → [新關係] (如無則寫「無」)
+作物(畜牧)收成: [名稱]×[數量] (如無則寫「無」)
+  - 遍歷`/作物/名/生長階段`,如為「可收割」，則為可收成，需列出
+  - 遍歷`/畜牧/名/產出物/產出狀況`,如為「已產出」，則為可收成，需列出
+研究進度: 
+  - 新建: [類別 / 研究項名 / 總進度:X] (如無則寫"無")
+  - 完成: [類別 / 研究項名] (如無則寫"無")
+  - 推進: [類別 / 研究項名 / 當前進度:X / 總進度:X] (如無則寫"無")
+劇情演出:
+  - 狀態更新: [同伴.名 / 事件-主題-序號 / 從X狀態變更爲Y狀態] (如無則寫"無")
+  - 新事件生成: [同伴.名 / 事件-主題-序號-未發放:描述 / 延續舊主題"主題名"或"新主題"] (如無則寫"無")
+  - 主題完結清理: [同伴.名 / 主題名 / 刪除該主題所有條目] (如無則寫"無")
+商店更新:
+  - 商品刷新: [是/否]
+  - 商品售出: [商品名] / 費用:生存點數X (如爲盲盒則寫商品名後追加"→開出:[具體商品名]") (如無則寫"無")
+項目: 
+  - 新建: [項目名 / 類別:建造(或其他) / 總進度:X / 工項清單:[工項1:需求Y][工項2:需求Z]... / 所需材料總量:[材料名]×[數量] / 項目產出:描述](如無則寫"無")
+  - 推進: [項目名 / 工項:[工項名稱] 進度 舊值→新值 / 總進度 舊值%→新值% / 當前狀態:進行中/已完成全部工項](如無則寫"無")
+  - 工項完成: [項目名 / 工項:[工項名稱] 已完成](如無則寫"無")
+  - 最終檢查: [項目名 / 材料驗證:足夠/不足 / 檢定難度:X / 檢定結果:成功/失敗 / 狀態變更:待檢查/待材料/待檢查,待材料/完工](如無則寫"無")
+  - 材料補足: [項目名 / 短缺材料:[材料名]×[數量] / 驗證結果:足夠/仍不足 / (若足夠)消耗材料:[材料名]-[數量] / 完工](如無則寫"無")
+  - 完工: [項目名 / 消耗材料:[材料名]-[數量] / 項目產出:描述](如無則寫"無")
+彩蛋/探索: [彩蛋:"成就描述"+20求生點數(出處)] 或 [新區域:"區域名"+20求生點數] (如無則寫"無")
+同伴人設指導:[同伴名 / 人設指導方向、內容]
+性愛結果:
+  - 角色: [同伴名]
+  - 完成: [是/否]
+  - 內射: [是/否]
+  - 授精者: [記錄具體授精對象,若內射為「是」則必填]
+  - 避孕措施: [無/保險套/體外射精/避孕藥/安全期/肛交]
+  - 情境: [情感推進/調教誘騙/武力強迫/被動捲入/苗床淪陷]
+  - 來源視角: [正文 / 平行事件] # 明確標註來源，避免與主場景衝突
+  - 自願度: [0-100]
+  - 自願分級: [高度自願-主動/積極/害羞 / 矛盾-... / 非自願-...]
+  - 描寫建議: [簡要方向]
+  - 淪陷階段: [簡單說明]
+  - 深度數據變化: [性癖好 / 敏感部位 / 背德經歷]
+  - 特殊狀態: [簡單說明]
+
+</ActionResult>
+
+<ActionResult> 塊填寫說明:
+- 所有字段都必須填寫,不能省略。無對應事件的字段寫"無"。
+- 環境變化:列出本回合結束時的天氣、天氣持續時間。即使沒有變化也必須寫當前值,不能留空。氣溫、亮度、風速由獨立腳本自動處理。
+- 舒適度:初始舒適度為0,建立營地後,以當前營地各項建設及食衣住行育樂的滿足度來評估數值,主要評估為「居住的舒適度」。
+- 注意:這個區塊只傳遞已確定的結果,不涉及數值計算。變量AI會根據此塊中的信號執行具體的數據更新。
+
+***
+}}

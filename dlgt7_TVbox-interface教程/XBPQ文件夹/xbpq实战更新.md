@@ -1,0 +1,71 @@
+首先，xbpq是用最少的参数实现网站配置，所以拿到一个网站，不要盲目的想着把所有参数都提取出来，要根据实际情况，添加需要的参数。
+下边就陆续开始根据日常写源的情况，汇总一下。慢慢加强对教程的理解。
+
+https://www.hongguodj1.cc  今天拿红果短剧来练练手。
+
+首先，写最基本的，这个不管是简写还是全写都需要写的，写完看看情况，jar里是有一些内置模板的，如果网站结构和内置模板一样，则能正常显示，不能正常显示，则根据情况，添加相应的参数：
+
+{
+
+    "主页url": "https://www.hongguodj1.cc/",
+    "分类url": "https://www.hongguodj1.cc/vod/type/id/{cateId}/page/{catePg}.html",	
+    "分类": "短剧大全$duanjudaquan#闪婚离婚$shanhunlihun#女频恋爱$nvpinlianai#反转爽剧$fanzhuanshuangju#脑洞悬疑$naodongxuanyi#年代穿越$niandaichuanyue#现代都市$xiandaidushi",
+  }
+
+这个网站还是比较简单的，写了三个参数就能看了，没有海报图片，下边我们来添加以下这个参数，再看看效果。
+
+<img src=" https://github.com/user-attachments/assets/f4086243-36c5-4899-ab48-d33390cdb5d2 " width="40%">    
+<img src="https://github.com/user-attachments/assets/a6e2d855-875e-4d26-b5e9-75b56171c34f " width="40%">
+
+{
+
+    "主页url": "https://www.hongguodj1.cc/",
+    "分类url": "https://www.hongguodj1.cc/vod/type/id/{cateId}/page/{catePg}.html",	
+    "分类": "短剧大全$duanjudaquan#闪婚离婚$shanhunlihun#女频恋爱$nvpinlianai#反转爽剧$fanzhuanshuangju#脑洞悬疑$naodongxuanyi#年代穿越$niandaichuanyue#现代都市$xiandaidushi",
+    "图片": "data-src=\"&&\"",
+    "图片前缀": "https://www.hongguodj1.cc"
+    
+  }
+
+  现在已经能正常显示图片了，愉快的观影吧。后续会陆续汇总其它参数的添加，今天这几个参数都比较简单，就不贴网站源码了，照着教程就能实战。
+  
+  <img src="https://github.com/user-attachments/assets/f15e6c77-f805-45f2-81b2-0ea8e93161cf " width="40%">
+
+  出现下面情况，需要添加数组：
+  
+  <img src="https://github.com/user-attachments/assets/6c699a30-88a9-4ae6-a176-51bb621520f9 " width="40%">
+  
+网页源码如下，查看提取数据：
+  {
+
+  								<li class="col-md-6 col-sm-4 col-xs-3">
+									<div class="stui-vodlist__box">
+										<a class="stui-vodlist__thumb lazyload" href="/vod/1879.html" title="花间令" data-original="https://img9.doubanio.com/view/photo/s_ratio_poster/public/p2905719646.jpg">
+											<span class="pic-text text-center"> 已完结 </span>
+										</a>
+										<div class="stui-vodlist__detail">
+											<h4 class="title text-overflow"><a href="/play/1879-1-1.html" title="花间令">花间令</a></h4>
+										</div>
+									</div>
+								</li>
+    }
+  
+  {
+  
+    "主页url": "https://www.nmdvd.cc/",
+    "分类url": "https://www.nmdvd.cc/vodshow/area/{area}/class/{class}/id/{cateId}/page/{catePg}/year/{year}.html",  
+    "分类": "电影$dianying#剧集$juji#动漫$dongman#综艺$zongyi#短剧$duanju",
+    "数组": "<div class=\"stui-vodlist__box\">&&</div>",
+    "图片": "data-original=\"&&\"",
+    "嗅探词": "m3u8#mp4#flv"
+    
+  }
+  
+  添加数组以后：
+  
+  
+  <img src="https://github.com/user-attachments/assets/c0f62141-a04e-40ad-881f-1749e7c089ba " width="40%">
+
+
+
+

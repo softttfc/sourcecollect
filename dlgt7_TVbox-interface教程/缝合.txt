@@ -1,0 +1,109 @@
+
+
+三、精缝操作指南
+1. 准备工作
+准备好需要缝合的 XBPQ.jar 包（约300k大小）。
+
+2. 打开文件
+使用 MT管理器 找到 XBPQ.jar，点击并选择“查看”，点击内部的 classes.dex 文件，选择 Dex编辑器++ 打开。
+
+3. 防冲突重命名（关键步骤）
+进入 com/github/catvod/spider 目录。
+
+长按需要修改的文件（通常保留核心入口文件如 XBPQ 不动，其他通用文件需修改）。
+
+选择 重命名。
+
+注意：修改文件名（例如加后缀 -xbpq）时，确保MT管理器提示会同步修改“类名”或“引用”，或者使用“批量重命名”功能并勾选更新引用。
+
+目的：防止这些通用文件与原项目中的文件重名，导致打包冲突或运行错误。
+
+4. 文件夹重命名
+同样在 spider 目录下，找到 merge 文件夹（如果有），长按选择重命名为 merge-xbpg。
+
+目的：隔离路径，防止包名冲突。
+
+5. 保存修改
+修改完成后，一直按返回键，直到提示“是否保存并更新”，选择 是。此时 classes.dex 已被修改。
+
+6. 转为 Smali
+再次点击修改后的 classes.dex，选择 Dex转Smali（或直接解压出dex后用工具转），最终得到包含smali代码的压缩包或文件夹（此处记为 classes.zip）。
+
+7. 解压资源
+解压 classes.zip 文件。如果解压过程中提示文件名冲突，请检查是否还有重名文件未处理，必要时修改文件名以共存。
+
+8. 植入项目
+将解压后得到的 spider 和 parser 文件夹，复制到 CatVodSpider 项目的以下路径中： ./jar/3rd/xbpq/
+
+检查层级：复制完成后，请确保路径结构如下，不要多套一层文件夹：
+
+./jar/3rd/xbpq/spider/ (打开里面直接是 .smali 文件)
+
+./jar/3rd/xbpq/parser/ (打开里面直接是 .smali 文件)
+
+9. 修改构建脚本 (genJar.bat)
+找到项目根目录下的 genJar.bat 文件，右键编辑。将内容完全替换为以下修正后的代码。
+
+
+
+代码段
+
+@echo off
+setlocal
+
+:: 设置当前目录
+set "CURRENT_DIR=%~dp0"
+
+:: 1. 清理旧文件
+del "%CURRENT_DIR%\custom_spider.jar" 2>nul
+
+:: 2. 反编译主程序 Dex
+echo Decompiling Main Classes...
+java -jar "%CURRENT_DIR%\3rd\baksmali-2.5.2.jar" d "%CURRENT_DIR%\..\app\build\intermediates\dex\release\minifyReleaseWithR8\classes.dex" -o "%CURRENT_DIR%\Smali_classes"
+
+:: 3. 清理工作区旧数据
+rd /s/q "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\spider"
+rd /s/q "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\parser"
+rd /s/q "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\js"
+
+:: 4. 重建目录结构
+if not exist "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\" md "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\"
+
+:: 5. 移动主程序 Smali 到工作区
+move "%CURRENT_DIR%\Smali_classes\com\github\catvod\spider" "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\"
+move "%CURRENT_DIR%\Smali_classes\com\github\catvod\parser" "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\"
+move "%CURRENT_DIR%\Smali_classes\com\github\catvod\js" "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\"
+
+:: ==========================================
+:: 6. 核心缝合：植入 XBPQ 代码
+:: ==========================================
+echo Injecting XBPQ Smali...
+
+:: 复制 spider 目录 (使用 /s 包含子目录, /y 自动覆盖)
+xcopy /s /y "%CURRENT_DIR%\3rd\xbpq\spider\*" "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\spider\"
+
+:: 检查并复制 parser 目录
+if not exist "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\parser\" md "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\parser\"
+xcopy /s /y "%CURRENT_DIR%\3rd\xbpq\parser\*" "%CURRENT_DIR%\spider.jar\smali\com\github\catvod\parser\"
+:: ==========================================
+
+:: 7. 回编译打包
+echo Rebuilding Jar...
+java -jar "%CURRENT_DIR%\3rd\apktool_2.4.1.jar" b "%CURRENT_DIR%\spider.jar" -c
+
+:: 8. 输出最终文件
+move "%CURRENT_DIR%\spider.jar\dist\dex.jar" "%CURRENT_DIR%\custom_spider.jar"
+
+:: 9. 生成 MD5 校验
+certUtil -hashfile "%CURRENT_DIR%\custom_spider.jar" MD5 | find /i /v "md5" | find /i /v "certutil" > "%CURRENT_DIR%\custom_spider.jar.md5"
+
+:: 10. 清理临时垃圾
+rd /s/q "%CURRENT_DIR%\spider.jar\build"
+rd /s/q "%CURRENT_DIR%\spider.jar\smali"
+rd /s/q "%CURRENT_DIR%\spider.jar\dist"
+rd /s/q "%CURRENT_DIR%\Smali_classes"
+
+echo Build Done.
+pause
+10. 开始打包
+保存上述 BAT 文件后，双击运行 build.bat 或 genJar.bat。打包过程应与原版一致，无报错即为缝合成功。

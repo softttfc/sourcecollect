@@ -1,0 +1,21 @@
+ 路径：app/src/main/java/com/fongmi/android/tv/api/config/VodConfig.java
+113-131行：蜂蜜源代码如下：只修改了124-126行
+   private void loadConfig(int id, Config config, Callback callback) {
+        try {
+            OkHttp.cancel(TAG);
+            Server.get().start();
+            String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
+            checkJson(id, config, callback, Json.parse(json).getAsJsonObject());
+            if (taskId.get() == id && config.equals(this.config)) config.update();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            if (isCanceled(e)) return;
+            if (taskId.get() != id) return;
+            if (TextUtils.isEmpty(config.getUrl())) {
+                String url = "添加你自己的源地址";
+                config.setUrl(url);
+            }
+            if (TextUtils.isEmpty(config.getUrl())) App.post(() -> callback.error(""));
+            else App.post(() -> callback.error(Notify.getError(R.string.error_config_get, e)));
+        }
+    }
