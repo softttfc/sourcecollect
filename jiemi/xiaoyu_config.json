@@ -34,8 +34,7 @@
         "url": "./txt/HB_mobile.txt",
         "playerType": 1,
         "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-        "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png",
-        "timeout": 15
+        "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
     },
     {
         "name": "湖北组播综合",
@@ -43,8 +42,7 @@
         "playerType": 1,
         "url": "./txt/HB_zonghe.txt",        
         "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-        "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png",
-        "timeout": 15
+        "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
     }
 ],
 
@@ -106,59 +104,45 @@
         "api": "csp_AppRJ",
         "ext": {
             "url": "http://v.rbotv.cn"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "韩圈",
         "name": "韩圈🔹App",
         "type": 3,
         "api": "csp_Hxq",
-        "ext": "http://www.小不点.com/api/2026/fishhxq.php",
-        "timeout": 10
+        "ext": "http://www.小不点.com/api/2026/fishhxq.php"
     },
     {
         "key": "瓜子影视",
         "name": "瓜子🔹影视",
         "type": 3,
-        "api": "csp_Gz360",
-        "timeout": 10
+        "api": "csp_Gz360"
     },
     {
         "key": "枫叶影视",
         "name": "枫叶🔹影视",
         "type": 3,
         "api": "csp_FengYe",
-        "ext": "https://www.vip1949.com/",
-        "timeout": 10
+        "ext": "https://www.vip1949.com/"
     },
     {
         "key": "山楂影视",
         "name": "山楂🔹影视",
         "type": 3,
-        "api": "csp_PianKu8",
-        "timeout": 10
+        "api": "csp_PianKu8"
     },
     {
         "key": "永乐影视",
         "name": "永乐🔹影视",
         "type": 3,
-        "api": "./py/yongle.py",
-        "timeout": 10
+        "api": "./py/yongle.py"
     },
     {
         "key": "可可影视",
         "name": "可可🔹影视",
         "type": 3,
-        "api": "./py/kkys.py",
-        "timeout": 10
-    },
-    {
-        "key": "云朵影视",
-        "name": "云朵🔹App",
-        "type": 3,
-        "api": "./py/云朵影视.py",
-        "timeout": 10
+        "api": "./py/kkys.py"
     },
     {
         "key": "橘汁",
@@ -175,8 +159,7 @@
             "site": "https://123-1349250429.cos.ap-shanghai.myqcloud.com/app.txt",
             "version": "3.0.2.3",
             "decrypt": "1"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "天堂",
@@ -193,8 +176,7 @@
             "site": "https://dyttandroid04-1372779881.cos.ap-shanghai.myqcloud.com/app_dyttandroid.txt",
             "version": "3.0.0.7",
             "decrypt": "0"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "苹果",
@@ -211,28 +193,14 @@
             "site": "https://xpgandroid03-1372779881.cos.ap-beijing.myqcloud.com/app_xpg_android.txt",
             "version": "1.0.0.3",
             "decrypt": "0"
-        },
-        "timeout": 10
-    },
-    {
-        "key": "小鹿",
-        "name": "小鹿🔹App",
-        "type": 3,
-        "api": "csp_AppQi",
-        "ext": {
-            "url": "https://xiaolu.pwwhu.cn",
-            "dataKey": "x5Bep6Q78VCeYnPS",
-            "dataIv": "x5Bep6Q78VCeYnPS"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "金牌",
         "name": "金牌🔹App",
         "type": 3,
         "api": "csp_Jpys",
-        "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.sizhengxt.com,https://m.jiabaide.cn",
-        "timeout": 10
+        "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.sizhengxt.com,https://m.jiabaide.cn"
     },
     {
         "key": "蓝鹰",
@@ -245,22 +213,19 @@
             "dataIv": "ca94b06ca359d80e",
             "init": "initV120",
             "ua": "okhttp/3.10.0"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "飞娱影视",
         "name": "飞娱🔹影视",
         "type": 3,
-        "api": "csp_Feiyu",
-        "timeout": 10
+        "api": "csp_Feiyu"
     },
     {
         "key": "独播影视",
         "name": "独播🔹影视",
         "type": 3,
-        "api": "csp_Duboku",
-        "timeout": 10
+        "api": "csp_Duboku"
     },
     {
         "key": "厂长影视",
@@ -268,46 +233,40 @@
         "type": 3,
         "api": "csp_Czsapp",
         "playerType": "2",
-        "ext": "https://cz01.vip",
-        "timeout": 10
+        "ext": "https://cz01.vip"
     },
     {
         "key": "小宝影视",
         "name": "小宝🔹影视",
         "type": 3,
         "api": "csp_XBPQ",
-        "ext": "./json/小宝影视.json",
-        "timeout": 10
+        "ext": "./json/小宝影视.json"
     },
     {
         "key": "飞快TV",
         "name": "飞快🔹影视",
         "type": 3,
         "api": "csp_XBPQ",
-        "ext": "./json/feikuaiTV.json",
-        "timeout": 10
+        "ext": "./json/feikuaiTV.json"
     },
     {
         "key": "骚火影视",
         "name": "骚火🔹影视",
         "type": 3,
         "api": "csp_SaoHuo",
-        "ext": "https://shdy5.us",
-        "timeout": 10
+        "ext": "https://shdy5.us"
     },
     {
         "key": "独播影视",
         "name": "独播🔹影视",
         "type": 3,
-        "api": "csp_Duboku",
-        "timeout": 10
+        "api": "csp_Duboku"
     },
     {
         "key": "机器人",
         "name": "爱看🔹机器",
         "type": 3,
-        "api": "csp_Ikanbot",
-        "timeout": 10
+        "api": "csp_Ikanbot"
     },
     {
         "key": "360资源",
@@ -321,24 +280,21 @@
         "name": "🐝天堂🔹采集",
         "type": 1,
         "api": "https://caiji.dyttzyapi.com/api.php/provide/vod",
-        "categories": ["动作片","喜剧片","爱情片","科幻片","恐怖片","剧情片","战争片","国产剧","香港剧","韩国剧","欧美剧","记录片","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","港台综艺","日韩综艺","欧美综艺","国产动漫","日韩动漫","欧美动漫","港台动漫","伦理片","短剧","动画片"],
-        "timeout": 10
+        "categories": ["动作片","喜剧片","爱情片","科幻片","恐怖片","剧情片","战争片","国产剧","香港剧","韩国剧","欧美剧","记录片","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","港台综艺","日韩综艺","欧美综艺","国产动漫","日韩动漫","欧美动漫","港台动漫","伦理片","短剧","动画片"]
     },
     {
         "key": "非凡资源",
         "name": "🐝非凡🔹采集",
         "type": 1,
         "api": "http://cj.ffzyapi.com/api.php/provide/vod",
-        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","动漫片","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片"],
-        "timeout": 10
+        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","动漫片","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片"]
     },
     {
         "key": "量子资源",
         "name": "🐝量子🔹采集",
         "type": 1,
         "api": "https://cj.lziapi.com/api.php/provide/vod",
-        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片","动画片","AI漫剧"],
-        "timeout": 10
+        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片","动画片","AI漫剧"]
     },
     {
         "key": "csp_Wogg",
@@ -414,40 +370,35 @@
         "name": "📱星芽🔹短剧",
         "type": 3,
         "api": "csp_ShortXingya",
-        "genre": "shortdrama",
-        "timeout": 10
+        "genre": "shortdrama"
     },
     {
         "key": "好看短剧",
         "name": "📱好看🔹短剧",
         "type": 3,
         "api": "csp_ShortHaokan",
-        "genre": "shortdrama",
-        "timeout": 10
+        "genre": "shortdrama"
     },
     {
         "key": "七猫短剧",
         "name": "📱七猫🔹短剧",
         "type": 3,
         "api": "csp_ShortQimao",
-        "genre": "shortdrama",
-        "timeout": 10
+        "genre": "shortdrama"
     },
     {
         "key": "河马短剧",
         "name": "📱河马🔹短剧",
         "type": 3,
         "api": "csp_ShortHema",
-        "genre": "shortdrama",
-        "timeout": 10
+        "genre": "shortdrama"
     },
     {
         "key": "围观短剧",
         "name": "📱围观🔹短剧",
         "type": 3,
         "api": "csp_ShortWeiguan",
-        "genre": "shortdrama",
-        "timeout": 10
+        "genre": "shortdrama"
     },
     {
         "key": "红果短剧",
@@ -459,8 +410,7 @@
             "编码": "UTF-8",
             "分类": "重生$1#穿越$2#爽剧$3#言情$4#都市$5#古装$6#悬疑$7#剧情$8",
             "分类url": "https://www.mochadj.com/i/{cateId}-{catePg}.html"
-        },
-        "timeout": 10
+        }
     },
     {
         "key": "西饭短剧",
@@ -468,30 +418,26 @@
         "type": 3,
         "api": "./js/西饭短剧.js",
         "quickSearch": 0,
-        "searchable": 0,
-        "timeout": 10
+        "searchable": 0
     },
     {
         "key": "喵呜动漫",
         "name": "🤡喵呜🔹动漫",
         "type": 3,
-        "api": "csp_MiaoWu",
-        "timeout": 10
+        "api": "csp_MiaoWu"
     },
     {
         "key": "魔都动漫",
         "name": "🤡魔都🔹动漫",
         "type": 3,
-        "api": "csp_MoDu",
-        "timeout": 10
+        "api": "csp_MoDu"
     },
     {
         "key": "巴士动漫",
         "name": "🤡巴士🔹动漫",
         "type": 3,
         "api": "csp_XYQHiker",
-        "ext": "./json/bashidm.json",
-        "timeout": 10
+        "ext": "./json/bashidm.json"
     },
     {
         "key": "蜻蜓FM",
@@ -500,38 +446,33 @@
         "api": "csp_QingtingFM",
         "style": {
                 "type": "list"
-            },
-        "timeout": 15
+            }
     },
     {
         "key": "米兔音乐",
         "name": "🎸米兔🔹音乐",
         "type": 3,
         "api": "./douban/drpy3.min.js",
-        "ext": "./js/music/mituyy.js",
-        "timeout": 15
+        "ext": "./js/music/mituyy.js"
     },
     {
         "key": "酷我音乐",
         "name": "🎸酷我🔹音乐",
         "type": 3,
-        "api": "./py/music/酷我音乐.py",
-        "timeout": 15
+        "api": "./py/music/酷我音乐.py"
     },
     {
         "key": "爱听音乐",
         "name": "🎸爱听🔹音乐",
         "type": 3,
-        "api": "./py/music/aitingyinyue.py",
-        "timeout": 15
+        "api": "./py/music/aitingyinyue.py"
     },
     {
       "key": " 音乐磁场", 
       "name": "🎸音乐🔹磁场", 
       "type": 3, 
       "api": "csp_XBPQ",
-      "ext": "./json/music/yinyuecc.json",
-      "timeout": 15
+      "ext": "./json/music/yinyuecc.json"
     },
     {
         "key": "世界听书",
@@ -540,8 +481,7 @@
         "api": "csp_TingShijie",
         "style": {
             "type": "list"
-        },
-        "timeout": 15
+        }
     },
 
 {"key": "BiliYS","name": "🅱️哔哩🔹影视","type": 3,"api": "csp_BiliYS","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./json/Biliys.json"}},
@@ -721,8 +661,6 @@
     
     {"name": "抖音","hosts": ["douyin.com"],"regex": ["is_play_url="]}
 ],
-
-"headers":[{"host":"hlsztemgsplive.miguvideo.com","header":{"User-Agent": "bingcha/1.1 (mianfeifenxiang) "}}],
 
 "hosts": [
         "cache.ott.*.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com",
