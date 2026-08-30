@@ -307,9 +307,10 @@
         "filterable": 1,
         "ext": {
             "site": [
-                "https://wogg.333232.xyz",
-                "https://www.wogg.one",
-                "https://woggpan.888484.xyz"
+                "https://www.wogg.live",
+                "https://woggpan.888484.xyz",
+                "https://wogg.xxooo.cf",
+                "https://woggpan.xxooo.cf"
             ]
         }
     },
@@ -324,12 +325,10 @@
         "filterable": 1,
         "ext": {
             "site": [
-                "https://mihdr.top",
-                "https://www.miqk.cc",
-                "https://xiaomiai.site",
-                "https://xiaomi666.fun",
-                "https://www.mihdr.top",
-                "https://www.zhizhenpan.fun"
+                "https://sp.zzzy.shop",
+                "https://www.zhizhen8.click",
+                "https://www.zhizhen1.top",
+                "https://www.mihdr.top"
             ]
         }
     },
@@ -337,16 +336,16 @@
         "key": "蜡笔",
         "name": "📀蜡笔🔹4K",
         "type": 3,
-        "api": "csp_Wogg",
+        "api": "csp_PanWebShare",
         "searchable": 1,
         "quickSearch": 1,
         "changeable": 0,
         "filterable": 1,
         "ext": {
             "site": [
-                "https://www.labi88.sbs",
-                "https://feimao666.fun",
-                "http://feimao888.fun"
+                "http://tvpanpan.site",
+                "http://feimo.fun",
+                "https://www.mmpanpan.site"
             ]
         }
     },
@@ -419,18 +418,6 @@
         "api": "./js/西饭短剧.js",
         "quickSearch": 0,
         "searchable": 0
-    },
-    {
-        "key": "喵呜动漫",
-        "name": "🤡喵呜🔹动漫",
-        "type": 3,
-        "api": "csp_MiaoWu"
-    },
-    {
-        "key": "魔都动漫",
-        "name": "🤡魔都🔹动漫",
-        "type": 3,
-        "api": "csp_MoDu"
     },
     {
         "key": "巴士动漫",
