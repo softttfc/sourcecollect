@@ -18,7 +18,14 @@
       "api": "http://154.8.225.238:9991/cang/lib/drpy2.min.js",
       "ext": "http://yp2.mftv.top/js/mg.js"
     },
-
+    {
+      "key": "备用2",
+      "name": "备用",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTlhSFZpWVc0akl5Tm9kV0poYmc9PQ=="
+      },
     {
       "key": "cms",
       "name": "主·推荐4k",
@@ -32,21 +39,43 @@
       "ext": "http://8.mftv.top/api.php/app/"
     },
     {
-      "key": "盘3",
-      "name": "免扫网盘",
-      "type": 3,
-      "api": "csp_AppYsV2",
-      "jar": "http://yp2.mftv.top/jar/og/jar.jar",
-      "ext": "http://111.231.104.229:5578/Emby5/Emby5.php?ck=eddbd55a&filter=true"
+      "key": "备用",
+      "name": "推荐4k",
+      "type": 4,
+      "api": "http://sf4.mftv.top/cs/ythy%E8%A7%82%E5%BD%B1.php?filter=true",
+     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
     },
     {
-      "key": "哥哥玩",
-      "name": "📢🌈哥哥4K",
-      "type": 3,
-      "api": "csp_ZC4K",
-      "jar": "https://gitee.com/zhouyadong7033/box/raw/master/JS/ZC4KK.jar",
-      "ext": "eyJhcmVhIjoiIiwieWVhciI6IiIsImxldHRlciI6IiIsInNvcnQiOiIiLCJjbGFzcyI6IiIsImNhdGVnb3J5SWQiOiI0NCJ9"
+      "key": "备用1",
+      "name": "4k",
+      "type": 4,
+      "api": "http://sf4.mftv.top/gy/ythy%E8%A7%82%E5%BD%B1.php?filter=true",
+     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
     },
+    {
+      "key": "wanou_sites",
+      "name": "网盘直连1",
+      "type": 4,
+      "api": "http://111.231.104.229:5578/Emby7/Emby7.php?ck=b7cd8eab&filter=true",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+   },
+    {
+      "key": "wanou_sites2",
+      "name": "网盘4K直连",
+      "type": 4,
+      "api": "http://111.231.104.229:5578/Emby5/Emby5.php?ck=2b34718a&filter=true",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+   },
     {
       "key": "hipy_js_腾云驾雾[官]",
       "name": "藤藤-（臻彩视界4K）",
