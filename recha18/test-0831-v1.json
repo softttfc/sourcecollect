@@ -2,10 +2,21 @@
     "spider": "./jar/399640384_3_1788121085146.jar;md5;01e3d12b032b87e2e1f7c278453881ce",
     "logo": "https://p3-pc.douyinpic.com/img/aweme-avatar/tos-cn-i-0813_6e2553f5708c414386eeca88b5f2674a~c5_300x300.jpeg?from=2956013662",
     "wallpaper": "http://127.0.0.1:9978/proxy?do=wallpaper",
-    "notice": "115.09.01 ver.1 修修修",  
+    "notice": "115.09.01 ver.2 修修修",  
     "danmaku": "http://127.0.0.1:5266/danmu/webhtv?name={name}&episode={episode}",
     "sites": [
-
+        {
+            "name": "📦特狗┃秒播",
+            "key": "AppV6Tg",
+            "type": 3,
+            "api": "csp_AppV6Amns",
+            "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
+            "searchable": 1,
+            "quickSearch": 1,
+            "changeable": 0,
+            "ext": "AppV6Tg"
+        },
+ 
     {
       "key": "豆瓣",
       "name": "[官源]熱播排行榜自動切換",
@@ -118,21 +129,25 @@
       "name": "[點播]銀牌",
       "type": 3,
       "api": "csp_YIysAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
     },
-    {
-      "key" : "皮皮虾",
-      "name": "[點播]銅牌",
-      "type": 3,
-      "api" : "./py/皮皮虾.py",
-      "ext" : "http://43.248.117.123:4680"
-    },
+        {
+            "key": "光影",
+            "name": "[點播]銅牌",
+            "type": 3,
+            "api": "csp_T4Guard",
+            "jar": "./jar/fan-0720.jar;md5;4f014e5152a3481b34b34b52292b94b1",
+            "searchable": 1,
+            "quickSearch": 1,
+            "changeable": 0,
+            "ext": "rfOIzPkSUkANv6AT2prC8en3+Trbx4j10CIoZMv3Ag4bdEYQqTMqu/Z3YPtC2NJv6n6YeZdgyWlo4WJjBL5gUt6B7LvCEDT4CLrWka31GRq7jwVkfQRB/Jy9HkG7E8xUBIJi5DdVFk3qAuGnwUWqQNRblRxzHW+tdSm6zoFcG/QkZ97bzWOXn0fzbgwjBDkBHgcPIYjlULlctCNKgJ9DzGNSl+zMZDZgmxczsZeeahRS38Cst3qvaHn1T2lmLBGVGXPaRovi77LPRRDOJSNRrdpvCHdRikYwgar0MU56hXMGeGBiKp/OmGTIYR8dFRGvZ/m8xGOqs8U13h6wvADOGlYoP9VaQBqTcDnz9Q0Urhw3oFXWyvIlUrDhX9la5L2NYzagbyk3afqhxeSXXp07nAFsNy2CojHRTbmz4eohLoIJTSi2DzPpheVx1DAapfgRdTc7Ax5ddYpN338GiDAa0GnEgLe04a1pZ5jF+/Q7HJswqlSO+DXCQ3FjRbb/ZPQcozcCWwzhUHE1QUAt799V9DPMuiHGyudIcZarGQmezB+Lb45RdHIRy0PXD+NRVPJlfDFD5FMGSqsiVklibvuwlVHT8J5vHgh/1nEZoI1RlYYLrkjTts2EeQmrpB/sgLyo1vnjFw=="
+        },      
     {
       "key"       : "py_aidianying",
-      "name"      : "[點播]鐵牌藍光",
+      "name"      : "[點播]鐵牌",
       "type"      : 3,
       "api"       : "./py/aidianying.py",
       "searchable": 1,
@@ -268,18 +283,7 @@
       "order_num"  : 0,
       "style"      : {"type": "rect"},
       "ext"        : ""
-    },
-        {
-            "key": "光影",
-            "name": "[點播]光影",
-            "type": 3,
-            "api": "csp_T4Guard",
-            "jar": "./jar/fan-0720.jar;md5;4f014e5152a3481b34b34b52292b94b1",
-            "searchable": 1,
-            "quickSearch": 1,
-            "changeable": 0,
-            "ext": "rfOIzPkSUkANv6AT2prC8en3+Trbx4j10CIoZMv3Ag4bdEYQqTMqu/Z3YPtC2NJv6n6YeZdgyWlo4WJjBL5gUt6B7LvCEDT4CLrWka31GRq7jwVkfQRB/Jy9HkG7E8xUBIJi5DdVFk3qAuGnwUWqQNRblRxzHW+tdSm6zoFcG/QkZ97bzWOXn0fzbgwjBDkBHgcPIYjlULlctCNKgJ9DzGNSl+zMZDZgmxczsZeeahRS38Cst3qvaHn1T2lmLBGVGXPaRovi77LPRRDOJSNRrdpvCHdRikYwgar0MU56hXMGeGBiKp/OmGTIYR8dFRGvZ/m8xGOqs8U13h6wvADOGlYoP9VaQBqTcDnz9Q0Urhw3oFXWyvIlUrDhX9la5L2NYzagbyk3afqhxeSXXp07nAFsNy2CojHRTbmz4eohLoIJTSi2DzPpheVx1DAapfgRdTc7Ax5ddYpN338GiDAa0GnEgLe04a1pZ5jF+/Q7HJswqlSO+DXCQ3FjRbb/ZPQcozcCWwzhUHE1QUAt799V9DPMuiHGyudIcZarGQmezB+Lb45RdHIRy0PXD+NRVPJlfDFD5FMGSqsiVklibvuwlVHT8J5vHgh/1nEZoI1RlYYLrkjTts2EeQmrpB/sgLyo1vnjFw=="
-        },    
+    },  
     {
       "key"        : "比特",
       "name"       : "[點播]比特",
@@ -330,7 +334,7 @@
       "name": "[點播]優影",
       "type": 3,
       "api": "csp_YspAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
@@ -340,7 +344,7 @@
       "name": "[點播]韓劇",
       "type": 3,
       "api": "csp_HxqAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0
@@ -361,7 +365,7 @@
       "name": "[點播]獨播庫",
       "type": 3,
       "api": "csp_DubkAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -385,7 +389,7 @@
       "name": "[點播]金牌",
       "type": 3,
       "api": "csp_JinPaiAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0
@@ -448,7 +452,7 @@
       "name": "[點播]哔嘀2K",
       "type": 3,
       "api": "csp_BidysAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -459,7 +463,7 @@
       "name": "[點播]愛壹帆",
       "type": 3,
       "api": "csp_AiyfAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
@@ -492,11 +496,18 @@
       "api"        : "./py/八天电影.py"
     },
     {
+      "key" : "皮皮虾",
+      "name": "[點播]皮皮蝦",
+      "type": 3,
+      "api" : "./py/皮皮虾.py",
+      "ext" : "http://43.248.117.123:4680"
+    },    
+    {
       "name": "[點播]哔嘀2K",
       "key": "Bidys",
       "type": 3,
       "api": "csp_BidysAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -507,7 +518,7 @@
       "name": "[點播]愛瓜",
       "type": 3,
       "api": "csp_AiGuaAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
@@ -536,7 +547,7 @@
       "key": "AppV7Fz",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -547,7 +558,7 @@
       "key": "AppV7Xy",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -558,7 +569,7 @@
       "key": "AppV7Zjdr",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -569,7 +580,7 @@
       "key": "AppV7Xyz",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -580,7 +591,7 @@
       "key": "AppV7Xnm",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -591,7 +602,7 @@
       "key": "AppV7Mtq",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -602,7 +613,7 @@
       "key": "AppV7Llq",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -613,7 +624,7 @@
       "key": "AppV7Xsz",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -624,7 +635,7 @@
       "key": "AppV7Xhr",
       "type": 3,
       "api": "csp_AppV7Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -681,7 +692,7 @@
       "name": "[點播]大师兄",
       "type": 3,
       "api": "csp_AppV6Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -693,7 +704,7 @@
       "name": "[點播]大師",
       "type": 3,
       "api": "csp_AppV6Amns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
@@ -981,8 +992,8 @@
         "请求头": "User-Agent$MOBILE_UA",
         "编码": "UTF-8",
         "分类url": "https://www.ylys.tv/vodshow/{cateId}-{area}-{by}-{class}-{lang}-{letter}---{catePg}---{year}.html",
-        "分类": "电影$1#电视劇$2#综艺$3#动漫$4",
-        "类型": "动作片$6#喜劇片$7#爱情片$8#科幻片$9#奇幻片$10#恐怖片$11#劇情片$12#战争片$20#动画片$26#悬疑片$22#冒险片$23#犯罪片$24#惊悚片$45#歌舞片$46#灾难片$47#网络片$48国产劇$13#港台劇$14#日劇$15#韩劇$33#欧美劇$16#泰劇$34#新马劇$35#其他劇$25内地综艺$27#港台综艺$28#日本综艺$29#韩国综艺$36#欧美综艺$30#新马泰综艺$37#其他综艺$38国产动漫$31#日本动漫$32#韩国动漫$39#港台动漫$40#新马泰动漫$41#欧美动漫$42#其他动漫$43"
+        "分类": "电影$1#电视劇$2#综艺$3#$4",
+        "类型": "动作片$6#喜劇片$7#爱情片$8#科幻片$9#奇幻片$10#恐怖片$11#劇情片$12#战争片$20#动画片$26#悬疑片$22#冒险片$23#犯罪片$24#惊悚片$45#歌舞片$46#灾难片$47#网络片$48国产劇$13#港台劇$14#日劇$15#韩劇$33#欧美劇$16#泰劇$34#新马劇$35#其他劇$25内地综艺$27#港台综艺$28#日本综艺$29#韩国综艺$36#欧美综艺$30#新马泰综艺$37#其他综艺$38国产$31#日本$32#韩国$39#港台$40#新马泰$41#欧美$42#其他$43"
       }
     },
         {
@@ -1061,7 +1072,7 @@
       "name": "[點播]歐樂(賭城廣告)",
       "type": 3,
       "api": "csp_OlyyAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
@@ -1465,7 +1476,7 @@
       "name": "[短劇]好看短剧",
       "type": 3,
       "api": "csp_HHkkAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -1476,7 +1487,7 @@
       "name": "[短劇]拜拜短剧",
       "type": 3,
       "api": "csp_BddjAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -1499,7 +1510,7 @@
       "name": "[短劇]七猫短剧",
       "type": 3,
       "api": "csp_QmdjAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -1510,7 +1521,7 @@
       "name": "[短劇]星星短剧",
       "type": 3,
       "api": "csp_XydjAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
@@ -1545,20 +1556,49 @@
             "filterable": 1,
             "changeable": 1
         },
-
         {
+            "name": "[動漫]囧途",
             "key": "DMcyc",
-            "name": "[動漫]囧途动漫",
             "type": 3,
             "api": "csp_DMcycAmns",
-            "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+            "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
+            "searchable": 1,
+            "quickSearch": 1,
+            "changeable": 0
+        },
+        {
+            "name": "[動漫]牛來",
+            "key": "DMox",
+            "type": 3,
+            "api": "csp_DMoxAmns",
+            "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
+            "searchable": 1,
+            "quickSearch": 1,
+            "changeable": 0
+        },
+        {
+            "name": "[動漫]青雲",
+            "key": "DMqingk",
+            "type": 3,
+            "api": "csp_DMqingkAmns",
+            "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
+            "searchable": 1,
+            "quickSearch": 1,
+            "changeable": 0
+        },       
+        {
+            "key": "DMcyc",
+            "name": "[動漫]囧途",
+            "type": 3,
+            "api": "csp_DMcycAmns",
+            "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
             "searchable": 1,
             "quickSearch": 1,
             "changeable": 0
         },       
     {
-      "key": "漫国动漫",
-      "name": "[動漫]漫国动漫",
+      "key": "漫国",
+      "name": "[動漫]漫国",
       "type": 3,
       "searchable": 1,
       "api": "csp_AppSy",
@@ -1571,8 +1611,8 @@
       }
     },
     {
-      "key": "方舟动漫",
-      "name": "[動漫]方舟动漫",
+      "key": "方舟",
+      "name": "[動漫]方舟",
       "type": 3,
       "searchable": 1,
       "api": "csp_AppGet",
@@ -1601,18 +1641,18 @@
       "quickSearch": 1
     },
     {
-      "key": "FanShu",
+      "key": "DMfans",
       "name": "[動漫]番薯",
       "type": 3,
-      "api": "csp_FanShuAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "api": "csp_DMfansAmns",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0
     },
     {
-      "key": "喵呜动漫",
-      "name": "[動漫]喵呜动漫",
+      "key": "喵呜",
+      "name": "[動漫]喵呜",
       "type": 3,
       "searchable": 1,
       "api": "csp_MiaoWu",
@@ -1620,19 +1660,19 @@
     },    
     {
       "key": "AowuDmMw",
-      "name": "[動漫]喵嗚动漫",
+      "name": "[動漫]喵嗚",
       "type": 3,
       "api": "csp_AowuDmAmns",
-      "jar": "./jar/aowu-0828.jar;md5;5b8862d1137cc2473444afba6d5884f3",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
       "ext": "db8b57143fce50cabe524135fd3fb26e4af09034942cb186addd2322edf17ab6c9b7862764598039301c43cf706efcd55499494d72c680001c30550747b3dc5994760e3d6e17208e5ed771b2b4162f65e72b3e530fdd9622474e1c5f8aecda41dcd17901c7ddc61193a63fd8aaa1a96dc8673f93a8116755fd04bb1baaa93215334aaa1327972f2dd7292eb3d593e60cad0b9a3dde2a1158640cfc93dac5af45ddd8f971e3be0ccb5c776752b9b92a7f67dc89375d7ad442bddb0c661554a03c420029010a932d2dd8e65d6dc5"
     },
-    {"key": "MiFun", "name": "[動漫]MiFun", "type": 3, "api": "./py/MiFun动漫.py"},
+    {"key": "MiFun", "name": "[動漫]MiFun", "type": 3, "api": "./py/MiFun.py"},
     {
       "key"        : "py_元咲_APP",
-      "name"       : "[動漫]元纓动漫",
+      "name"       : "[動漫]元纓",
       "type"       : 3,
       "api"        : "./py/app/getapp.py",
       "searchable" : 1,
@@ -1647,7 +1687,7 @@
     },
     {
       "key"        : "py_曼波_APP",
-      "name"       : "[動漫]曼波动漫",
+      "name"       : "[動漫]曼波",
       "type"       : 3,
       "api"        : "./py/app/getapp.py",
       "searchable" : 1,
@@ -1662,7 +1702,7 @@
     },
     {
       "key"        : "py_咕咕_APP",
-      "name"       : "[動漫]咕咕动漫",
+      "name"       : "[動漫]咕咕",
       "type"       : 3,
       "api"        : "./py/app/getapp.py",
       "searchable" : 1,
@@ -1687,16 +1727,16 @@
       "ext"        : "./json/動漫巴士.json"
     },
     {
-      "key" : "巴士动漫",
-      "name": "[動漫]巴士动漫",
+      "key" : "巴士",
+      "name": "[動漫]巴士",
       "type": 3,
       "api" : "csp_XYQHiker",
       "jar" : "./jar/xyqxbpq.jar;md5;fd3cefc7302f3a39a442682f802b11e5",
-      "ext" : "./json/巴士动漫.json"
+      "ext" : "./json/巴士.json"
     },
     {
       "key"        : "csp_天天動漫",
-      "name"       : "[動漫]天天動漫",
+      "name"       : "[動漫]天天",
       "type"       : 3,
       "api"        : "csp_XBPQ",
       "jar"        : "./jar/xyqxbpq.jar;md5;fd3cefc7302f3a39a442682f802b11e5",
@@ -1712,13 +1752,13 @@
         "跳转播放链接": "var player_*\"url\":\"&&\"",
         "主页url": "https://www.ttdm.me/vod-type/1/",
         "分类url": "https://www.ttdm.me/vod-show/{cateId}--{by}-{class}-----{catePg}---/",
-        "分类": " 中国动漫$1#日本动漫$2#欧美动漫$3#其他动漫$4#动画电影$5",
+        "分类": " 中国$1#日本$2#欧美$3#其他$4#动画电影$5",
         "劇情": "玄幻&科幻&武侠&冒险&战斗&搞笑&恋爱&魔幻&竞技&热血&治愈&励志&机战&奇幻&悬疑&日常&校园&真人&推理&历史&经典&美食&偶像"
       }
     },
     {
-      "key": "魔都动漫",
-      "name": "[動漫]魔都动漫",
+      "key": "魔都",
+      "name": "[動漫]魔都",
       "type": 3,
       "searchable": 1,
       "api": "csp_MoDu",
@@ -1726,12 +1766,12 @@
     },    
     {
       "key"       : "魔都",
-      "name"      : "[動漫]魔都动漫",
+      "name"      : "[動漫]魔都",
       "type"      : 0,
       "api"       : "https://caiji.moduapi.cc/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "changeable": 1,
-      "categories": ["国产动漫", "日韩动漫", "欧美动漫", "港台动漫", "动漫电影", "里番动漫"]
+      "categories": ["国产", "日韩", "欧美", "港台", "电影", "里番"]
     },
     {
       "key"        : "csp_AG動漫",
@@ -1744,22 +1784,22 @@
       "filterable" : 1,
       "ext"        : {
         "分类url": "https://agdm.tv/show/{cateId}/area/{area}/by/{by}/page/{catePg}/year/{year}.html",
-        "分类": "日本动漫$6#国产动漫$7#欧美动漫$8#海外动漫$21#劇场版$9",
+        "分类": "日本$6#国产$7#欧美$8#海外$21#劇场版$9",
         "地区": "日本&大陆&美国"
       }
     },
     {
-      "key"       : "py_樱花动漫",
-      "name"      : "[動漫]櫻花動漫",
+      "key"       : "py_樱花",
+      "name"      : "[動漫]櫻花",
       "type"      : 3,
-      "api"       : "./py/樱花动漫🔞.py",
+      "api"       : "./py/樱花🔞.py",
       "searchable": 1,
       "filterable": 0,
       "changeable": 1
     },
     {
       "key"        : "drpy_js_去看吧",
-      "name"       : "[動漫]去看动漫",
+      "name"       : "[動漫]去看",
       "type"       : 3,
       "searchable" : 1,
       "quickSearch": 1,
@@ -1769,7 +1809,7 @@
     },
     {
       "key"        : "drpy_js_爱弹幕",
-      "name"       : "[動漫]爱动漫",
+      "name"       : "[動漫]爱動漫",
       "type"       : 3,
       "searchable" : 1,
       "quickSearch": 1,
@@ -1779,7 +1819,7 @@
     },
     {
       "key"        : "hipy_js_七色番[漫]",
-      "name"       : "[動漫]七色番动漫",
+      "name"       : "[動漫]七色番",
       "type"       : 3,
       "searchable" : 1,
       "quickSearch": 1,
@@ -1789,7 +1829,7 @@
     },
     {
       "key"        : "hipy_js_爱弹幕[漫]",
-      "name"       : "[動漫]爱动漫",
+      "name"       : "[動漫]爱動漫",
       "type"       : 3,
       "api"        : "./drpy_libs/drpy2.min.js",
       "searchable" : 1,
@@ -1799,7 +1839,7 @@
     },        
         {
             "key": "XingHui",
-            "name": "[動漫]星绘动漫",
+            "name": "[動漫]星绘",
             "type": 3,
             "api": "csp_XingHui",
             "searchable": 1,
@@ -1810,7 +1850,7 @@
         },
         {
             "key": "FanShu",
-            "name": "[動漫]番薯动漫",
+            "name": "[動漫]番薯",
             "type": 3,
             "api": "csp_FanShu",
             "searchable": 1,
@@ -1820,14 +1860,14 @@
         },
         {
             "key": "双星",
-            "name": "[動漫]双星动漫",
+            "name": "[動漫]双星",
             "type": 3,
             "api": "csp_App88",
             "ext": "https://max.moyu666666.top/app88.php?site=legacy_b"
         },
         {
             "key": "XgAnime",
-            "name": "[動漫]西瓜动漫",
+            "name": "[動漫]西瓜",
             "type": 3,
             "api": "csp_XgAnime",
             "searchable": 1,
@@ -1836,7 +1876,7 @@
         },
         {
             "key": "Manbo",
-            "name": "[動漫]曼波动漫",
+            "name": "[動漫]曼波",
             "type": 3,
             "api": "csp_AppGet",
             "searchable": 1,
@@ -1846,7 +1886,7 @@
         },
         {
             "key": "Gugu",
-            "name": "[動漫]咕咕动漫",
+            "name": "[動漫]咕咕",
             "type": 3,
             "api": "csp_AppGet",
             "searchable": 1,
@@ -1876,7 +1916,7 @@
       "api"        : "http://www.mixuetv.top/api.php/provide/vod/at/xml",
       "categories" : [
         "国产剧",   "台灣剧",   "日本剧",   "美国剧",   "短剧",    "大陆综艺",  "日韩综艺",  "港台综艺",
-        "欧美综艺",  "国产动漫",  "日韓动漫",  "欧美动漫",  "奈飞电视剧", "奈飞电影",  "動作片",   "韓國劇",
+        "欧美综艺",  "国产",  "日韓",  "欧美",  "奈飞电视剧", "奈飞电影",  "動作片",   "韓國劇",
         "海外劇",   "港劇",    "恐怖片",   "科幻片",   "劇情片",   "戰爭片",   "愛情片"
       ],
       "searchable" : 1,
@@ -1901,7 +1941,7 @@
       "categories": [
         "国产劇",  "短片",   "动画片",  "香港劇",  "韩国劇",  "欧美劇",  "动作片",  "喜劇片",  "爱情片",
         "科幻片",  "恐怖片",  "劇情片",  "战争片",  "NBA",  "惊悚片",  "家庭篇",  "古装片",  "历史片",
-        "悬疑片",  "犯罪片",  "纪录片",  "台湾劇",  "大陆综艺", "国产动漫", "日韩动漫", "西部片"
+        "悬疑片",  "犯罪片",  "纪录片",  "台湾劇",  "大陆综艺", "国产", "日韩", "西部片"
       ]
     },
     {
@@ -1923,7 +1963,7 @@
       "categories" : [
         "动作片",  "喜剧片",  "爱情片",  "科幻片",  "恐怖片",  "剧情片",  "战争片",  "国产剧",  "欧美剧",
         "韩国剧",  "日本剧",  "港台剧",  "台湾剧",  "泰国剧",  "纪录片",  "海外剧",  "大陆综艺", "日韩综艺",
-        "港台综艺", "欧美综艺", "国产动漫", "日韩动漫", "欧美动漫", "动画片",  "港台动漫", "女频恋爱", "反转爽剧",
+        "港台综艺", "欧美综艺", "国产", "日韩", "欧美", "动画片",  "港台", "女频恋爱", "反转爽剧",
         "古装仙侠", "年代穿越", "脑洞悬疑", "现代都市"
       ]
     },
@@ -1947,7 +1987,7 @@
       "categories" : [
         "内地劇",  "欧美劇",  "日劇",   "韩劇",   "台湾劇",  "香港劇",  "马泰劇",  "悬疑片",  "喜劇片",
         "动作片",  "爱情片",  "科幻片",  "恐怖片",  "劇情片",  "战争片",  "犯罪片",  "记录片",  "动画片",
-        "日本动漫", "欧美动漫", "中国动漫", "大陆综艺", "日韩综艺", "港台综艺", "欧美综艺", "体育赛事"
+        "日本", "欧美", "中国", "大陆综艺", "日韩综艺", "港台综艺", "欧美综艺", "体育赛事"
       ]
     },
     {
@@ -1961,7 +2001,7 @@
       "categories" : [
         "动作片",  "喜劇片",  "爱情片",  "科幻片",  "恐怖片",  "劇情片",  "战争片",  "悬疑片",  "犯罪片",
         "奇幻片",  "记录片",  "动画片",  "内地劇",  "香港劇",  "台湾劇",  "日劇",   "韩劇",   "欧美劇",
-        "马泰劇",  "大陆综艺", "港台综艺", "日韩综艺", "欧美综艺", "中国动漫", "日本动漫", "欧美动漫"
+        "马泰劇",  "大陆综艺", "港台综艺", "日韩综艺", "欧美综艺", "中国", "日本", "欧美"
       ]
     },
     {
@@ -1972,9 +2012,9 @@
       "searchable" : 1,
       "quickSearch": 1,
       "categories" : [
-        "电影",   "连续劇",  "综艺",   "动漫",   "动作片",  "电影",   "喜劇片",  "爱情片",  "科幻片",
+        "电影",   "连续劇",  "综艺",   "",   "动作片",  "电影",   "喜劇片",  "爱情片",  "科幻片",
         "恐怖片",  "劇情片",  "战争片",  "国产劇",  "香港劇",  "台湾劇",  "日本劇",  "韩国劇",  "欧美劇",
-        "海外劇",  "纪录片",  "动漫电影", "邵氏大片"
+        "海外劇",  "纪录片",  "电影", "邵氏大片"
       ]
     },
     {
@@ -2024,7 +2064,7 @@
       "categories": [
         "动作片",  "喜劇片",  "爱情片",  "科幻片",  "恐怖片",  "犯罪片",  "战争片",  "劇情片",  "动画电影",
         "国产劇",  "港台劇",  "日韩劇",  "欧美劇",  "海外劇",  "网红主播", "日韩综艺", "港台综艺", "欧美综艺",
-        "大陆综艺", "国产动漫", "日韩动漫", "欧美动漫", "海外动漫", "海外抖音", "影视解说", "直播"
+        "大陆综艺", "国产", "日韩", "欧美", "海外", "海外抖音", "影视解说", "直播"
       ]
     },
     {
@@ -2047,7 +2087,7 @@
       "categories" : [
         "动作片",  "喜劇片",  "爱情片",  "科幻片",  "恐怖片",  "犯罪片",  "战争片",  "劇情片",  "动画电影",
         "国产劇",  "港台劇",  "日韩劇",  "欧美劇",  "海外劇",  "网红主播", "日韩综艺", "港台综艺", "欧美综艺",
-        "大陆综艺", "国产动漫", "日韩动漫", "欧美动漫", "海外动漫", "海外抖音", "影视解说", "直播"
+        "大陆综艺", "国产", "日韩", "欧美", "海外", "海外抖音", "影视解说", "直播"
       ]
     },
     {
@@ -2062,8 +2102,8 @@
       "categories" : [
         "动作片",  "喜劇片",  "爱情片",  "科幻片",  "恐怖片",  "劇情片",  "战争片",  "悬疑片",  "犯罪片",
         "冒险片",  "动画片",  "惊悚片",  "奇幻片",  "国产劇",  "欧美劇",  "韩劇",   "日劇",   "港劇",
-        "台劇",   "泰劇",   "大陆综艺", "日韩综艺", "港台综艺", "欧美综艺", "国产动漫", "日韩动漫", "欧美动漫",
-        "动画片",  "港台动漫", "海外动漫"
+        "台劇",   "泰劇",   "大陆综艺", "日韩综艺", "港台综艺", "欧美综艺", "国产", "日韩", "欧美",
+        "动画片",  "港台", "海外"
       ]
     },
     {
@@ -2077,8 +2117,8 @@
       "categories" : [
         "动作片",  "动画片",  "喜劇片",  "爱情片",  "科幻片",  "恐怖片",  "劇情片",  "战争片",  "悬疑片",
         "犯罪片",  "奇幻片",  "邵氏电影", "纪录片",  "短劇",   "国产劇",  "香港劇",  "台湾劇",  "日本劇",
-        "韩国劇",  "美国劇",  "泰劇",   "海外劇",  "大陆综艺", "港台综艺", "日韩综艺", "欧美综艺", "国产动漫",
-        "日韩动漫", "欧美动漫", "影视解说"
+        "韩国劇",  "美国劇",  "泰劇",   "海外劇",  "大陆综艺", "港台综艺", "日韩综艺", "欧美综艺", "国产",
+        "日韩", "欧美", "影视解说"
       ]
     },
     {
@@ -2090,8 +2130,8 @@
       "quickSearch": 1,
       "filterable" : 1,
       "categories" : [
-        "综艺",   "动漫",   "动作片",  "喜剧片",  "爱情片",  "科幻片",  "恐怖片",  "剧情片",  "战争片",
-        "国产剧",  "港澳剧",  "日剧",   "欧美剧",  "动漫电影", "台湾剧",  "韩剧",   "泰剧",   ",记录片",
+        "综艺",   "",   "动作片",  "喜剧片",  "爱情片",  "科幻片",  "恐怖片",  "剧情片",  "战争片",
+        "国产剧",  "港澳剧",  "日剧",   "欧美剧",  "电影", "台湾剧",  "韩剧",   "泰剧",   ",记录片",
         "短剧",   "奇幻片",  "犯罪片"
       ]
     },
@@ -2132,7 +2172,7 @@
       "filterable": 1,
       "categories": [
         "动作片",  "爱情片",  "科幻片",  "战争片",  "劇情片",  "恐怖片",  "喜劇片",  "大陆劇",  "港澳劇",
-        "台湾劇",  "欧美劇",  "动漫电影", "韩劇",   "日劇",   "泰劇"
+        "台湾劇",  "欧美劇",  "电影", "韩劇",   "日劇",   "泰劇"
       ]
     },
     {
@@ -2148,7 +2188,7 @@
       "categories" : [
         "国产剧",  "香港剧",  "韩国剧",  "欧美剧",  "记录片",  "台湾剧",  "日本剧",  "海外剧",  "泰国剧",
         "动作片",  "喜剧片",  "爱情片",  "科幻片",  "恐怖片",  "剧情片",  "战争片",  "大陆综艺", "港台综艺",
-        "日韩综艺", "欧美综艺", "国产动漫", "日韩动漫", "欧美动漫", "港台动漫", "海外动漫", "体育",   "足球",
+        "日韩综艺", "欧美综艺", "国产", "日韩", "欧美", "港台", "海外", "体育",   "足球",
         "篮球",   "网球",   "斯诺克",  "预告片",  "短剧",   "动画电影"
       ]
     },        
