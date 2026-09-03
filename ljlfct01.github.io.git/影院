@@ -1,406 +1,327 @@
-{
-  "spider": "http://109.244.56.3:8000/56d0b667615145949789418bff9f22a5-no-go-proxy.jar",
-  "sites": [
+{    "spider": "",
+    "sites": [
+        {
+            "key": "导航┃豆瓣",
+            "name": "导航┃豆瓣",
+            "type": 3,
+            "indexs": 1,
+            "api": "csp_Douban",
+            "ext": "http://cdn.huanxizm.com/newTvhome/image/eced6e9a8bbfc2d85908adfd3be87410.jpg"
+        },
 
-            {
-      "key": "腾讯弹幕",
-      "name": "👑 腾讯┃SVIP",
-      "searchable": 1,
+    {
+      "key": "备用1",
+      "name": "备用4k1",
       "type": 3,
-      "api": "http://154.8.225.238:9991/cang/lib/drpy2.min.js",
-      "ext": "http://yp2.mftv.top/js/tx.js"
-    }
-
-
-  ],
-  "lives": [
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTlhSFZpWVc0akl5Tm9kV0poYmc9PQ=="
+      },
     {
-      "name": "4K线路1",
-      "type": 0,
-      "url": "https://ghfast.top/https://raw.githubusercontent.com/tianze889/vbd/refs/heads/main/tvdsj0505.txt",
-      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
-      "logo": "https://epg.112114.xyz/logo/{name}.png"
-    },
+      "key": "备用2",
+      "name": "备用4k2",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTliR0ZpYVNNakkyeGhZbWs9"
+      },
     {
-      "name": "4K线路",
-      "type": 0,
-      "url": "https://ghfast.top/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/zb",
-      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
-      "logo": "https://epg.112114.xyz/logo/{name}.png"
-    },
- 
+      "key": "备用3",
+      "name": "备用4k3",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTljMmhoZVdGdVp5TWpJM05vWVhsaGJtYz0="
+      },
     {
-      "name": "哦了tv",
-      "type": 0,
-      "url": "https://ghfast.top/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/%E9%9D%92%E8%8B%B9%E6%9E%9C",
-      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
-      "logo": "https://epg.112114.xyz/logo/{name}.png"
-    },
-	     {
-            "name": "🐬综合直播 海豚影视交流群 TG：@hshsjk9",
-            "type": 0,
-            "playerType": 2,
-            "ua": "okhttp",
-			"url": "https://ghfast.top/https://raw.githubusercontent.com/fleung49/star/refs/heads/main/mit"
-         },
-		{
-            "name": "🐬风云源 海豚影视永久免费如有收费的都是骗子",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://iptv.4666888.xyz/FYTV.txt"
-        },
-		{
-            "name": "🐬各大源合集",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/807080747/zv/refs/heads/main/sese.txt"
-        }, 	
-	     {
-            "name": "🐬电视家",
-            "type": 0,
-            "playerType": 2,
-             "ua": "okhttp",
-			 "url": "https://ghfast.top/https://github.com/bang359/dsj/raw/main/dsjcs.txt"
-         },
-         {
-            "name": "🐬地方直播",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt"
-        }, 
-         {
-            "name": "🐬地方直播2",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/ipv4/result.m3u"
-        },    
-		{
-            "name": "🐬薄荷直播",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/bhmb.m3u"
-        },   
-		{
-            "name": "🐬全球直播",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/wujiangliu/live-sources/refs/heads/main/%E5%85%A8%E7%90%83%E7%9B%B4%E6%92%AD.m3u"
-        },
-		{
-            "name": "🐬咪咕直播",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "http://www.52top.com.cn:678/downloads/migu.txt"
-        },
-		{
-            "name": "🐬iptv直播",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/vinkerq/iptv-api/refs/heads/master/iptv.txt"
-        },
-		{
-            "name": "🐬juli",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://files.catbox.moe/h3mb5a.txt"
-        },	
-	    {
-            "name": "🐬小新TV",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "https://d.kstore.dev/download/9565/小新TV.txt"
+      "key": "备用4",
+      "name": "备用4k4",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTliM1ZuWlNNakkyOTFaMlU9"
+      },
+    {
+      "key": "备用5",
+      "name": "备用4k5",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTlaWEo0YVdGdkl5TWpaWEo0YVdGdg=="
+      },
+    {
+      "key": "备用6",
+      "name": "备用4k6",
+      "type": 3,
+      "api": "csp_ZC4K",
+     "jar": "http://yp2.mftv.top/zz4k666.jar",
+      "ext": "YUhSMGNEb3ZMMnRyTXk1dFpuUjJMblJ2Y0M5aGNHa3VjR2h3UDNOcGRHVTliWFZ2ZFNNakkyMTFiM1U9"
+      }
+  
+   
+    ],
+    "parses": [
+        {
+            "name": "解析聚合",
+            "type": 3,
+            "url": "Demo"
         },
         {
-            "name": "🐬北美长城源",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://ha.msbot.dpdns.org/wall.php"
-        }, 
-	    {
-            "name": "🐬台湾台",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://epg.pw/test_channels_taiwan.m3u"
-        },
-	    {
-            "name": "🐬体育台",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://82.156.243.185:33389/fwc.m3u"
-        },
-	    {
-            "name": "🐬国际TV",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/xJEYDAin/iptv/main/output/all_merged.m3u"
-        },
-	    {
-            "name": "🐬裤佬TV",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg1.m3u"
-        },
-		{
-            "name": "🐬裤佬TV2",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://tv.tmxk.kdns.fr/ex64181y"
-        },
-		{
-            "name": "🐬live.m3u",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://live.445569.xyz/live.m3u"
+            "name": "Json轮询",
+            "type": 2,
+            "url": "Sequence"
         },
         {
-            "name": "🐬Gather",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://iptv.yang-1989.eu.org/m3u/Gather.m3u"
+            "name": "老三",
+            "type": 1,
+            "url": "http://tvv.tw/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/zb"
         },
         {
-            "name": "🐬Mytv",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://cdn.qd.je/live.m3u"
+            "name": "getSBSjx",
+            "type": 1,
+            "url": "http://127.0.0.1:9978/proxy?do=seachdanmu&go=getSBSjx&url="
         },
         {
-            "name": "🐬新加坡(梯子)",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://xtvantsc.xyz/新加坡.m3u"
-        },
-	    {
-            "name": "🐬黄蚂蚁先锋推流源",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://ge.html-5.me//ii/黄蚂蚁先锋推流源.txt"
-        },
-        {
-            "name": "🐬风云源",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://iptv.4666888.xyz/FYTV.txt"
-        }, 
-       {
-            "name": "🐬飞扬源",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://www.985pan.com/down.php/bf5e9607ff407fcdd71f63928ea5bc79.txt"
-        },
-	    {
-            "name": "🐬港奥台国际",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://tv123.vvvv.ee/tv.m3u"
-        },
-        {
-            "name": "🐬中港台直播源",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://t.freetv.fun/m3u/playlist_all.txt"
-        },
-        {
-            "name": "🐬4GTV(梯子台湾节点)720p",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/4gtv.txt"
-        },
-	    {
-            "name": "🐬4GTV怡淳酒店(梯子台湾节点)720p",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://xtvantsc.xyz/4gtv.txt"
-        },
-	    {
-            "name": "🐬4GTV(梯子任何节点)1080p",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://ha.msbot.dpdns.org/4gtv_api.php"
-        },
-		{
-            "name": "🐬4GTV(免梯子)1080p",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "http://4gtv.cnlive.club/4gtv.m3u"
-        },
-        {
-            "name": "🐬jackTV(梯子)",
-            "type": 0,
-            "ua": "okhttp",
-            "url": "https://php.946985.filegear-sg.me/jackTV.m3u"
+            "name": "XM",
+            "type": 1,
+            "url": "http://127.0.0.1:9997/proxy?do=seachdanmu&go=getXmflvjx&url=",
+            "ext": {
+                "header": {
+                    "Accept": "*/*",
+                    "Origin": "https://jx.xmflv.com"
+                }
+            }
         }
-  ],
-  "parses": [
-
-
- {
-      "name": "4k",
-      "type": 1,
-      "url": "http://114.66.26.5:8686/api/index?parsesId=3&appid=10000&videoUrl="
-    }
-
-],
-  "ijk": [
-    {
-      "group": "软解码",
-      "options": [
-        {
-          "category": 4,
-          "name": "opensles",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "overlay-format",
-          "value": "842225234"
-        },
-        {
-          "category": 4,
-          "name": "framedrop",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "soundtouch",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "start-on-prepared",
-          "value": "1"
-        },
-        {
-          "category": 1,
-          "name": "http-detect-range-support",
-          "value": "0"
-        },
-        {
-          "category": 1,
-          "name": "fflags",
-          "value": "fastseek"
-        },
-        {
-          "category": 2,
-          "name": "skip_loop_filter",
-          "value": "48"
-        },
-        {
-          "category": 4,
-          "name": "reconnect",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "enable-accurate-seek",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-auto-rotate",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-handle-resolution-change",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-hevc",
-          "value": "0"
-        },
-        {
-          "category": 1,
-          "name": "dns_cache_timeout",
-          "value": "600000000"
-        }
-      ]
+    ],
+    "lives": [
+	    {
+      "name": "综合直播",
+      "type": 0,
+      "playerType": 2,
+      "url": "http://tvv.tw/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/zb",
+      "ua": "bingcha/1.1 (mianfeifenxiang) "
     },
-    {
-      "group": "硬解码",
-      "options": [
-        {
-          "category": 4,
-          "name": "opensles",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "overlay-format",
-          "value": "842225234"
-        },
-        {
-          "category": 4,
-          "name": "framedrop",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "soundtouch",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "start-on-prepared",
-          "value": "1"
-        },
-        {
-          "category": 1,
-          "name": "http-detect-range-support",
-          "value": "0"
-        },
-        {
-          "category": 1,
-          "name": "fflags",
-          "value": "fastseek"
-        },
-        {
-          "category": 2,
-          "name": "skip_loop_filter",
-          "value": "48"
-        },
-        {
-          "category": 4,
-          "name": "reconnect",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "enable-accurate-seek",
-          "value": "0"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-auto-rotate",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-handle-resolution-change",
-          "value": "1"
-        },
-        {
-          "category": 4,
-          "name": "mediacodec-hevc",
-          "value": "1"
-        },
-        {
-          "category": 1,
-          "name": "dns_cache_timeout",
-          "value": "600000000"
-        }
-      ]
+	    {
+      "name": "Kimentanm",
+      "type": 0,
+      "url": "https://ghfast.top/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u",
+      "playerType": 2
     }
-  ]
+    ],
+    "doh": [
+        {
+            "name": "Quad9",
+            "url": "https://dns.quad9.net/dns-quer",
+            "ips": [
+                "9.9.9.9",
+                "149.112.112.112"
+            ]
+        }
+    ],
+    "ads": [
+        
+    ],
+    "proxy": [
+        
+    ],
+    "rules": [
+        {
+            "name": "bdys10",
+            "hosts": [
+                "bdys10.com"
+            ],
+            "regex": [
+                "/obj/"
+            ],
+            "exclude": [
+                ".m3u8"
+            ]
+        }
+    ],
+    "ijk": [
+        {
+            "group": "软解码",
+            "options": [
+                {
+                    "category": 4,
+                    "name": "opensles",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "overlay-format",
+                    "value": "842225234"
+                },
+                {
+                    "category": 4,
+                    "name": "framedrop",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "soundtouch",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "start-on-prepared",
+                    "value": "1"
+                },
+                {
+                    "category": 1,
+                    "name": "http-detect-range-support",
+                    "value": "0"
+                },
+                {
+                    "category": 1,
+                    "name": "fflags",
+                    "value": "fastseek"
+                },
+                {
+                    "category": 2,
+                    "name": "skip_loop_filter",
+                    "value": "48"
+                },
+                {
+                    "category": 4,
+                    "name": "reconnect",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "enable-accurate-seek",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-auto-rotate",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-handle-resolution-change",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-hevc",
+                    "value": "0"
+                },
+                {
+                    "category": 1,
+                    "name": "dns_cache_timeout",
+                    "value": "600000000"
+                }
+            ]
+        },
+        {
+            "group": "硬解码",
+            "options": [
+                {
+                    "category": 4,
+                    "name": "opensles",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "overlay-format",
+                    "value": "842225234"
+                },
+                {
+                    "category": 4,
+                    "name": "framedrop",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "soundtouch",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "start-on-prepared",
+                    "value": "1"
+                },
+                {
+                    "category": 1,
+                    "name": "http-detect-range-support",
+                    "value": "0"
+                },
+                {
+                    "category": 1,
+                    "name": "fflags",
+                    "value": "fastseek"
+                },
+                {
+                    "category": 2,
+                    "name": "skip_loop_filter",
+                    "value": "48"
+                },
+                {
+                    "category": 4,
+                    "name": "reconnect",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "enable-accurate-seek",
+                    "value": "0"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-auto-rotate",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-handle-resolution-change",
+                    "value": "1"
+                },
+                {
+                    "category": 4,
+                    "name": "mediacodec-hevc",
+                    "value": "1"
+                },
+                {
+                    "category": 1,
+                    "name": "dns_cache_timeout",
+                    "value": "600000000"
+                }
+            ]
+        }
+    ],
+
+    "wallpaper": "http://tool.teyonds.com/api",
+    "flags": [
+        "youku",
+        "qq",
+        "QQ",
+        "iqiyi",
+        "qiyi",
+        "letv",
+        "sohu",
+        "pptv",
+        "PPTV",
+        "mgtv",
+        "wasu",
+        "bilibili",
+        "m1905",
+        "seven",
+        "m78",
+        "mtv",
+        "dbs",
+        "yds",
+        "HNB",
+        "JL4K"
+    ]
 }
