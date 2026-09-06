@@ -1335,7 +1335,7 @@
     },
         {
             "key": "HonHon",
-            "name": "[短劇]紅果短劇",
+            "name": "[短劇]紅果短劇(飯源)",
             "type": 3,
             "api": "csp_HonHon",
             "searchable": 1,
@@ -1347,10 +1347,22 @@
                 "quality": "1080p",
                 "danmu": false
             }
-        },    
+        },  
+    {
+      "key": "Hgdh",
+      "name": "[短劇]紅果短劇(嗷嗚)",
+      "type": 3,
+      "api": "csp_HgdhAmns",
+      "jar": "./jar/aowu-0901.jar;md5;08c0d2859e15f94294b697869f4ef899",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0,
+      "genre": "shortdrama",
+      "ext": "Hgdh"
+    },          
     {
       "key" : "果果短剧",
-      "name": "[短劇]紅果短剧",
+      "name": "[短劇]紅果短劇(瀟灑)",
       "type": 3,
       "api" : "csp_XBPQ",
       "jar" : "./jar/xiaosa-0813.jar;md5;a932698717d44bbf1780212ff05e3d6e",

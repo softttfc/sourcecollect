@@ -16,14 +16,14 @@
       "name": "👑 腾讯┃SVIP",
       "searchable": 1,
       "type": 3,
-      "api": "http://154.8.225.238:9991/cang/lib/drpy2.min.js",
+      "api": "http://yp2.mftv.top/drpy_libs/drpy2.min.js",
       "ext": "http://yp2.mftv.top/js/tx.js"
     },
       {
       "key": "芒果视频",
       "name": "👑 芒果┃SVIP",
       "type": 3,
-      "api": "http://154.8.225.238:9991/cang/lib/drpy2.min.js",
+      "api": "http://yp2.mftv.top/drpy_libs/drpy2.min.js",
       "ext": "http://yp2.mftv.top/js/mg.js"
     },
 
@@ -72,7 +72,7 @@
       "key": "依依1",
       "name": "依依4k1",
       "type": 4,
-      "api": "http://111.231.104.229:5578/Emby7/Emby7.php?ck=e5ae4f3c&filter=true",
+      "api": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/nav?token=",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
@@ -81,7 +81,7 @@
       "key": "依依2",
       "name": "依依4k2",
       "type": 4,
-      "api": "http://111.231.104.229:5578/Emby5/Emby5.php?ck=f6922e75&filter=true",
+      "api": "http://111.231.104.229:5578/Emby5/Emby5.php?ck=316f95eb&filter=true",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1

@@ -815,6 +815,7 @@ MOMO TV,
 靖洋戏剧,
 纬来育乐,
 东森超视,
+龙华偶像,
 
 央视台,#genre#
 CCTV-4K 高清,
@@ -3513,6 +3514,7 @@ Aqui No Hay Quien Viva,
 Goldmines 2,
 Еврокино,
 Русский Иллюзион,
+Nash Bridges Channel,
 
 电视剧🔁,#genre#
 科幻动作,
@@ -6655,6 +6657,8 @@ beIN Sports 1,
 beIN Sports 2,
 咪咕足球,
 咪咕体育,
+HTV Thể thao,
+MLB Channel,
 
 少儿,#genre#
 央视少儿,
@@ -6823,6 +6827,7 @@ Rock of Manila TV,
 音乐现场,
 B4U Hitz,
 KPVM Ace Country Radio,
+Страна FM,
 
 新闻,#genre#
 TVBS新闻,
@@ -6974,6 +6979,9 @@ Redseat The First,
 TGCom 24,
 Channel Y,
 KPVM OAN Plus,
+ASTV News 1,
+Gulistan News,
+Jovem Pan News (JP News),
 
 财经,#genre#
 央视财经,
