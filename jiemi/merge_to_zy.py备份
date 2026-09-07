@@ -23,45 +23,19 @@ def read_json_file(file_path):
     encoding = detect_encoding(file_path)
     try:
         with open(file_path, 'r', encoding=encoding) as f:
+            # 读取时用 json5，完美兼容所有不标准格式、注释等
             return json5.load(f)
     except Exception as e:
         print(f"[-] 读取 {file_path} 失败: {e}")
         return None
 
-def write_standard_json(file_path, data, reference_file, tvbox_count, moyu_count, xiaoyu_count):
+def write_standard_json(file_path, data, reference_file):
     encoding = detect_encoding(reference_file)
     try:
-        # 1. 先导出标准的格式化 JSON 字符串
-        json_str = json.dumps(data, ensure_ascii=False, indent=2)
-
-        # 2. 精准定位：只在三个配置源的“第一个对象 {”上方插入注释
-        lines = json_str.split("\n")
-        new_lines = []
-        object_index = 0
-
-        # 计算 TVBOX、MOYU、XIAOYU 对应第一个对象的序号 (索引从 0 开始)
-        tvbox_start = 0 if tvbox_count > 0 else -1
-        moyu_start = tvbox_count if moyu_count > 0 else -1
-        xiaoyu_start = (tvbox_count + moyu_count) if xiaoyu_count > 0 else -1
-
-        for line in lines:
-            # indent=2 时，sites 列表里的对象开头缩进刚好是 4 个空格 "    {"
-            if line == "    {":
-                if object_index == tvbox_start:
-                    new_lines.append("    // tvbox_config.json")
-                elif object_index == moyu_start:
-                    new_lines.append("    // moyu.json")
-                elif object_index == xiaoyu_start:
-                    new_lines.append("    // xiaoyu.json")
-                object_index += 1
-            
-            new_lines.append(line)
-
-        final_json_str = "\n".join(new_lines)
-
-        # 3. 写入文件
         with open(file_path, 'w', encoding=encoding) as f:
-            f.write(final_json_str)
+            # 关键：强制使用标准 json 库 dump！
+            # 这会强制给所有 keys 和 values 加上双引号，并生成最标准的大括号
+            json.dump(data, f, ensure_ascii=False, indent=2)
         print(f"[+] 成功生成/更新标准文件: {file_path}")
     except Exception as e:
         print(f"[-] 写入 {file_path} 失败: {e}")
@@ -85,22 +59,16 @@ def merge_sites():
         print("[-] 错误: 'sites' 字段不是列表格式！")
         exit(1)
 
-    # 按顺序合并 sites
+    # 合并 sites：tvbox 在前，moyu 居中，xiaoyu 追加在最后，顺序保持不变
     merged_sites = tvbox_sites + moyu_sites + xiaoyu_sites
 
+    # 封装为标准的 Python 字典对象（自动带有外层 {}）
     output_data = {
         "sites": merged_sites
     }
 
-    # 传入三组源数据的实际节点数量，准确控制插入点
-    write_standard_json(
-        OUTPUT_FILE, 
-        output_data, 
-        TVBOX_FILE, 
-        len(tvbox_sites), 
-        len(moyu_sites), 
-        len(xiaoyu_sites)
-    )
+    # 写入到全新的 zy.json 中
+    write_standard_json(OUTPUT_FILE, output_data, TVBOX_FILE)
     print("[*] 合并完成！")
 
 if __name__ == "__main__":

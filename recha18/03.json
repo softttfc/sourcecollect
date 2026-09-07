@@ -1,7 +1,7 @@
 (async function() {
-    if (window._mvuFinalStableV08152) return;
+    if (window._mvuFinalStableV0907) return;
     await waitGlobalInitialized('Mvu');
-    console.log('✅ MVU ZOD 0815.ver2 已啓用');
+    console.log('✅ MVU ZOD 0907.ver1 已啓用');
 
     var _ = window._;
     var get = function(o, p) { return _.get(o, p); };
@@ -40,6 +40,21 @@
     ];
     var decayRates = [0.06, 0.15, 0.35, 0.8, 2.4];
 
+var SEASON_CONFIG = {
+    SPRING_DAYS: 90,      // ← 從 30 改回 90
+    SUMMER_DAYS: 90,
+    AUTUMN_DAYS: 90,
+    WINTER_DAYS: 90,
+    SEASON_ORDER: ['春季', '夏季', '秋季', '冬季'],
+    // 新增：月份範圍配置
+    MONTH_RANGES: {
+        '春季': { startMonth: 3, startDay: 1, endMonth: 5, endDay: 31 },
+        '夏季': { startMonth: 6, startDay: 1, endMonth: 8, endDay: 31 },
+        '秋季': { startMonth: 9, startDay: 1, endMonth: 11, endDay: 30 },
+        '冬季': { startMonth: 12, startDay: 1, endMonth: 2, endDay: 28 }
+    }
+};
+
 // ==================== 日期解析與季節計算（基於月/日格式） ====================
 
 // 將 "5月29日" 格式轉換為 { month: 5, day: 29 }
@@ -53,8 +68,7 @@ function parseDateString(dateStr) {
     };
 }
 
-
-// 每個月的天數（不考慮閏年，但可以擴充）
+// 每個月的天數（不考慮閏年）
 var DAYS_IN_MONTH = {
     1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
     7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
@@ -97,103 +111,6 @@ function getDaysBetweenDates(dateStr1, dateStr2) {
     return day2 - day1;
 }
 
-// ==================== 自動更新經過天數（基於日期） ====================
-
-function updateDayFromDate(vars) {
-    var currentDate = get(vars, '系統.當前日期');
-    var previousDate = get(vars, '系統.前次日期');
-    
-    // 如果沒有日期，跳過（使用原本的天數系統）
-    if (!currentDate || typeof currentDate !== 'string') {
-        debugLog('日期更新：無日期資料，跳過');
-        return false;
-    }
-    
-    // 解析當前日期
-    var parsedCurrent = parseDateString(currentDate);
-    if (!parsedCurrent) {
-        debugLog('日期更新：無法解析日期 "' + currentDate + '"');
-        return false;
-    }
-    
-    var currentDayOfYear = dateToDayOfYear(parsedCurrent.month, parsedCurrent.day);
-    var currentDay = get(vars, '系統.經過天數') || 0;
-
-    // 如果 currentDay 是 2，但日期是 5月29日（第149天）
-    // 且 currentDay 小於 365（表示不是跨年後的天數）
-    var expectedDay = currentDayOfYear;
-    if (currentDay > 0 && currentDay < 365 && currentDay !== expectedDay) {
-        // 天數與日期不符，自動校正
-        keyLog('⚠️ 天數與日期不符: 天數=' + currentDay + ', 日期=' + currentDate + ' (應為第' + expectedDay + '天)');
-        keyLog('🔧 自動校正: ' + currentDay + ' → ' + expectedDay);
-        set(vars, '系統.經過天數', expectedDay);
-        set(vars, '系統.前次日期', currentDate);
-        return true;
-    }
-
-    var newDay = currentDayOfYear; // 直接用 1~365
-    
-    // 如果有前次日期，計算經過的天數
-    if (previousDate && typeof previousDate === 'string') {
-        var parsedPrevious = parseDateString(previousDate);
-        if (parsedPrevious) {
-            var previousDayOfYear = dateToDayOfYear(parsedPrevious.month, parsedPrevious.day);
-            var diff = currentDayOfYear - previousDayOfYear;
-            
-            // 跨年處理
-            if (diff < 0) {
-                var yearDays = 0;
-                for (var m = 1; m <= 12; m++) {
-                    yearDays += DAYS_IN_MONTH[m] || 30;
-                }
-                diff = yearDays - previousDayOfYear + currentDayOfYear;
-            }
-            
-            // 如果有時間跨日，diff 可能為 0，但時間有跨日
-            var prevTime = get(vars, '系統.前次時間');
-            var curTime = get(vars, '系統.當前時間');
-            if (prevTime && curTime) {
-                var prevMins = parseTime(prevTime);
-                var curMins = parseTime(curTime);
-                if (prevMins !== null && curMins !== null && curMins < prevMins) {
-                    diff += 1; // 時間跨日，加1天
-                }
-            }
-            
-            if (diff > 0) {
-                // 有經過天數，更新
-                newDay = currentDay + diff;
-                keyLog('📅 日期更新: ' + previousDate + ' → ' + currentDate + '，經過 ' + diff + ' 天');
-                set(vars, '系統.經過天數', newDay);
-                set(vars, '系統.前次日期', currentDate);
-                return true;
-            } else if (diff === 0 && currentDate !== previousDate) {
-                // 同一天但日期字串不同（不太可能發生）
-                set(vars, '系統.前次日期', currentDate);
-                keyLog('📅 日期更新: 同一天，更新前次日期為 ' + currentDate);
-                return true;
-            }
-        }
-    }
-    
-    // 第一次設定日期，或沒有前次日期
-    if (!previousDate || currentDate !== previousDate) {
-        // 檢查是否已經有經過天數，如果沒有則設為 1月1日 = 1
-        if (currentDay === 0) {
-            newDay = currentDayOfYear;
-        } else {
-            // 保留原本的天數，但調整為基於 1月1日
-            newDay = currentDay;
-        }
-        set(vars, '系統.經過天數', newDay);
-        set(vars, '系統.前次日期', currentDate);
-        keyLog('📅 初始化日期: ' + currentDate + ' → 天數 ' + newDay);
-        return true;
-    }
-    
-    return false;
-}
-
 // 根據月份和日期計算季節
 function calculateSeasonFromDate(month, day) {
     if ((month === 3) || (month === 4) || (month === 5)) return '春季';
@@ -203,27 +120,96 @@ function calculateSeasonFromDate(month, day) {
     return '春季';
 }
 
-// 主函數：從日期字串計算季節
+// 從日期字串計算季節
 function calculateSeasonFromDateString(dateStr) {
     var parsed = parseDateString(dateStr);
     if (!parsed) return '春季';
     return calculateSeasonFromDate(parsed.month, parsed.day);
 }
 
-var SEASON_CONFIG = {
-    SPRING_DAYS: 90,
-    SUMMER_DAYS: 90,
-    AUTUMN_DAYS: 90,
-    WINTER_DAYS: 90,
-    SEASON_ORDER: ['春季', '夏季', '秋季', '冬季'],
-    // 新增：月份範圍配置
-    MONTH_RANGES: {
-        '春季': { startMonth: 3, startDay: 1, endMonth: 5, endDay: 31 },
-        '夏季': { startMonth: 6, startDay: 1, endMonth: 8, endDay: 31 },
-        '秋季': { startMonth: 9, startDay: 1, endMonth: 11, endDay: 30 },
-        '冬季': { startMonth: 12, startDay: 1, endMonth: 2, endDay: 28 }
+// 季節性事件（可選）
+function getSeasonalEvent(month, day) {
+    var events = {
+        '櫻花季': function(m, d) {
+            if (m === 3 && d >= 20) return true;
+            if (m === 4 && d <= 10) return true;
+            return false;
+        },
+        '花火季': function(m, d) {
+            if (m === 7 || m === 8) return true;
+            return false;
+        },
+        '紅葉季': function(m, d) {
+            if (m === 11) return true;
+            return false;
+        },
+        '聖誕季': function(m, d) {
+            if (m === 12 && d >= 20) return true;
+            return false;
+        }
+    };
+    
+    for (var name in events) {
+        if (events[name](month, day)) return name;
     }
-};
+    return null;
+}
+
+function getSeasonalEventFromDateString(dateStr) {
+    var parsed = parseDateString(dateStr);
+    if (!parsed) return null;
+    return getSeasonalEvent(parsed.month, parsed.day);
+}
+
+function calculateSeasonByDay(currentDay) {
+    var total = SEASON_CONFIG.SPRING_DAYS + SEASON_CONFIG.SUMMER_DAYS + 
+                SEASON_CONFIG.AUTUMN_DAYS + SEASON_CONFIG.WINTER_DAYS;
+    var pos = currentDay % total;
+    var acc = 0;
+    
+    acc += SEASON_CONFIG.SPRING_DAYS;
+    if (pos < acc) return '春季';
+    acc += SEASON_CONFIG.SUMMER_DAYS;
+    if (pos < acc) return '夏季';
+    acc += SEASON_CONFIG.AUTUMN_DAYS;
+    if (pos < acc) return '秋季';
+    return '冬季';
+}
+
+function updateSeason(vars) {
+    var dateStr = get(vars, '系統.當前日期');
+    var newSeason;
+    
+    // 優先使用日期字串（如 "5月29日"）
+    if (dateStr && typeof dateStr === 'string') {
+        newSeason = calculateSeasonFromDateString(dateStr);
+        debugLog('季節計算（基於日期）: ' + dateStr + ' → ' + newSeason);
+    } else {
+        // 向後兼容：如果沒有日期，使用天數計算
+        var currentDay = v(get(vars, '系統.經過天數'), 0);
+        newSeason = calculateSeasonByDay(currentDay);
+        debugLog('季節計算（基於天數，fallback）: 天數=' + currentDay + ' → ' + newSeason);
+    }
+    
+    var currentSeason = get(vars, '環境.季節');
+    
+    if (newSeason !== currentSeason) {
+        set(vars, '環境.季節', newSeason);
+        keyLog('季節更新: ' + currentSeason + ' → ' + newSeason);
+        logChange('季節更新', currentSeason + ' → ' + newSeason);
+        fixCount++;
+        return true;
+    }
+    debugLog('季節無變化: ' + currentSeason);
+    return false;
+}
+
+    var SEASON_GROWTH_BONUS = {
+        '春季': 15,
+        '夏季': 20,
+        '秋季': 0,
+        '冬季': -50
+    };
 
     var PREGNANCY_CONFIG = {
         STAGES: [
@@ -330,7 +316,100 @@ function ensureSexResultArray(vars) {
         var d = parseInt(m[1]), h = parseInt(m[2]), mm = parseInt(m[3]);
         return { day: d, hour: h, minute: mm, total: d * 1440 + h * 60 + mm };
     }
+
+    // ==================== 自動更新經過天數（基於日期） ====================
+
+function updateDayFromDate(vars) {
+    var currentDate = get(vars, '系統.當前日期');
+    var previousDate = get(vars, '系統.前次日期');
     
+    // 如果沒有日期，跳過（使用原本的天數系統）
+    if (!currentDate || typeof currentDate !== 'string') {
+        debugLog('日期更新：無日期資料，跳過');
+        return false;
+    }
+    
+    // 解析當前日期
+    var parsedCurrent = parseDateString(currentDate);
+    if (!parsedCurrent) {
+        debugLog('日期更新：無法解析日期 "' + currentDate + '"');
+        return false;
+    }
+    
+    var currentDayOfYear = dateToDayOfYear(parsedCurrent.month, parsedCurrent.day);
+    var currentDay = get(vars, '系統.經過天數') || 0;
+
+    // 如果 currentDay 與日期不符，自動校正
+    var expectedDay = currentDayOfYear;
+    if (currentDay > 0 && currentDay < 365 && currentDay !== expectedDay) {
+        keyLog('⚠️ 天數與日期不符: 天數=' + currentDay + ', 日期=' + currentDate + ' (應為第' + expectedDay + '天)');
+        keyLog('🔧 自動校正: ' + currentDay + ' → ' + expectedDay);
+        set(vars, '系統.經過天數', expectedDay);
+        set(vars, '系統.前次日期', currentDate);
+        return true;
+    }
+
+    var newDay = currentDayOfYear;
+    
+    // 如果有前次日期，計算經過的天數
+    if (previousDate && typeof previousDate === 'string') {
+        var parsedPrevious = parseDateString(previousDate);
+        if (parsedPrevious) {
+            var previousDayOfYear = dateToDayOfYear(parsedPrevious.month, parsedPrevious.day);
+            var diff = currentDayOfYear - previousDayOfYear;
+            
+            // 跨年處理
+            if (diff < 0) {
+                var yearDays = 0;
+                for (var m = 1; m <= 12; m++) {
+                    yearDays += DAYS_IN_MONTH[m] || 30;
+                }
+                diff = yearDays - previousDayOfYear + currentDayOfYear;
+            }
+            
+            // 如果有時間跨日，diff 可能為 0，但時間有跨日
+            var prevTime = get(vars, '系統.前次時間');
+            var curTime = get(vars, '系統.當前時間');
+            if (prevTime && curTime) {
+                var prevMins = parseTime(prevTime);
+                var curMins = parseTime(curTime);
+                if (prevMins !== null && curMins !== null && curMins < prevMins) {
+                    diff += 1; // 時間跨日，加1天
+                }
+            }
+            
+            if (diff > 0) {
+                // 有經過天數，更新
+                newDay = currentDay + diff;
+                keyLog('📅 日期更新: ' + previousDate + ' → ' + currentDate + '，經過 ' + diff + ' 天');
+                set(vars, '系統.經過天數', newDay);
+                set(vars, '系統.前次日期', currentDate);
+                return true;
+            } else if (diff === 0 && currentDate !== previousDate) {
+                // 同一天但日期字串不同（不太可能發生）
+                set(vars, '系統.前次日期', currentDate);
+                keyLog('📅 日期更新: 同一天，更新前次日期為 ' + currentDate);
+                return true;
+            }
+        }
+    }
+    
+    // 第一次設定日期，或沒有前次日期
+    if (!previousDate || currentDate !== previousDate) {
+        if (currentDay === 0) {
+            newDay = currentDayOfYear;
+        } else {
+            newDay = currentDay;
+        }
+        set(vars, '系統.經過天數', newDay);
+        set(vars, '系統.前次日期', currentDate);
+        keyLog('📅 初始化日期: ' + currentDate + ' → 天數 ' + newDay);
+        return true;
+    }
+    
+    return false;
+}
+
     function getCurrentTime(vars) {
         var day = get(vars, '系統.經過天數'),
             time = get(vars, '系統.當前時間');
@@ -417,34 +496,7 @@ function isItemInvalid(item) {
         if (t < 40) return 1.5;
         return 1.8;
     }
-    
-    function updateDesc(desc, val) {
-        var d = desc || '';
-        var patterns = [
-            new RegExp('（看起來不太新鮮的樣子）$'),
-            new RegExp('（開始有些變質的跡象）$'),
-            new RegExp('（明顯變質了，需要儘快處理）$'),
-            new RegExp('（已經壞了，可能不適合使用）$'),
-            new RegExp('（腐爛了，使用可能會有危險）$')
-        ];
-        patterns.forEach(function(r) { if (r.test(d)) d = d.replace(r, ''); });
-        d = d.trim();
-        if (val >= 50) return d;
-        if (val >= 40) return d + '（看起來不太新鮮的樣子）';
-        if (val >= 30) return d + '（開始有些變質的跡象）';
-        if (val >= 20) return d + '（明顯變質了，需要儘快處理）';
-        if (val >= 10) return d + '（已經壞了，可能不適合使用）';
-        return d + '（腐爛了，使用可能會有危險）';
-    }
-    
-    function checkRequirement(req) {
-        if (!_.isPlainObject(req)) return req;
-        if (typeof req.進度 == 'number' && typeof req.目標 == 'number') {
-            if (req.進度 >= req.目標 && !req.已完成) req.已完成 = true;
-            else if (req.進度 < req.目標 && req.已完成) req.已完成 = false;
-        }
-        return req;
-    }
+       
     
     function logChange(action, detail) {
         var hash = action + ':' + detail;
@@ -479,7 +531,7 @@ function applyIntegerAndBounds(vars) {
         '狀態.表皮溼度', '狀態.疲勞', '狀態.清潔', '狀態.免疫力', 
         '生理.免疫負荷', '狀態.當前負重', '狀態.負重上限',
         '狀態.疼痛', '狀態.感染',
-        '系統.求生點數', '系統.奇蹟點數', '系統.經過天數'
+        '系統.經過天數'
     ];
     
 function toInt(value, allowDecimal) {
@@ -620,158 +672,9 @@ function toInt(value, allowDecimal) {
         return SEASON_GROWTH_BONUS[season] || 0;
     }
 
-// ==================== 提取作物加成（支援多種路徑） ====================
-function extractCropBonusFromObject(obj) {
-    if (!obj || typeof obj !== 'object') return 0;
-    
-    // 1. 檢查第一層 '作物加成'
-    var bonus = Number(obj['作物加成']);
-    if (!isNaN(bonus) && bonus > 0) return bonus;
-    
-    // 2. 🔴 檢查 '加值' 內部的 '生長加成' 和 '作物加成'
-    if (obj.加值 && typeof obj.加值 === 'object') {
-        var growthBonus = Number(obj.加值['生長加成']);
-        if (!isNaN(growthBonus) && growthBonus > 0) return growthBonus;
-        
-        var cropBonus = Number(obj.加值['作物加成']);
-        if (!isNaN(cropBonus) && cropBonus > 0) return cropBonus;
-    }
-    
-    return 0;
-}
-
-function extractCropBonusFromCarriedItems(items) {
-    if (!_.isPlainObject(items)) return 0;
-    var total = 0;
-    for (var name in items) {
-        if (name.startsWith('$')) continue;
-        total += extractCropBonusFromObject(items[name]);
-    }
-    return total;
-}
-
-// ==================== 計算實際成長天數（完整版） ====================
-function calculateActualGrowthDays(vars, cropName, baseDays) {
-    var totalBonus = 0;
-    
-    // 1. 季節加成
-    var season = get(vars, '環境.季節');
-    totalBonus += getSeasonGrowthBonus(season);
-    
-    // ========== 2. 掃描所有作物（除了自己） ==========
-    var crops = get(vars, '作物');
-    if (_.isPlainObject(crops)) {
-        for (var name in crops) {
-            if (name.startsWith('$') || name === cropName) continue;
-            totalBonus += extractCropBonusFromObject(crops[name]);
-        }
-    }
-    
-    // ========== 3. 掃描同伴的所有相關路徑 ==========
-    var companions = get(vars, '同伴');
-    if (_.isPlainObject(companions)) {
-        for (var name in companions) {
-            if (name.startsWith('$')) continue;
-            var comp = companions[name];
-            
-            // 3a. 同伴的攜帶物品
-            totalBonus += extractCropBonusFromCarriedItems(get(comp, '攜帶物品'));
-            
-            // 3b. 🔴 同伴的天賦特性（支援加值內部）
-            var talents = get(comp, '天賦特性');
-            if (_.isPlainObject(talents)) {
-                for (var talentName in talents) {
-                    if (talentName.startsWith('$')) continue;
-                    totalBonus += extractCropBonusFromObject(talents[talentName]);
-                }
-            }
-            
-            // 3c. 🔴 同伴的裝備
-            var equip = get(comp, '裝備');
-            if (_.isPlainObject(equip)) {
-                for (var slot in equip) {
-                    if (slot.startsWith('$')) continue;
-                    totalBonus += extractCropBonusFromObject(equip[slot]);
-                }
-            }
-        }
-    }
-    
-    // ========== 4. 🔴 掃描主角的路徑 ==========
-    // 4a. 主角的天賦特性
-    var playerTalents = get(vars, '天賦特性');
-    if (_.isPlainObject(playerTalents)) {
-        for (var talentName in playerTalents) {
-            if (talentName.startsWith('$')) continue;
-            totalBonus += extractCropBonusFromObject(playerTalents[talentName]);
-        }
-    }
-    
-    // 4b. 主角的裝備
-    var playerEquip = get(vars, '裝備');
-    if (_.isPlainObject(playerEquip)) {
-        for (var slot in playerEquip) {
-            if (slot.startsWith('$')) continue;
-            totalBonus += extractCropBonusFromObject(playerEquip[slot]);
-        }
-    }
-    
-    // 4c. 主角的攜帶物品（如果有作物加成）
-    var playerItems = get(vars, '攜帶物品');
-    if (_.isPlainObject(playerItems)) {
-        for (var itemName in playerItems) {
-            if (itemName.startsWith('$')) continue;
-            totalBonus += extractCropBonusFromObject(playerItems[itemName]);
-        }
-    }
-    
-    // ========== 5. 🔴 掃描營地設施 ==========
-    var camps = get(vars, '營地');
-    if (_.isPlainObject(camps)) {
-        for (var campName in camps) {
-            if (campName.startsWith('$')) continue;
-            var facilities = get(camps[campName], '設施');
-            if (_.isPlainObject(facilities)) {
-                for (var facilityName in facilities) {
-                    if (facilityName.startsWith('$')) continue;
-                    totalBonus += extractCropBonusFromObject(facilities[facilityName]);
-                }
-            }
-        }
-    }
-    
-    // ========== 6. 🔴 掃描寵物攜帶物品 ==========
-    var pets = get(vars, '寵物');
-    if (_.isPlainObject(pets)) {
-        for (var petName in pets) {
-            if (petName.startsWith('$')) continue;
-            var petItems = get(pets[petName], '攜帶物品');
-            if (_.isPlainObject(petItems)) {
-                for (var itemName in petItems) {
-                    if (itemName.startsWith('$')) continue;
-                    totalBonus += extractCropBonusFromObject(petItems[itemName]);
-                }
-            }
-        }
-    }
-    
-    // ========== 7. 計算實際天數 ==========
-    if (totalBonus <= 0) return baseDays;
-    if (totalBonus <= 50) return Math.max(1, baseDays - Math.floor(baseDays * (totalBonus / 100)));
-    return Math.max(1, Math.floor(baseDays / (1 + totalBonus / 100)));
-}
-
     // ======================== 路徑確保 ========================
     function ensurePaths(vars) {
-        // 強制刪除已廢棄的狀態.飽腹感
-if (get(vars, '狀態.飽腹感') !== undefined) {
-    _.unset(vars, '狀態.飽腹感');
-    console.log('🗑️ 已刪除廢棄路徑: 狀態.飽腹感');
-}
-        if (!_.isPlainObject(get(vars, '任務'))) {
-            set(vars, '任務', { 主線: {}, 支線: {}, 日常: {}, 緊急: {} });
-        }
-        
+        // 強制刪除已廢棄的狀態.飽腹感       
         var comps = get(vars, '同伴');
         if (_.isPlainObject(comps)) {
             for (var n in comps) {
@@ -785,54 +688,11 @@ if (get(vars, '狀態.飽腹感') !== undefined) {
             }                
             }
         }
-        
-        var pets = get(vars, '寵物');
-        if (_.isPlainObject(pets)) {
-            for (var n in pets) {
-                if (n.startsWith('$')) continue;
-                if (!_.isPlainObject(get(vars, '寵物.' + n + '.攜帶物品'))) {
-                    set(vars, '寵物.' + n + '.攜帶物品', {});
-                }
-            }
-        }
-        
-        var camps = get(vars, '營地');
-        if (_.isPlainObject(camps)) {
-            for (var c in camps) {
-                if (c.startsWith('$')) continue;
-                ['位置', '樣式', '物品', '食材', '醫藥', '材料', '牲畜', '設施', '奇物', '武器'].forEach(function(f) {
-                    if (get(vars, '營地.' + c + '.' + f) === undefined) {
-                        set(vars, '營地.' + c + '.' + f, (f === '位置' || f === '樣式') ? '' : {});
-                    }
-                });
-            }
-        }
-        
-        var equip = get(vars, '裝備');
-        if (_.isPlainObject(equip)) {
-            ['頭部', '頸部', '胸部', '其他', '背部', '左手', '右手', '腰部', '腿部', '腳部'].forEach(function(p) {
-                if (get(vars, '裝備.' + p) === undefined) set(vars, '裝備.' + p, {});
-            });
-        }
+
 
         if (_.isPlainObject(comps)) {
             for (var n in comps) {
                 if (n.startsWith('$')) continue;
-                var eq = get(vars, '同伴.' + n + '.裝備');
-                if (!_.isPlainObject(eq)) {
-                    eq = {};
-                    ['頭部', '頸部', '胸部', '其他', '背部', '左手', '右手', '腰部', '腿部', '腳部'].forEach(function(p) { eq[p] = {}; });
-                    set(vars, '同伴.' + n + '.裝備', eq);
-                } else {
-                    ['頭部', '頸部', '胸部', '其他', '背部', '左手', '右手', '腰部', '腿部', '腳部'].forEach(function(p) {
-                        if (get(vars, '同伴.' + n + '.裝備.' + p) === undefined) {
-                            set(vars, '同伴.' + n + '.裝備.' + p, {});
-                        }
-                    });
-                }
-                if (!Array.isArray(get(vars, '同伴.' + n + '.劇情演出'))) {
-                    set(vars, '同伴.' + n + '.劇情演出', []);
-                }
                 
                 var gender = get(vars, '同伴.' + n + '.基礎信息.性別');
                 if (gender === '女' || gender === 'female') {
@@ -861,10 +721,6 @@ if (get(vars, '狀態.飽腹感') !== undefined) {
             debugLog('初始化 系統.前次天數 = 1');
         }
 
-        if (!_.isPlainObject(get(vars, '養殖'))) set(vars, '養殖', {});
-        
-        var shop = get(vars, '商店');
-        if (!_.isPlainObject(shop)) set(vars, '商店', {});
     }
 
     // ======================== 等級升級處理 ========================
@@ -921,7 +777,10 @@ function processCompanionLimits(vars) {
                 { p: base + '.精神.睡眠', min: 0, max: 100 },
                 // 次生屬性
                 { p: base + '.狀態.疲勞', min: 0, max: 4 * (get(vars, base + '.屬性.耐力.等級') || 20) },
-                { p: base + '.狀態.清潔', min: 0, max: 100 }
+                { p: base + '.狀態.清潔', min: 0, max: 100 },
+                // 核心狀態（生命/精神值）
+                { p: base + '.生理.當前生命值', min: 0, max: get(vars, base + '.生理.生命值上限') || 100 },
+                { p: base + '.精神.當前精神值', min: 0, max: get(vars, base + '.精神.精神值上限') || 100 }
             ];
             
             bounds.forEach(function(b) {
@@ -952,10 +811,22 @@ function processCompanionLimits(vars) {
                     }
                 }
             }
-
+            
+            // ✅ 在這裡添加屬性經驗修正（在技能經驗修正之後）
+            var attrs = ['力量', '敏捷', '耐力', '智力', '感知', '意志'];
+            for (var i = 0; i < attrs.length; i++) {
+                var attr = attrs[i];
+                var exp = get(vars, base + '.屬性.' + attr + '.當前經驗');
+                if (typeof exp === 'number' && exp < 0) {
+                    set(vars, base + '.屬性.' + attr + '.當前經驗', 0);
+                    logChange('同伴屬性經驗修正', base + '.' + attr + ' 經驗 ' + exp + ' → 0');
+                    fixCount++;
+                }
+            }
             
             // ========== 等級升級 ==========
-            processLevelUp(vars, base + '.技能');       
+            processLevelUp(vars, base + '.屬性');
+            processLevelUp(vars, base + '.技能');
         }
     }
     
@@ -975,338 +846,12 @@ function processCompanionLimits(vars) {
                     fixCount++;
                 }
             }
+            processLevelUp(vars, base + '.屬性');
             processLevelUp(vars, base + '.技能');
         }
     }
 }
-    // ======================== 物品狀態上限修正 ========================
-    function fixItemStatusLimits(vars) {
-        var paths = ['攜帶物品', '裝備', '捷徑或裝置'];
-        paths.forEach(function(p) {
-            var items = get(vars, p);
-            if (!_.isPlainObject(items)) return;
-            for (var k in items) {
-                if (k.startsWith('$')) continue;
-                var s = get(items[k], '狀態');
-                if (Number.isFinite(s) && s > 100) {
-                    set(vars, p + '.' + k + '.狀態', 100);
-                    logChange('物品狀態上限', p + '.' + k + ' ' + s + ' → 100');
-                    fixCount++;
-                }
-            }
-        });
-        
-        var camps = get(vars, '營地');
-        if (_.isPlainObject(camps)) {
-            for (var c in camps) {
-                if (c.startsWith('$')) continue;
-                var cats = ['物品', '食材', '醫藥', '材料', '設施', '奇物', '武器'];
-                cats.forEach(function(cat) {
-                    var items = get(vars, '營地.' + c + '.' + cat);
-                    if (!_.isPlainObject(items)) return;
-                    for (var k in items) {
-                        if (k.startsWith('$')) continue;
-                        var s = get(items[k], '狀態');
-                        if (Number.isFinite(s) && s > 100) {
-                            set(vars, '營地.' + c + '.' + cat + '.' + k + '.狀態', 100);
-                            logChange('物品狀態上限', '營地.' + c + '.' + cat + '.' + k + ' ' + s + ' → 100');
-                            fixCount++;
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    // ======================== 清理無效物品 ========================
-function cleanupAllItems(vars) {
-    var paths = ['攜帶物品', '捷徑或裝置'];  // 🔴 移除 '裝備'
-    
-    function fixItemNumbers(item, itemPath) {
-        if (!_.isPlainObject(item)) return;
-        var changed = false;
-        var s = get(item, '狀態');
-        if (Number.isFinite(s) && !Number.isInteger(s)) {
-            var newS = Math.round(s);
-            set(item, '狀態', newS);
-            logChange('狀態取整', itemPath + ' 狀態 ' + s + ' → ' + newS);
-            fixCount++;
-            changed = true;
-        }
-        var w = get(item, '重量');
-        if (Number.isFinite(w)) {
-            var newW = Math.round(w * 100) / 100;
-            if (newW !== w) {
-                set(item, '重量', newW);
-                logChange('重量修正', itemPath + ' 重量 ' + w + ' → ' + newW);
-                fixCount++;
-                changed = true;
-            }
-        }
-        var q = get(item, '數量');
-        if (Number.isFinite(q)) {
-            var rounded = Math.round(q);
-            if (Math.abs(q - rounded) < 1e-10 && rounded !== q) {
-                set(item, '數量', rounded);
-                logChange('數量誤差修正', itemPath + ' 數量 ' + q + ' → ' + rounded);
-                fixCount++;
-                changed = true;
-            }
-        }
-        return changed;
-    }
-    
-    // 🔴 只處理攜帶物品和捷徑，不處理裝備
-    paths.forEach(function(p) {
-        var items = get(vars, p);
-        if (!_.isPlainObject(items)) return;
-        var toDel = [];
-        for (var k in items) {
-            if (k.startsWith('$')) continue;
-            var item = items[k];
-            fixItemNumbers(item, p + '.' + k);
-            if (isItemInvalid(item)) toDel.push(k);
-        }
-        if (toDel.length) {
-            toDel.forEach(function(k) { _.unset(vars, p + '.' + k); });
-            logChange('清理異常物品', p + ': ' + toDel.join(', '));
-            delCount += toDel.length;
-        }
-    });
-    
-    // 營地物品處理（保持不變）
-    var camps = get(vars, '營地');
-    if (_.isPlainObject(camps)) {
-        for (var c in camps) {
-            if (c.startsWith('$')) continue;
-            var cats = ['物品', '食材', '醫藥', '材料', '設施', '奇物', '武器'];
-            cats.forEach(function(cat) {
-                var items = get(vars, '營地.' + c + '.' + cat);
-                if (!_.isPlainObject(items)) return;
-                var toDel = [];
-                for (var k in items) {
-                    if (k.startsWith('$')) continue;
-                    var item = items[k];
-                    fixItemNumbers(item, '營地.' + c + '.' + cat + '.' + k);
-                    if (isItemInvalid(item)) toDel.push(k);
-                }
-                if (toDel.length) {
-                    toDel.forEach(function(k) { _.unset(vars, '營地.' + c + '.' + cat + '.' + k); });
-                    logChange('清理營地異常物品', c + '/' + cat + ': ' + toDel.join(', '));
-                    delCount += toDel.length;
-                }
-            });
-        }
-    }
-    
-    // 同伴攜帶物品（保持不變）
-    var comps = get(vars, '同伴');
-    if (_.isPlainObject(comps)) {
-        for (var n in comps) {
-            if (n.startsWith('$')) continue;
-            var items = get(vars, '同伴.' + n + '.攜帶物品');
-            if (!_.isPlainObject(items)) continue;
-            var toDel = [];
-            for (var k in items) {
-                if (k.startsWith('$')) continue;
-                var item = items[k];
-                fixItemNumbers(item, '同伴.' + n + '.攜帶物品.' + k);
-                if (isItemInvalid(item)) toDel.push(k);
-            }
-            if (toDel.length) {
-                toDel.forEach(function(k) { _.unset(vars, '同伴.' + n + '.攜帶物品.' + k); });
-                logChange('清理同伴異常物品', n + ': ' + toDel.join(', '));
-                delCount += toDel.length;
-            }
-        }
-    }
-    
-    // 寵物攜帶物品（保持不變）
-    var pets = get(vars, '寵物');
-    if (_.isPlainObject(pets)) {
-        for (var n in pets) {
-            if (n.startsWith('$')) continue;
-            var items = get(vars, '寵物.' + n + '.攜帶物品');
-            if (!_.isPlainObject(items)) continue;
-            var toDel = [];
-            for (var k in items) {
-                if (k.startsWith('$')) continue;
-                var item = items[k];
-                fixItemNumbers(item, '寵物.' + n + '.攜帶物品.' + k);
-                if (isItemInvalid(item)) toDel.push(k);
-            }
-            if (toDel.length) {
-                toDel.forEach(function(k) { _.unset(vars, '寵物.' + n + '.攜帶物品.' + k); });
-                logChange('清理寵物異常物品', n + ': ' + toDel.join(', '));
-                delCount += toDel.length;
-            }
-        }
-    }
-}
-
-    // ======================== 物品腐敗處理 ========================
-    function decayLocation(vars, basePath, hours, factor) {
-        var items = get(vars, basePath);
-        if (!_.isPlainObject(items)) return;
-        
-        (function walk(path, obj) {
-            if (!_.isPlainObject(obj)) return;
-            for (var k in obj) {
-                if (k.startsWith('$')) continue;
-                var v = obj[k];
-                if (_.isPlainObject(v)) {
-                    var shelf = int(get(v, '保質期'));
-                    if (shelf >= 1 && shelf <= 5) {
-                        var state = int(get(v, '狀態'));
-                        if (state > 0) {
-                            var decay = decayRates[5 - shelf] * hours * factor,
-                                newState = Math.max(0, Math.round(state - decay));
-                            if (newState !== state) {
-                                set(vars, path + '.' + k + '.狀態', newState);
-                                var desc = get(v, '描述'),
-                                    newDesc = updateDesc(desc, newState);
-                                if (newDesc !== desc) set(vars, path + '.' + k + '.描述', newDesc);
-                            }
-                        }
-                    }
-                    walk(path + '.' + k, v);
-                }
-            }
-        })(basePath, items);
-    }
-    
-    function processItemDecay(vars) {
-        if (!lastSnapshot) return;
-        var cur = getCurrentTime(vars);
-        if (!cur) return;
-        var prevDay = lastSnapshot.day,
-            prevTime = lastSnapshot.time;
-        if (!prevDay || !prevTime) return;
-        var prevMins = prevDay * 1440 + parseTime(prevTime),
-            curMins = cur.total,
-            delta = curMins - prevMins;
-        if (delta <= 0) return;
-        
-        var hours = delta / 60,
-            avgTemp = int(get(vars, '環境.體感溫度')) || 25,
-            factor = tempFactor(avgTemp);
-        
-        ['攜帶物品', '裝備', '捷徑或裝置'].forEach(function(p) {
-            decayLocation(vars, p, hours, factor);
-        });
-        
-        var camps = get(vars, '營地');
-        if (_.isPlainObject(camps)) {
-            for (var c in camps) {
-                if (c.startsWith('$')) continue;
-                ['物品', '食材', '醫藥', '材料', '奇物', '武器'].forEach(function(cat) {
-                    decayLocation(vars, '營地.' + c + '.' + cat, hours, factor);
-                });
-            }
-        }
-        
-        var comps = get(vars, '同伴');
-        if (_.isPlainObject(comps)) {
-            for (var n in comps) {
-                if (n.startsWith('$')) continue;
-                decayLocation(vars, '同伴.' + n + '.攜帶物品', hours, factor);
-            }
-        }
-        
-        var pets = get(vars, '寵物');
-        if (_.isPlainObject(pets)) {
-            for (var n in pets) {
-                if (n.startsWith('$')) continue;
-                decayLocation(vars, '寵物.' + n + '.攜帶物品', hours, factor);
-            }
-        }
-    }
-
-    // ==================== 季節系統 ====================
-function calculateSeasonByDay(currentDay) {
-    var total = SEASON_CONFIG.SPRING_DAYS + SEASON_CONFIG.SUMMER_DAYS + 
-                SEASON_CONFIG.AUTUMN_DAYS + SEASON_CONFIG.WINTER_DAYS;
-    var pos = currentDay % total;
-    var acc = 0;
-    
-    acc += SEASON_CONFIG.SPRING_DAYS;
-    if (pos < acc) return '春季';
-    acc += SEASON_CONFIG.SUMMER_DAYS;
-    if (pos < acc) return '夏季';
-    acc += SEASON_CONFIG.AUTUMN_DAYS;
-    if (pos < acc) return '秋季';
-    return '冬季';
-}
-
-// 新的 calculateSeason 會優先使用日期
-function calculateSeason(currentDay) {
-    // 這個函數現在會由 updateSeason 覆寫邏輯
-    // 但保留給其他可能直接呼叫的地方
-    return calculateSeasonByDay(currentDay);
-}
-
-function updateSeason(vars) {
-    var dateStr = get(vars, '系統.當前日期');
-    var newSeason;
-    
-    // 優先使用日期字串（如 "5月29日"）
-    if (dateStr && typeof dateStr === 'string') {
-        newSeason = calculateSeasonFromDateString(dateStr);
-        debugLog('季節計算（基於日期）: ' + dateStr + ' → ' + newSeason);
-    } else {
-        // 向後兼容：如果沒有日期，使用天數計算
-        var currentDay = v(get(vars, '系統.經過天數'), 0);
-        newSeason = calculateSeasonByDay(currentDay);
-        debugLog('季節計算（基於天數，fallback）: 天數=' + currentDay + ' → ' + newSeason);
-    }
-    
-    var currentSeason = get(vars, '環境.季節');
-    
-    if (newSeason !== currentSeason) {
-        set(vars, '環境.季節', newSeason);
-        keyLog('季節更新: ' + currentSeason + ' → ' + newSeason);
-        logChange('季節更新', currentSeason + ' → ' + newSeason);
-        fixCount++;
-        return true;
-    }
-    debugLog('季節無變化: ' + currentSeason);
-    return false;
-}
-
-function getSeasonalEvent(month, day) {
-    var events = {
-        '櫻花季': function(m, d) {
-            if (m === 3 && d >= 20) return true;
-            if (m === 4 && d <= 10) return true;
-            return false;
-        },
-        '花火季': function(m, d) {
-            if (m === 7 || m === 8) return true;
-            return false;
-        },
-        '紅葉季': function(m, d) {
-            if (m === 11) return true;
-            return false;
-        },
-        '聖誕季': function(m, d) {
-            if (m === 12 && d >= 20) return true;
-            return false;
-        }
-    };
-    
-    for (var name in events) {
-        if (events[name](month, day)) return name;
-    }
-    return null;
-}
-
-// 從日期字串獲取季節性事件
-function getSeasonalEventFromDateString(dateStr) {
-    var parsed = parseDateString(dateStr);
-    if (!parsed) return null;
-    return getSeasonalEvent(parsed.month, parsed.day);
-}
-
+  
     // ==================== 懷孕系統 ====================
 function updatePregnancyStage(vars, characterPath) {
     var prefix = characterPath ? characterPath + '.' : '';
@@ -1785,8 +1330,6 @@ if (curDay > prevDay) {
     advancePregnancy(vars, 1);
     updateMenstrualCycle(vars);
     updateSeason(vars);
-    // updateCropGrowthStages(vars);
-    // updateLivestockStates(vars);
     return true;
 }
         var prevMinutes = parseTime(prevTime);
@@ -1806,8 +1349,6 @@ if (isTimeRewind && isSameDay) {
     advancePregnancy(vars, 1);
     updateMenstrualCycle(vars);
     updateSeason(vars);
-    updateCropGrowthStages(vars);
-    updateLivestockStates(vars);
     return true;
 }
         return false;
@@ -1815,14 +1356,88 @@ if (isTimeRewind && isSameDay) {
 
     function processTimeAndLevel(vars, oldVars) {
         updateDayOnTimePassed(vars);
+        processLevelUp(vars, '屬性');
         processLevelUp(vars, '技能');
-        var end = int(get(vars, '屬性.耐力.等級')) || 20;  // ← 新增
-
-
-// 根據生效效果計算屬性加值（正面加成 + 負面減值）
-var curEffs = get(vars, '狀態.生效效果') || {};
-var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
- 
+        
+// 主角屬性經驗邊界修正
+var playerAttrs = ['力量', '敏捷', '耐力', '智力', '感知', '意志'];
+for (var i = 0; i < playerAttrs.length; i++) {
+    var attr = playerAttrs[i];
+    var exp = get(vars, '屬性.' + attr + '.當前經驗');
+    if (typeof exp === 'number' && exp < 0) {
+        set(vars, '屬性.' + attr + '.當前經驗', 0);
+        logChange('主角屬性經驗修正', '屬性.' + attr + ' 經驗 ' + exp + ' → 0');
+        fixCount++;
+    }
+}
+       
+        var end = int(get(vars, '屬性.耐力.等級')) || 20;
+        var will = int(get(vars, '屬性.意志.等級')) || 20;
+        var str = int(get(vars, '屬性.力量.等級')) || 20;
+        
+        var hpMax = 4 * end,
+            spMax = 4 * will,
+            baseCarry = 2 * str,
+            carryBonus = 0;
+        
+        var equip = get(vars, '裝備');
+        if (_.isPlainObject(equip)) {
+            _.forEach(equip, function(slot, slotName) {
+                if (slotName.startsWith('$')) return;
+                if (_.isPlainObject(slot)) {
+                    var bonus = int(get(slot, '負重加成'));
+                    if (Number.isFinite(bonus) && bonus > 0) carryBonus += bonus;
+                }
+            });
+        }
+        var carryMax = Math.round(baseCarry * (carryBonus > 0 ? carryBonus : 1));
+        
+        if (lastSnapshot && lastSnapshot.hpMax && lastSnapshot.hpMax !== hpMax) {
+            var newHp = scaleValue(lastSnapshot.hpCur, lastSnapshot.hpMax, hpMax);
+            if (newHp !== get(vars, '生理.當前生命值')) {
+                set(vars, '生理.當前生命值', newHp);
+                logChange('生命值上限變化', '當前生命值按比例調整');
+            }
+        }
+        
+        set(vars, '生理.生命值上限', hpMax);
+        set(vars, '精神.精神值上限', spMax);
+        set(vars, '狀態.負重上限', carryMax);
+        
+        var totalWeight = 0;
+        var items = get(vars, '攜帶物品');
+        if (_.isPlainObject(items)) {
+            _.forEach(items, function(item, key) {
+                if (key.startsWith('$')) return;
+                var q = get(item, '數量'), w = get(item, '重量');
+                if (Number.isFinite(q) && Number.isFinite(w) && q > 0 && w > 0) totalWeight += q * w;
+            });
+        }
+        if (_.isPlainObject(equip)) {
+            _.forEach(equip, function(slot, slotName) {
+                if (slotName.startsWith('$')) return;
+                if (_.isPlainObject(slot)) {
+                    var w = get(slot, '重量');
+                    if (Number.isFinite(w) && w > 0) totalWeight += w;
+                }
+            });
+        }
+        set(vars, '狀態.當前負重', Math.round(totalWeight * 100) / 100);
+        
+        var hpCur = get(vars, '生理.當前生命值');
+        if (hpCur > hpMax) {
+            set(vars, '生理.當前生命值', hpMax);
+            logChange('邊界修正', '當前生命值 ' + hpCur + ' → ' + hpMax);
+            fixCount++;
+        }
+        
+        var spCur = get(vars, '精神.當前精神值');
+        if (spCur > spMax) {
+            set(vars, '精神.當前精神值', spMax);
+            logChange('邊界修正', '當前精神值 ' + spCur + ' → ' + spMax);
+            fixCount++;
+        }
+        
         var fatigueMax = 4 * end,
             fatigue = get(vars, '狀態.疲勞');
         if (fatigue > fatigueMax) {
@@ -1848,6 +1463,12 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         
         var bounds = [
             { p: '生理.水分', min: 0, max: 100 },
+            { p: '生理.碳水', min: 0, max: 2000 },
+            { p: '生理.脂肪', min: 0, max: 100000 },
+            { p: '生理.蛋白質', min: 0, max: 2400 },
+            { p: '生理.維生素', min: 0, max: 100 },
+            { p: '生理.氮平衡', min: -100, max: 100 },
+            { p: '生理.免疫負荷', min: 0, max: 100 },
             { p: '生理.體溫', min: 35, max: 40 },
             { p: '精神.壓力', min: 0, max: 100 },
             { p: '精神.無聊', min: 0, max: 100 },
@@ -1858,7 +1479,7 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
             { p: '狀態.表皮溼度', min: 0, max: 100 },
             { p: '狀態.感染', min: 0, max: 100 },
             { p: '狀態.清潔', min: 0, max: 100 },
-            { p: '狀態.疼痛', min: 0, max: 100 }
+            { p: '狀態.疼痛', min: 0, max: 100 },
         ];
         bounds.forEach(function(b) {
             var val = get(vars, b.p);
@@ -1879,8 +1500,6 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
     var statusCache = null;
     
     function processStatusEffects(vars) {
-        var end = int(get(vars, '屬性.耐力.等級')) || 20;  // ← 新增
-        var will = int(get(vars, '屬性.意志.等級')) || 20;  // ← 新增
         var cur = getCurrentTime(vars);
         if (!cur) return;
         
@@ -1897,6 +1516,10 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         var skin = int(get(vars, '狀態.表皮溼度')) || 0;
         var clean = int(get(vars, '狀態.清潔')) || 0;
         var pain = int(get(vars, '狀態.疼痛')) || 0;
+        
+        var end = int(get(vars, '屬性.耐力.等級')) || 20;
+        var will = int(get(vars, '屬性.意志.等級')) || 20;
+        var str = int(get(vars, '屬性.力量.等級')) || 20;
         var maxFatigue = 4 * end;
         var fatiguePerc = maxFatigue > 0 ? fatigue / maxFatigue * 100 : 0;
         
@@ -1921,7 +1544,7 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         if (stress < 10) add('壓力', '心神沉靜', '思維清晰，內心平靜。', stress);
         else if (stress < 50) add('壓力', '狀態正常', '無特殊效果', stress);
         else if (stress < 80) add('壓力', '高度焦慮', '壓力極大，內心充滿焦慮和不安。', stress);
-        else if (stress < 100) add('壓力', '不堪重負', '巨大的壓力使你瀕臨崩潰邊緣。。', stress);
+        else if (stress < 100) add('壓力', '不堪重負', '巨大的壓力使你瀕臨崩潰邊緣。', stress);
         else add('壓力', '精神崩潰', '精神防線徹底崩潰，角色陷入恐慌、偏執或絕望狀態。', stress);
         
         // 性慾
@@ -1940,13 +1563,12 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         else add('無聊', '極度無聊', '單調的生活令人窒息，你迫切需要做點什麼來改變現狀。', boring);
         
         // 睡眠
-        if (sleep > 90) add('睡眠', '精力充沛', '充足的睡眠讓你恢復了所有精力。', sleep);
+        if (sleep > 90) add('睡眠', '精力充沛', '充足的睡眠讓你恢復了所有精力。疲勞恢復速度加倍', sleep);
         else if (sleep > 60) add('睡眠', '狀態正常', '無特殊效果', sleep);
         else if (sleep > 30) add('睡眠', '疲倦', '開始感到身體和精神的疲勞。', sleep);
         else if (sleep > 0) add('睡眠', '非常疲憊', '嚴重缺乏睡眠，眼皮沉重，反應遲鈍。', sleep);
         else add('睡眠', '精疲力竭', '身體達到極限，隨時可能因過度疲勞而昏倒。', sleep);
-        
-        
+               
         // 體溫
         if (temp > 40) add('體溫', '高熱', '身體滾燙，意識模糊，嚴重高燒讓人難以思考。', temp);
         else if (temp > 38) add('體溫', '發燒', '身體發燙，感到乏力、惡寒，身體非常不適。', temp);
@@ -1970,7 +1592,13 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         else if (fatiguePerc <= 70) add('疲勞', '有些疲憊', '肌肉微微發酸，呼吸比平時稍重，是時候考慮歇一歇了。', fatigue);
         else if (fatiguePerc <= 90) add('疲勞', '相當疲勞', '身體變得沉重，每一下動作都需要更多力氣，疲倦感十分明顯。', fatigue);
         else add('疲勞', '筋疲力盡', '身體非常沉重，每一下動作都變得吃力，只想找個地方坐下來喘口氣。', fatigue);
-               
+        
+        // 氮平衡
+        if (nitrogen > 75) add('氮平衡', '正氮平衡', '身體處於合成代謝狀態，有利於組織生長和修復。', nitrogen);
+        else if (nitrogen > -50) add('氮平衡', '狀態正常', '無特殊效果', nitrogen);
+        else if (nitrogen > -90) add('氮平衡', '負氮平衡', '身體處於分解代謝狀態，肌肉開始流失，感到無力。', nitrogen);
+        else add('氮平衡', '嚴重負氮平衡', '嚴重的組織蛋白分解，身體虛弱。', nitrogen);
+        
         // 表皮溼度
         if (skin > 80) add('表皮溼度', '全身溼透', '衣物和皮膚完全溼透，非常不適，體溫流失速度加快。在寒冷環境中更容易觸發"體溫過低"狀態', skin);
         else if (skin > 40) add('表皮溼度', '潮溼', '皮膚和衣物感到潮溼，略有不適', skin);
@@ -1978,13 +1606,13 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         else add('表皮溼度', '皮膚乾燥', '皮膚缺水，感到緊繃和輕微的瘙癢', skin);
         
         // 清潔
-        if (clean > 90) add('清潔', '乾淨整潔', '全身清爽，心情愉悅。', clean);
+        if (clean > 90) add('清潔', '乾淨整潔', '全身清爽，心情愉悅。精神值自然恢復速度提升10%', clean);
         else if (clean > 40) add('清潔', '狀態正常', '無特殊效果', clean);
         else if (clean > 10) add('清潔', '有點髒', '身上有污垢或異味，讓人不適。', clean);
         else add('清潔', '污穢不堪', '全身骯髒，散發惡臭，大大增加感染疾病的風險。', clean);
         
         // 疼痛
-        if (pain > 90) add('疼痛', '極度痛苦', '難以忍受的劇痛，幾乎無法思考和行動，有概率因劇痛而昏厥', pain);
+        if (pain > 90) add('疼痛', '極度痛苦', '難以忍受的劇痛，幾乎無法思考和行動。有概率因劇痛而昏厥', pain);
         else if (pain > 50) add('疼痛', '劇烈疼痛', '強烈的疼痛感嚴重干擾了專注力。', pain);
         else if (pain > 10) add('疼痛', '輕微疼痛', '持續的隱痛讓人煩躁，分散注意力。', pain);
         else add('疼痛', '狀態正常', '無特殊效果', pain);
@@ -2206,15 +1834,7 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
             baseHpMax -= 10;
             immunity -= 10;
         }
-        
-        if (statuses.維生素) {
-            switch(statuses.維生素.name) {
-                case '維生素充足': immunity += 5; break;
-                case '維生素缺乏': immunity -= 5; break;
-                case '維生素嚴重缺乏': immunity -= 10; break;
-            }
-        }
-        
+               
         if (statuses.體溫) {
             switch(statuses.體溫.name) {
                 case '發燒': immunity += 5; break;
@@ -2256,217 +1876,6 @@ var endBonus = 0, strBonus = 0, willBonus = 0, intBonus = 0, perBonus = 0;
         statusCache = { time: cur, statuses: statuses };
     }
 
-        // ======================== 清理已完結的劇情演出 ========================
-function cleanupCompletedPerformances(vars) {
-    var comps = get(vars, '同伴');
-    if (!_.isPlainObject(comps)) return;
-    
-    for (var name in comps) {
-        if (name.startsWith('$')) continue;
-        
-        var performances = get(vars, '同伴.' + name + '.劇情演出');
-        if (!Array.isArray(performances) || performances.length === 0) continue;
-        
-        // 收集需要刪除的主題
-        var themesToDelete = {};
-        
-        // 第一遍：分析每個主題的狀態
-        for (var i = 0; i < performances.length; i++) {
-            var perf = performances[i];
-            if (typeof perf !== 'string') continue;
-            
-            // 解析格式：事件-主題-序號-狀態:描述
-            var match = perf.match(/^事件-([^-]+)-(\d+)-(.+?):(.+)$/);
-            if (!match) continue;
-            
-            var theme = match[1];
-            var seq = parseInt(match[2]);
-            var status = match[3];
-            var desc = match[4];
-            
-            if (!themesToDelete[theme]) {
-                themesToDelete[theme] = {
-                    maxSeq: 0,
-                    hasCompleted: false,
-                    indices: []
-                };
-            }
-            
-            themesToDelete[theme].indices.push(i);
-            if (seq > themesToDelete[theme].maxSeq) {
-                themesToDelete[theme].maxSeq = seq;
-            }
-            if (status === '已完成') {
-                themesToDelete[theme].hasCompleted = true;
-            }
-        }
-        
-        // 第二遍：從後往前刪除（避免索引錯亂）
-        var indicesToRemove = [];
-        for (var theme in themesToDelete) {
-            var info = themesToDelete[theme];
-            
-            // 規則：當序號達到 5 且最後一個事件已完成時，刪除整個主題
-            if (info.maxSeq >= 5 && info.hasCompleted) {
-                indicesToRemove.push(...info.indices);
-                logChange('劇情演出清理', name + ' 主題「' + theme + '」序號已達 ' + info.maxSeq + '，已完結，刪除 ' + info.indices.length + ' 條');
-                fixCount++;
-            }
-        }
-        
-        // 從後往前刪除（保持索引有效）
-        if (indicesToRemove.length > 0) {
-            indicesToRemove.sort((a, b) => b - a);
-            for (var i = 0; i < indicesToRemove.length; i++) {
-                performances.splice(indicesToRemove[i], 1);
-            }
-            set(vars, '同伴.' + name + '.劇情演出', performances);
-        }
-    }
-}
-
-    // ======================== 任務和商店處理 ========================
-function processTasksAndShop(vars) {
-    function updateTaskCompletion(tp) {
-        var task = get(vars, tp);
-        if (!_.isPlainObject(task) || !task.狀態) return;
-        var changed = false;
-        
-        var baseReqs = get(task, '任務要求');
-        if (_.isPlainObject(baseReqs)) {
-            var allDone = true;
-            for (var k in baseReqs) {
-                if (k.startsWith('$')) continue;
-                var req = baseReqs[k],
-                    newReq = checkRequirement(req);
-                if (newReq !== req) {
-                    set(vars, tp + '.任務要求.' + k, newReq);
-                    changed = true;
-                }
-                if (!newReq.已完成) allDone = false;
-            }
-            var curDone = get(task, '完成情況.基礎要求完成');
-            if (allDone !== curDone) {
-                set(vars, tp + '.完成情況.基礎要求完成', allDone);
-                changed = true;
-            }
-        }
-        
-        var advReqs = get(task, '進階目標');
-        if (_.isPlainObject(advReqs)) {
-            var allDone = true;
-            for (var k in advReqs) {
-                if (k.startsWith('$')) continue;
-                var req = advReqs[k],
-                    newReq = checkRequirement(req);
-                if (newReq !== req) {
-                    set(vars, tp + '.進階目標.' + k, newReq);
-                    changed = true;
-                }
-                if (!newReq.已完成) allDone = false;
-            }
-            var curDone = get(task, '完成情況.進階目標完成');
-            if (allDone !== curDone) {
-                set(vars, tp + '.完成情況.進階目標完成', allDone);
-                changed = true;
-            }
-        }
-        
-        return changed;
-    }
-
-    function updateTaskStatus(tp, type) {
-        var task = get(vars, tp);
-        if (!_.isPlainObject(task) || !task.狀態) return;
-        var status = get(task, '狀態'),
-            baseDone = get(task, '完成情況.基礎要求完成', false),
-            advDone = get(task, '完成情況.進階目標完成', false),
-            hasAdv = _.isPlainObject(get(task, '進階目標')) && 
-                     Object.keys(get(task, '進階目標')).filter(function(k) { return !k.startsWith('$'); }).length > 0,
-            endTimeStr = get(task, '結束時間', ''),
-            curTime = getCurrentTime(vars);
-        var correct = status,
-            endTime = endTimeStr ? parseFullTime(endTimeStr) : null,
-            expired = endTime && curTime && curTime.total >= endTime.total;
-        
-        if (expired) {
-            if (baseDone) {
-                correct = '待結算';
-                if (hasAdv && !advDone) {
-                    var s = get(task, '結算狀態') || { 基礎獎勵已發放: false, 進階獎勵已發放: false, 失敗懲罰已發放: false };
-                    if (!s.進階獎勵已發放) set(vars, tp + '.結算狀態', { ...s, 進階獎勵已發放: true });
-                }
-            } else {
-                if (type === '緊急') {
-                    correct = '已失敗';
-                    var s = get(task, '結算狀態') || { 基礎獎勵已發放: false, 進階獎勵已發放: false, 失敗懲罰已發放: false };
-                    if (s.失敗懲罰已發放 === undefined || s.失敗懲罰已發放 === false) {
-                        set(vars, tp + '.結算狀態', { ...s, 失敗懲罰已發放: false });
-                    }
-                } else {
-                    correct = '已放棄';
-                }
-            }
-        } else {
-            if (!baseDone) correct = '進行中';
-            else if (hasAdv && !advDone) correct = '進階中';
-            else correct = '待結算';
-        }
-        
-        if (status !== correct) {
-            set(vars, tp + '.狀態', correct);
-            logChange('任務狀態修正', tp + ' ' + status + ' → ' + correct);
-        }
-    }
-    
-    // ========== 主線、支線、日常、緊急、背德（統一處理） ==========
-    // 🔴 加入「背德」
-    var types = ['主線', '支線', '日常', '緊急', '背德'];
-    for (var i = 0; i < types.length; i++) {
-        var t = types[i], p = '任務.' + t;
-        var task = get(vars, p);
-        if (_.isPlainObject(task) && task.狀態) {
-            updateTaskCompletion(p);
-            updateTaskStatus(p, t);
-        }
-    }
-        
-    // ========== 清理 ==========
-    function cleanup() {
-        // 清理主類型任務（加入「背德」）
-        var types = ['主線', '支線', '日常', '緊急', '背德'];
-        for (var i = 0; i < types.length; i++) {
-            var t = types[i], p = '任務.' + t;
-            var task = get(vars, p);
-            if (!_.isPlainObject(task) || _.isEmpty(task)) continue;
-            var baseReward = get(task, '結算狀態.基礎獎勵已發放', false);
-            var advReward = get(task, '結算狀態.進階獎勵已發放', false);
-            var hasAdv = _.isPlainObject(get(task, '進階目標')) && 
-                         Object.keys(get(task, '進階目標')).filter(function(k) { return !k.startsWith('$'); }).length > 0;
-            var allDone = baseReward && (!hasAdv || advReward);
-            if (allDone) {
-                _.set(vars, p, {});
-                logChange('任務清理', p + ' 設爲空對象');
-                continue;
-            }
-            var status = get(task, '狀態');
-            if (status === '待結算' && baseReward && (!hasAdv || advReward)) {
-                _.set(vars, p, {});
-                logChange('任務清理', p + ' 設爲空對象');
-            } else if (status === '已放棄') {
-                _.set(vars, p, {});
-                logChange('任務清理', p + ' 設爲空對象');
-            } else if (status === '已失敗' && get(task, '結算狀態.失敗懲罰已發放', false)) {
-                _.set(vars, p, {});
-                logChange('任務清理', p + ' 設爲空對象');
-            }
-        }
-        
-    }
-    
-    cleanup();
-}
-
 // ======================== 同伴生效效果（改寫版 - 適用你的路徑） ========================
 function processCompanionStatusEffects(vars) {
   var comps = get(vars, '同伴');
@@ -2474,11 +1883,7 @@ function processCompanionStatusEffects(vars) {
   
   var cur = getCurrentTime(vars);
   if (!cur) return;
-  
-  // 獲取主角的維生素和氮平衡（同伴會受影響）
-  var playerVit = int(get(vars, '生理.維生素')) || 0;
-  var playerNitro = int(get(vars, '生理.氮平衡')) || 0;
-  
+   
   for (var n in comps) {
     if (n.startsWith('$')) continue;
     var base = '同伴.' + n;
@@ -2510,10 +1915,17 @@ function processCompanionStatusEffects(vars) {
     var sleepVal = int(get(vars, base + '.精神.睡眠')) || 0;
     
     var fatigue = int(get(vars, base + '.狀態.疲勞')) || 0;
-    var endLv = int(get(vars, base + '.屬性.耐力.等級')) || 20;  // ← 新增
-    var maxFat = 4 * endLv;                                       // ← 新增
-    var fatPerc = maxFat > 0 ? fatigue / maxFat * 100 : 0;       // ← 新增    
     var cleanVal = int(get(vars, base + '.狀態.清潔')) || 0;
+    
+    var endLv = int(get(vars, base + '.屬性.耐力.等級')) || 20;
+    var maxFat = 4 * endLv;
+    var fatPerc = maxFat > 0 ? fatigue / maxFat * 100 : 0;
+    
+    // 生命/精神值（用於持續傷害）
+    var hpCur = int(get(vars, base + '.生理.當前生命值')) || 100;
+    var hpMaxV = int(get(vars, base + '.生理.生命值上限')) || 100;
+    var spCur2 = int(get(vars, base + '.精神.當前精神值')) || 100;
+    var spMaxV = int(get(vars, base + '.精神.精神值上限')) || 100;
     
     // ========== 5. 生理週期計算 ==========
     var menses = int(get(vars, base + '.生理狀態.月經週期')) || 14;
@@ -2556,13 +1968,13 @@ function processCompanionStatusEffects(vars) {
         var preStage, preDesc;
         if (preDays <= 30) {
             preStage = '懷孕初期';
-            preDesc = '體力消耗+30%。飽腹感消耗每小時額外+2。可能出現噁心、食慾變化。';
+            preDesc = '體力消耗+30%。飽腹感消耗每小時額外+2。全屬性檢定-5減值。可能出現噁心、食慾變化。';
         } else if (preDays <= 60) {
             preStage = '懷孕中期';
-            preDesc = '飽腹感消耗每小時額外+3。腹部開始隆起。';
+            preDesc = '體力消耗+20%。飽腹感消耗每小時額外+3。蛋白質和維生素需求+30%。力量/敏捷檢定-10減值。腹部開始隆起。';
         } else {
             preStage = '懷孕後期';
-            preDesc = '容易疲倦。無法奔跑、無法重體力活動。睡眠恢復效率-30%。尿意累積速度+100%。';
+            preDesc = '體力消耗+40%。無法奔跑、無法重體力活動。力量/敏捷檢定-20減值。睡眠恢復效率-30%。尿意累積速度+100%。';
         }
         add('懷孕', preStage, preDesc);
         
@@ -2612,7 +2024,7 @@ function processCompanionStatusEffects(vars) {
     add('好感度', affectionStage, affectionDesc);
     
     // ========== 7. 水分 ==========
-    if (water > 90) add('水分', '水分充足', '身體水分充足，精神飽滿。所有與耐力相關的檢定獲得+5背景加值。');
+    if (water > 90) add('水分', '水分充足', '身體水分充足，精神飽滿。');
     else if (water > 70) add('水分', '狀態正常', '沒什麼特別的感覺。');
     else if (water > 50) add('水分', '輕微口渴', '喉嚨有點幹，下意識想找水喝，注意力有點不集中。');
     else if (water > 30) add('水分', '明顯口渴', '口乾舌燥，感覺有些煩躁，身體在強烈要求補水。');
@@ -2621,7 +2033,7 @@ function processCompanionStatusEffects(vars) {
     else add('水分', '瀕死：脫水', '身體因嚴重缺水而瀕臨崩潰。');
     
     // ========== 8. 飽腹感 ==========
-    if (full > 95) add('飽腹感', '過飽', '吃撐了，行動有點不方便。所有敏捷和耐力相關檢定受到-5減值。');
+    if (full > 95) add('飽腹感', '過飽', '吃撐了，行動有點不方便。');
     else if (full > 85) add('飽腹感', '飽足', '吃飽喝足，感覺充滿能量，體力充沛，疲勞感不易累積。');
     else if (full > 60) add('飽腹感', '狀態正常', '沒什麼特別的感覺。');
     else if (full > 30) add('飽腹感', '輕微飢餓', '肚子有點空，開始期待下一頓飯。');
@@ -2645,7 +2057,7 @@ function processCompanionStatusEffects(vars) {
     else add('壓力', '精神崩潰', '精神防線徹底崩潰，陷入恐慌、偏執或絕望狀態。');
     
     // ========== 11. 睡眠 ==========
-    if (sleepVal > 90) add('睡眠', '精力充沛', '充足的睡眠讓她恢復了所有精力。');
+    if (sleepVal > 90) add('睡眠', '精力充沛', '充足的睡眠讓她恢復了所有精力。疲勞恢復速度加倍。');
     else if (sleepVal > 60) add('睡眠', '狀態正常', '無特殊效果。');
     else if (sleepVal > 30) add('睡眠', '疲倦', '開始感到身體和精神的疲勞。');
     else if (sleepVal > 0) add('睡眠', '非常疲憊', '嚴重缺乏睡眠，眼皮沉重，反應遲鈍。');
@@ -2656,18 +2068,6 @@ function processCompanionStatusEffects(vars) {
     else if (cleanVal > 40) add('清潔', '狀態正常', '無特殊效果。');
     else if (cleanVal > 10) add('清潔', '有點髒', '身上有污垢或異味，讓人不適。');
     else add('清潔', '污穢不堪', '全身骯髒，散發惡臭，大大增加感染疾病的風險。');
-    
-    // ========== 13. 維生素（受主角影響） ==========
-    if (playerVit > 80) add('維生素', '維生素充足', '維生素充足。');
-    else if (playerVit > 30) add('維生素', '狀態正常', '無特殊效果。');
-    else if (playerVit > 0) add('維生素', '維生素缺乏', '身體出現多種不良反應，更快疲勞等。');
-    else add('維生素', '維生素嚴重缺乏', '出現壞血病、夜盲症等嚴重疾病。');
-    
-    // ========== 14. 氮平衡（受主角影響） ==========
-    if (playerNitro >= 75) add('氮平衡', '正氮平衡', '蛋白質充足，力量相關檢定效果增強，更快從疲勞恢復。');
-    else if (playerNitro >= 0) add('氮平衡', '狀態正常', '無特殊效果。');
-    else if (playerNitro >= -50) add('氮平衡', '負氮平衡', '蛋白質不足，肌肉分解流失。力量下降，免疫力下降，傷口難以癒合，更難恢復耐力。');
-    else add('氮平衡', '嚴重負氮平衡', '蛋白質嚴重缺乏，身體機能大幅受損。');
        
     // ========== 15. 寫入生效效果 ==========
     var curEff = get(vars, base + '.狀態.生效效果') || {};
@@ -2769,6 +2169,12 @@ function applyCorrections(vars, oldVars) {
         ensurePaths(vars);
         fixTimeFormat(vars);
         
+        // ========== 🔴 新增：基於日期更新天數 ==========
+        var dateUpdated = updateDayFromDate(vars);
+        if (dateUpdated) {
+            keyLog('📅 天數已根據日期更新');
+        }
+        
         processStatusEffects(vars);
         processCompanionStatusEffects(vars);
         processMiscarriageCleanup(vars);
@@ -2783,17 +2189,7 @@ function applyCorrections(vars, oldVars) {
                 updatePregnancyStage(vars, '同伴.' + name);
             }
         }
-
-        fixItemStatusLimits(vars);
-        cleanupAllItems(vars);
-        processItemDecay(vars);
-
-      // ========== 🔴 新增：基於日期更新天數 ==========
-        var dateUpdated = updateDayFromDate(vars);
-        if (dateUpdated) {
-            keyLog('📅 天數已根據日期更新');
-        }
-              
+       
         // 時間差計算（每小時更新）
         if (lastSnapshot) {
             var prevTime = lastSnapshot.time;
@@ -2843,10 +2239,6 @@ function applyCorrections(vars, oldVars) {
                     // 氮平衡
                     var nitrogen = get(vars, '生理.氮平衡') || 0;
                     set(vars, '生理.氮平衡', Math.max(-100, nitrogen - 1 * hoursDiff * sleepMultiplier));
-                    
-                    // 維生素
-                    var vitamin = get(vars, '生理.維生素') || 0;
-                    set(vars, '生理.維生素', Math.max(0, vitamin - 0.5 * hoursDiff * sleepMultiplier));
                     
                     // 睡眠值
                     var sleep = get(vars, '精神.睡眠') || 0;
@@ -2951,21 +2343,10 @@ function applyCorrections(vars, oldVars) {
         // 🔴 第二次整數化移到這裡（在所有消耗計算完成之後）
         applyIntegerAndBounds(vars);
         
-        //checkAndRestoreSustainableLivestock(vars, oldVars);  // ✅ 新增這一行
+       
+        updateSeason(vars);
+        processCompanionLimits(vars);
         
-        //updateSeason(vars);
-        //recordShopHistory(vars);
-        //updateCropGrowthStages(vars);
-        //updateLivestockStates(vars);
-        //processTasksAndShop(vars);
-        //processCompanionLimits(vars);
-        
-        // 作物和畜牧修復（保持原有順序）
-        //checkAndRestoreSustainableCrops(vars, oldVars);
-        //verifyAndFixAllCrops(vars);
-        //verifyAndFixAllLivestock(vars);  // ✅ 保持在這一行
-
-        //cleanupCompletedPerformances(vars);
 
         //更新前次時間和天數
         var currentTime = get(vars, '系統.當前時間');
@@ -2989,32 +2370,24 @@ function applyCorrections(vars, oldVars) {
 }
 
     // ======================== 事件掛載 ========================
-eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, function(vars) {
-    var d = vars.stat_data;
-    var currentDay = get(d, '系統.經過天數');
-    var currentTime = get(d, '系統.當前時間');
-    var currentDate = get(d, '系統.當前日期');
-    
-    // 如果有日期，優先記錄日期
-    if (currentDate) {
+    eventOn(Mvu.events.VARIABLE_UPDATE_STARTED, function(vars) {
+        var d = vars.stat_data;
+        var currentDay = get(d, '系統.經過天數');
+        var currentTime = get(d, '系統.當前時間');
+        
         lastSnapshot = {
             day: currentDay,
             time: currentTime,
-            date: currentDate
-        };
-        debugLog('記錄前次狀態: 日期=' + currentDate + ', 天數=' + currentDay + ', 時間=' + currentTime);
-    } else {
-        lastSnapshot = {
-            day: currentDay,
-            time: currentTime
+            hpMax: get(d, '生理.生命值上限'),
+            hpCur: get(d, '生理.當前生命值'),
+            spMax: get(d, '精神.精神值上限'),
+            spCur: get(d, '精神.當前精神值')
         };
         debugLog('記錄前次狀態: 天數=' + currentDay + ', 時間=' + currentTime);
-    }
-    
-    fixCount = 0;
-    delCount = 0;
-    lastLogHash = '';
-});
+        fixCount = 0;
+        delCount = 0;
+        lastLogHash = '';
+    });
 
 eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function(newVars, oldVars) {
     if (isProcessing) return;
@@ -3184,9 +2557,7 @@ eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function(newVars, oldVars) {
     window.getResultGrade = getResultGrade;
     window.calculateVoluntary = calculateVoluntary;
     window.calculatePregnancy = calculatePregnancy;
-    window.updateAllCrops = function(vars) { return updateCropGrowthStages(vars); };
-    window.updateAllLivestock = function(vars) { return updateLivestockStates(vars); };
-    window.calculateMoonPhase = calculateMoonPhase;
+    //window.calculateMoonPhase = calculateMoonPhase;
     window.calculateSeason = calculateSeason;
     window.parseDateString = parseDateString;
     window.calculateSeasonFromDate = calculateSeasonFromDate;
@@ -3199,7 +2570,8 @@ eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function(newVars, oldVars) {
     window.getDayOfYearFromDateString = getDayOfYearFromDateString;
     window.getDaysBetweenDates = getDaysBetweenDates;
     window.updateDayFromDate = updateDayFromDate;
-    window._mvuFinalStableV08152 = true;
+    
+    window._mvuFinalStableV0907 = true;
     
     console.log('✅ 所有擴充功能已載入 (0815.ver2 路徑更新)');
     console.log('📊 功能模塊: 好感系統 | 性愛系統 | 季節系統 | 作物系統 | 畜牧系統 | 懷孕系統 | 幼兒系統 | 任務系統 | 入眠系統 | 狀態效果');
