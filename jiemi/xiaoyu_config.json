@@ -369,6 +369,12 @@
         "genre": "shortdrama"
     },
     {
+        "key": "红果",
+        "name": "📱红果🔹短剧",
+        "type": 3,
+        "api": "./py/红果短剧.py"
+    },
+    {
         "key": "好看短剧",
         "name": "📱好看🔹短剧",
         "type": 3,
@@ -407,14 +413,6 @@
             "分类": "重生$1#穿越$2#爽剧$3#言情$4#都市$5#古装$6#悬疑$7#剧情$8",
             "分类url": "https://www.mochadj.com/i/{cateId}-{catePg}.html"
         }
-    },
-    {
-        "key": "西饭短剧",
-        "name": "📱西饭🔹短剧",
-        "type": 3,
-        "api": "./js/西饭短剧.js",
-        "quickSearch": 0,
-        "searchable": 0
     },
     {
         "key": "巴士动漫",

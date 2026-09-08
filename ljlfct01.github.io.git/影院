@@ -17,6 +17,26 @@
       "ext": "https://gitee.com/zhouyadong7033/box/raw/master/JS/%E7%99%BE%E5%BF%99.js"
     },
     {
+      "key": "移动",
+      "name": "🔥移动┃影视",
+      "type": 3,
+      "api": "csp_Yidong4K",
+      "jar": "http://101.201.171.207:6767/qijiyun4kBA/jar/2.jpg",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "timeout": 60
+    },
+    {
+      "key": "影探",
+      "name": "影探4k",
+      "type": 4,
+      "api": "http://cccimg.com/down.php/8cfc0e2827d8832bde7ca99420471027.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+   },
+    {
       "key": "全",
       "name": "📢🔥全",
       "type": 4,
