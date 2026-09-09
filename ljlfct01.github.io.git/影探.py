@@ -47,10 +47,10 @@ class Spider(Spider):
     # ============ 4K 解析引擎挂载表 ============
     # (tag, 显示名, 文件路径)  —— 播放 id 形如 tag@@线路码@@引擎剧集id
     ENGINES = [
-        ('dd', '多多4K', 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl='),
-        ('jxf', '剧下饭4K', 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl='),
-        ('zn', '真不错4K', 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl='),
-        ('xy', '星影', 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl='),
+        ('dd', '多多4K', 'http://zz2.mftv.top/api/index?parsesId=3&appid=10006&videoUrl='),
+        ('jxf', '剧下饭4K', 'http://zz2.mftv.top/api/index?parsesId=3&appid=10006&videoUrl='),
+        ('zn', '真不错4K', 'http://zz2.mftv.top/api/index?parsesId=3&appid=10006&videoUrl='),
+        ('xy', '星影', 'http://zz2.mftv.top/api/index?parsesId=3&appid=10006&videoUrl='),
     ]
 
 
@@ -325,10 +325,10 @@ class Spider(Spider):
         if re.match(r'^https?://', video_id):
             import random as _r
             parser = _r.choice(self.WEB_PARSES)
-            return {'jx': 0, 'parse': 1, 'playUrl': '', 'url': parser + quote(video_id, safe=''),
+            return {'jx': 0, 'parse': 1, 'playUrl': 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl=', 'url': parser + quote(video_id, safe=''),
                     'header': self.headers}
 
-        return {'jx': 1, 'parse': 0, 'playUrl': '', 'url': video_id, 'header': self.headers}
+        return {'jx': 1, 'parse': 0, 'playUrl': 'http://125.208.22.184:6019/api/index?parsesId=550266&appid=10000&videoUrl=', 'url': video_id, 'header': self.headers}
 
     # ---------- 其他接口 ----------
     def homeVideoContent(self):
