@@ -78,8 +78,9 @@ jobs:
                 [lxmusic-洛雪源]="https://github.com/guoyue2010/lxmusic-.git"
                 [lx-music-source洛雪源]="https://github.com/pdone/lx-music-source.git"        
                 [lxmusic洛雪源]="https://github.com/wzh15802/lxmusic.git"  
+                [lx-ikun-music-sources洛雪源]="https://github.com/Macrohard0001/lx-ikun-music-sources.git" 
+                [HYWmusic_source洛雪源]="https://github.com/Macrohard0001/HYWmusic_source.git"  
                 
-                 
                [TB18]="https://github.com/LIUJEI/TB.git" 
                [tvbox-FL18]="https://github.com/aa123jg/tvbox-FL.git"
                [pgfh18]="https://github.com/lang999/pgfh.git"
