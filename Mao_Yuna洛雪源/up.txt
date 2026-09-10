@@ -1,0 +1,4 @@
+String New_Bnben="3.1.8";
+int New_Xiaobanben=318;
+String New_Log="🔥🌲更新";
+String New_Download="https://gitee.com/Myn_1/Mao_Yuna/raw/MYN_update/Music/%E7%BE%BD%E9%9B%AB3.1.8.zip";
