@@ -47,7 +47,7 @@
       "quickSearch": 1,
       "filterable": 1,
       "api": "http://103.236.94.69:12/lib/drpy2.min.js",
-      "ext": "http://103.236.94.69:12/lib/qq.js"
+      "ext": "https://gitee.com/zhouyadong7033/box/raw/master/JS/%E8%85%BE%E8%AE%AF%E5%BC%B9%E5%B9%95.js"
     },
       {
       "key": "芒果弹幕",
@@ -64,14 +64,25 @@
       "ext": "https://app.69mini.com/lib1/bili.js"
     },
     {
-      "key": "影探",
-      "name": "影探4k",
-      "type": 3,
-      "api": "http://cccimg.com/down.php/8cfc0e2827d8832bde7ca99420471027.py",
+      "key": "影影1",
+      "name": "影影4k1",
+      "type": 4,
+      "api": "http://sf4.mftv.top/cs/ythy%E8%A7%82%E5%BD%B1.php?filter=true",
+     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
-   },
+    },
+    {
+      "key": "影影2",
+      "name": "影影4k2",
+      "type": 4,
+      "api": "http://sf4.mftv.top/gy/ythy%E8%A7%82%E5%BD%B1.php?filter=true",
+     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
       {
       "key": "drpy_js_奇珍异兽",
       "name": "💖主线｜QY",
