@@ -11,7 +11,7 @@ VERSIONS = {
     'grass': '1',
     'huibq': '1.2.0',
     'ikun': '22',
-    'lx': '4',
+    'lx': '6',
     'sixyin': '1.2.1',
     'juhe': '3',
     'qdy': '9.3'
