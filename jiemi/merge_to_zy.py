@@ -4,7 +4,7 @@ import json5  # 用 json5 读取，以兼容你原本带注释的源文件
 import chardet
 
 TVBOX_FILE = "tvbox_config.json"
-MOYU_FILE = "moyu.json"
+RIHOU_FILE = "rihou.json"
 XIAOYU_FILE = "xiaoyu.json"
 OUTPUT_FILE = "zy.json"
 
@@ -28,7 +28,7 @@ def read_json_file(file_path):
         print(f"[-] 读取 {file_path} 失败: {e}")
         return None
 
-def write_standard_json(file_path, data, reference_file, tvbox_count, moyu_count, xiaoyu_count):
+def write_standard_json(file_path, data, reference_file, tvbox_count, rihou_count, xiaoyu_count):
     encoding = detect_encoding(reference_file)
     try:
         # 1. 先导出标准的格式化 JSON 字符串
@@ -39,18 +39,18 @@ def write_standard_json(file_path, data, reference_file, tvbox_count, moyu_count
         new_lines = []
         object_index = 0
 
-        # 计算 TVBOX、MOYU、XIAOYU 对应第一个对象的序号 (索引从 0 开始)
+        # 计算 TVBOX、RIHOU、XIAOYU 对应第一个对象的序号 (索引从 0 开始)
         tvbox_start = 0 if tvbox_count > 0 else -1
-        moyu_start = tvbox_count if moyu_count > 0 else -1
-        xiaoyu_start = (tvbox_count + moyu_count) if xiaoyu_count > 0 else -1
+        rihou_start = tvbox_count if rihou_count > 0 else -1
+        xiaoyu_start = (tvbox_count + rihou_count) if xiaoyu_count > 0 else -1
 
         for line in lines:
             # indent=2 时，sites 列表里的对象开头缩进刚好是 4 个空格 "    {"
             if line == "    {":
                 if object_index == tvbox_start:
                     new_lines.append("    // tvbox_config.json")
-                elif object_index == moyu_start:
-                    new_lines.append("    // moyu.json")
+                elif object_index == rihou_start:
+                    new_lines.append("    // rihou.json")
                 elif object_index == xiaoyu_start:
                     new_lines.append("    // xiaoyu.json")
                 object_index += 1
@@ -69,24 +69,24 @@ def write_standard_json(file_path, data, reference_file, tvbox_count, moyu_count
 def merge_sites():
     print("[*] 开始读取文件并准备合并...")
     tvbox_data = read_json_file(TVBOX_FILE)
-    moyu_data = read_json_file(MOYU_FILE)
+    rihou_data = read_json_file(RIHOU_FILE)
     xiaoyu_data = read_json_file(XIAOYU_FILE)
 
-    if tvbox_data is None or moyu_data is None or xiaoyu_data is None:
+    if tvbox_data is None or rihou_data is None or xiaoyu_data is None:
         print("[-] 合并中止：源文件读取失败。")
         exit(1)
 
     # 提取 sites 列表
     tvbox_sites = tvbox_data.get("sites", [])
-    moyu_sites = moyu_data.get("sites", [])
+    rihou_sites = rihou_data.get("sites", [])
     xiaoyu_sites = xiaoyu_data.get("sites", [])
 
-    if not isinstance(tvbox_sites, list) or not isinstance(moyu_sites, list) or not isinstance(xiaoyu_sites, list):
+    if not isinstance(tvbox_sites, list) or not isinstance(rihou_sites, list) or not isinstance(xiaoyu_sites, list):
         print("[-] 错误: 'sites' 字段不是列表格式！")
         exit(1)
 
     # 按顺序合并 sites
-    merged_sites = tvbox_sites + moyu_sites + xiaoyu_sites
+    merged_sites = tvbox_sites + rihou_sites + xiaoyu_sites
 
     output_data = {
         "sites": merged_sites
@@ -98,7 +98,7 @@ def merge_sites():
         output_data, 
         TVBOX_FILE, 
         len(tvbox_sites), 
-        len(moyu_sites), 
+        len(rihou_sites), 
         len(xiaoyu_sites)
     )
     print("[*] 合并完成！")

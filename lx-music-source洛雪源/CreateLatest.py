@@ -7,8 +7,10 @@ from pathlib import Path
 
 # Latest Version Numbers
 VERSIONS = {
+    'changqing': '1.3.0',
     'flower': '1',
     'grass': '1',
+    'huanyin': '3',
     'huibq': '1.2.0',
     'ikun': '22',
     'lx': '6',

@@ -17,18 +17,6 @@
         "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
     },
     {
-        "name": "宫殿",
-        "type": 0,
-        "playerType": 2,
-        "url": "https://gongdian.top/tv/iptv"
-    },
-    {
-        "name": "裤佬",
-        "type": 0,
-        "playerType": 2,
-        "url": "https://live.445569.xyz/live.m3u"
-    },
-    {
         "name": "湖北移动组播",
         "type": 0,
         "url": "./txt/HB_mobile.txt",

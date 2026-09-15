@@ -29,10 +29,92 @@
       "searchable": 1,
       "type": 3
     },
+     {
+      "key": "internetarchive.py",
+      "name": "💥internetarchive💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/internetarchive.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+     
+     {
+      "key": "美女视频收藏馆.py",
+      "name": "💥美女视频收藏馆💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/美女视频收藏馆.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+     {
+      "key": "djyyy.py",
+      "name": "💥djyyy💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/djyyy.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+    {
+      "key": "QinAV.py",
+      "name": "💥QinAV💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/QinAV.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+     {
+      "key": "91成人短剧.py",
+      "name": "💥91成人短剧💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/91成人短剧.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+     {
+      "key": "MissAV123.py",
+      "name": "💥MissAV123💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/MissAV123.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+      {
+      "key": "光厂.py",
+      "name": "💥光厂💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/光厂.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
 {
       "key": "搜狐视频.py",
       "name": "💥搜狐视频💥",
       "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/搜狐视频.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+    {
+      "key": "腾讯视频测试.py",
+      "name": "💥腾讯视频测试💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/腾讯视频测试.py",
+      "filterable": 1,
+      "quickSearch": 1,
+      "searchable": 1,
+      "type": 3
+    },
+    {
+      "key": "抖音精选.py",
+      "name": "💥抖音精选💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/抖音精选.py",
       "filterable": 1,
       "quickSearch": 1,
       "searchable": 1,
@@ -48,9 +130,9 @@
       "type": 3
     },
     {
-      "key": "360影视.py",
-      "name": "💥360影视💥",
-      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/360影视.py",
+      "key": "TinyAV.py",
+      "name": "💥TinyAV💥",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/TinyAV.py",
       "filterable": 1,
       "quickSearch": 1,
       "searchable": 1,
@@ -59,7 +141,7 @@
     {
       "key": "ZIP0影视.py",
       "name": "💥ZIP0影视💥",
-      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/ZIP0影视.py",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/py9/ZIP0影视.py",
       "filterable": 1,
       "quickSearch": 1,
       "searchable": 1,
@@ -86,7 +168,7 @@
     {
       "key": "乌云.py",
       "name": "💥Y乌云💥",
-      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/js8/乌云.js",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/乌云.py",
       "filterable": 1,
       "quickSearch": 1,
       "searchable": 1,
@@ -230,7 +312,7 @@
  {
       "key": "Pexels视频.py",
       "name": "💥Pexels视频💥",
-      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/Pexels视频.py",
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/yingshi/pytesx/Pexels视频1.py",
       "filterable": 1,
       "quickSearch": 1,
       "searchable": 1,

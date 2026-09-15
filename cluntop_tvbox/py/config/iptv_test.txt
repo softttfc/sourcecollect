@@ -1290,6 +1290,7 @@ NewTV中国功夫,
 纯享4K,
 NewTV超级体育|超级体育|NewTV超级体育 4M1080|NewTV_超级体育「IPV6」,
 哈哈炫动|炫动卡通,
+NewTV精品体育|精品体育|NewTV精品体育 4M1080|NewTV_精品体育「IPV6」,
 
 求索系列,#genre#
 求索记录,
@@ -3536,6 +3537,16 @@ Sony Max 1,
 Star Gold Select HD,
 Zee Bollymovies,
 Zee Bollywood,
+Cine Mexicano,
+创世纪,
+寻秦记,
+强森电影,
+战争电影,
+无心法师,
+武侠电影,
+活佛济公3,
+谍战电影,
+黄渤电影,
 
 电视剧🔁,#genre#
 科幻动作,
@@ -3950,6 +3961,7 @@ viju History,
 ETV Abhiruchi,
 KPVM Story Television,
 自然传奇,
+地理中国,
 
 动画片,#genre#
 青春动漫,
@@ -6424,6 +6436,7 @@ HZTV-2,
 东莞新闻综合,
 东莞生活资讯,
 河源综合,
+南国都市,
 
 上海,#genre#
 上海新闻,
@@ -6468,6 +6481,7 @@ HZTV-2,
 江苏卫视4K,
 湖南卫视4K,
 东方卫视4K,
+南国都市4K,
 
 8K,#genre#
 北京纪实8K,
@@ -6507,6 +6521,8 @@ YouTube,#genre#
 滁州新闻综合频道|滁州新闻综合,
 滁州科教频道|滁州科教,
 滁州公共频道|滁州公共,
+铜陵新闻综合频道|铜陵新闻|铜陵综合,
+亳州农村,
 
 宁夏,#genre#
 宁夏公共,
@@ -6688,6 +6704,7 @@ beIN Sports USA,
 NBA,
 Fox Sports,
 Star Sports Select 1 HD,
+GolTV Latin America,
 
 少儿,#genre#
 央视少儿,
@@ -6789,6 +6806,7 @@ Transformers TV,
 Cartoon Channel PH,
 Sony Yay!,
 УТРК Баластан,
+猫和老鼠,
 
 音乐,#genre#
 MTV Live,
@@ -6858,6 +6876,7 @@ B4U Hitz,
 KPVM Ace Country Radio,
 Страна FM,
 Ultra TV 4K,
+Quiero Musica en mi Idioma,
 
 新闻,#genre#
 TVBS新闻,
