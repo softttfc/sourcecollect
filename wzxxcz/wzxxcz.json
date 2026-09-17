@@ -419,12 +419,6 @@
             "ext": "https://gitee.com/wzbdyr/hqds/raw/master/lib/live.json"
         },
         {
-            "key": "网络直播",
-            "name": "📺网络直播",
-            "type": 3,
-            "api": "./py/网络直播.py"
-        },
-        {
             "key": "央视片库",
             "name": "🇨🇳央视大全",
             "type": 3,
@@ -569,25 +563,6 @@
             "timeout": 60
         },
         {
-            "key": "欧哥",
-            "name": "🐲小橙子4K弹幕",
-            "type": 3,
-            "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "changeable": 1,
-            "ext": {
-                "site": [
-                    "https://woog.nxog.eu.org",
-                    "https://woog.nxog.fun",
-                    "https://woog.nxog.eu.org",
-                    "https://woog.430520.xyz"
-                ]
-            },
-            "timeout": 60
-        },
-        {
             "key": "夸快夸快",
             "name": "🐲小橙子夸快4K",
             "type": 3,
@@ -638,24 +613,6 @@
             },
             "timeout": 60
         },
-		{
-            "key": "二小",
-            "name": "🐂二小4K弹幕",
-            "type": 3,
-            "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "changeable": 1,
-            "ext": {
-                "site": [
-                    "http://www.wexwp.cc",
-                    "https://www.2xiaopan.one",
-                    "https://www.wexwp.cc"
-                ]
-            },
-            "timeout": 60
-        },
         {
             "key": "木偶",
             "name": "🍁木偶资源4K弹幕",
@@ -689,43 +646,6 @@
                     "https://tv.yydsys.top",
                     "https://tv.yydsys.cc",
                     "https://tv.214521.xyz"
-                ]
-            },
-            "timeout": 60
-        },
-		{
-            "key": "至臻",
-            "name": "🏆️至臻4K4K",
-            "type": 3,
-            "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "changeable": 1,
-            "ext": {
-                "site": [
-                    "https://sp.zzzy.shop",
-                    "https://www.zhizhen8.click",
-                    "https://www.zhizhen1.top",
-                    "https://www.mihdr.top"
-                ]
-            },
-            "timeout": 60
-        },
-		{
-            "key": "蜡笔",
-            "name": "👠蜡笔在线",
-            "type": 3,
-            "api": "csp_PanWebShare",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "changeable": 1,
-            "ext": {
-                "site": [
-                    "http://tvpanpan.site",
-                    "http://feimo.fun",
-                    "https://www.mmpanpan.site"
                 ]
             },
             "timeout": 60
@@ -812,22 +732,6 @@
                 "site": [
                     "https://123panfx.com",
                     "https://pan1.me"
-                ]
-            },
-            "timeout": 60
-        },
-		{
-            "key": "米搜",
-            "name": "🌾米搜4K4K弹幕",
-            "type": 3,
-            "api": "csp_MiSou",
-            "searchable": 1,
-            "quickSearch": 0,
-            "filterable": 0,
-            "ext": {
-                "site": [
-                    "http://gesoso.fun",
-                    "http://www.misoso.shop"
                 ]
             },
             "timeout": 60
@@ -990,6 +894,12 @@
             "filterable": 0,
             "timeout": 60
         },
+		{
+            "key": "5",
+            "name": "🍊小橙子影视",
+            "type": 3,
+            "api": "./py/小橙子影视.py"
+        },
         {
             "key": "荐片",
             "name": "🐭荐片P2P",
@@ -1012,6 +922,16 @@
             "filterable": 1,
             "timeout": 60
         },
+		{
+            "key": "爱盼",
+            "name": "💡爱盼4K",
+            "type": 3,
+            "api": "csp_AiPan",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1,
+            "timeout": 60
+        },
         {
             "key": "咕噜画",
             "name": "🌾咕噜影视",
@@ -1024,16 +944,6 @@
                 "key": "guluyinghua_123",
                 "sign": "679543610991810f19698c187e5e106e"
             }
-        },
-		{
-            "key": "七味",
-            "name": "🍢七味磁力",
-            "type": 3,
-            "api": "csp_QnMp4",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "ext": "https://www.qwshow.com,https://www.qwmkv.com,https://www.qwfilm.com,https://www.qwfun.com,https://www.qnnull.com,https://www.qnnull.com"
         },
         {
             "key": "New6v",
@@ -1063,16 +973,6 @@
             "quickSearch": 1,
             "filterable": 1,
             "ext": "https://xunlei8.me"
-        },
-        {
-            "key": "电影港",
-            "name": "🍊电影港磁力",
-            "type": 3,
-            "api": "csp_XYQHiker",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "ext": "./XYQHiker/电影港.json"
         },
         {
             "key": "py_xiongdi",
@@ -1923,6 +1823,12 @@
             "api": "./py/饭搭子影视.py"
         },
 		{
+            "key": "10",
+            "name": "🍊T4影视",
+            "type": 4,
+            "api": "https://banyeomni.780420.xyz:17777/api/tvbox/source/2097848348508688384?token=banye666"
+        },
+		{
             "key": "爬虫影视",
             "name": "🐛爬虫影视",
             "type": 1,
@@ -2169,8 +2075,7 @@
             "key": "韩圈",
             "name": "🥯韩圈影视",
             "type": 3,
-            "api": "csp_Hxq",
-            "ext": "http://www.小不点.com/api/2026/fishhxq.php"
+            "api": "csp_Hxq"
         },
         {
             "key": "乌云影视",
@@ -2775,24 +2680,6 @@
                 "排序": "时间&人气&评分",
                 "排序值": "time&hits&score"
             }
-        },
-		{
-            "key": "世界影视1",
-            "name": "🗺️世界影视1",
-            "type": 3,
-            "api": "csp_HkybSpider",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1
-        },
-        {
-            "key": "壹壹影视",
-            "name": "💵壹壹影视",
-            "type": 3,
-            "api": "csp_YiYs",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1
         },
         {
             "key": "飞娱影视",
@@ -9096,8 +8983,8 @@
             }
         },
         {
-            "key": "吉吉影院",
-            "name": "🎸吉吉影院",
+            "key": "吉吉电影网",
+            "name": "🎸吉吉电影网",
             "type": 3,
             "api": "csp_XBPQ",
             "searchable": 1,
@@ -9106,22 +8993,22 @@
             "filterable": 1,
             "timeout": 120,
             "ext": {
-                "作者": "🍊小橙子/250806",
-                "站名": "吉吉影院",
-                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； ASUS_I005DA Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.70 Mobile Safari/537.36&&Cookie@&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
+				"作者": "🍊小橙子/20260917",
+                "站名": "吉吉电影网",
+                "请求头": "User-Agent@Mozilla/5.0 (Linux；； Android 9；； NX809J Build/PI；； wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36&&Cookie@gg_iscookie=1；； server_session_5ae8f0af=3285787f1faca4ede97fa25d9eaaa46a；； PHPSESSID=76hibia00bmurt6688reioqdum&&Accept@text/html,application/xhtml+xml,application/xml；；q=0.9,image/avif,image/webp,image/apng,*/*；；q=0.8,application/signed-exchange；；v=b3；；q=0.7&&Accept-Language@zh-CN,zh；；q=0.9",
                 "编码": "UTF-8",
-                "图片代理": "0",
+				"图片代理": "0",
                 "直接播放": "0",
                 "播放请求头": "",
                 "嗅探词": ".mp4#.m3u8#.flv#hcts-m3u8#index.m3u8",
                 "免嗅": "1",
                 "过滤词": "",
-                "主页url": "https://www.sc5188.com/",
-                "首页": "120",
+                "主页url": "https://www.xinshici.com/",
+				"首页": "120",
                 "起始页": "1",
-                "分类url": "https://www.sc5188.com/vodshow/{cateId}--------{catePg}---/",
+				"分类url": "https://www.xinshici.com/vodshow/{cateId}--------{catePg}---{year}.html",
                 "分类": "电影$1#电视剧$2#综艺$3#动漫$4#短剧$26#",
-                "二次截取": "",
+				"二次截取": "",
                 "数组": "lazyload&&</a>",
                 "标题": "title=\"&&\"",
                 "图片": "data-original=\"&&\"",
@@ -9133,21 +9020,21 @@
                 "状态": "状态：&&</p>",
                 "导演": "导演：&&</p>",
                 "主演": "主演：&&</p>",
-                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+left\">&&</div>",
-                "线路二次截取": "",
-                "线路数组": "data-toggle&&</a>",
-                "线路标题": ">&&</a>",
+                "简介": "🍊小橙子为您介绍剧情👉请不要相信视频中的广告，以免上当受骗！+简介：&&</div>",
+				"线路二次截取": "",
+                "线路数组": "more text-muted pull-right&&</div>",
+                "线路标题": "src*>&&</h3>",
                 "播放二次截取": "",
                 "播放数组": "<ul class=\"stui-content__playlist clearfix&&</ul>",
                 "倒序": "0",
-                "播放列表": "<a&&/a>",
+                "播放列表": "<a&&</a>",
                 "播放标题": ">&&</a>",
                 "播放链接": "href=\"&&\"",
                 "解析": "",
                 "跳转播放链接": "var player_*\"url\":\"&&\"",
                 "跳转解析": "",
                 "搜索请求头": "User-Agent$MOBILE_UA",
-                "搜索url": "https://www.sc5188.com/vodsearch/{wd}----------{pg}---/",
+                "搜索url": "https://www.xinshici.com/vodsearch/{wd}----------{pg}---.html",
                 "搜索模式": "1",
                 "搜索后缀": "",
                 "搜索二次截取": "",
@@ -35991,7 +35878,6 @@
             "ext": {
                 "host": "http://111.180.139.119:19987/app/bn",
                 "LoginPath": "/app/log",
-                "appkey": "f66f65db127e48449f073c2c6eb0f993",
                 "versionName": "6.4.9",
                 "name": "双子星动漫",
                 "package": "com.haiwang.liangxia.my.ym",
@@ -36042,43 +35928,6 @@
             "api": "./js/drpy2.min.js",
             "ext": "./js/Anime1.js"
         },
-		{
-            "key": "漫国动漫",
-            "name": "🤣漫国动漫",
-            "type": 3,
-            "searchable": 1,
-            "api": "csp_AppSy",
-            "ext": {
-                "url": "http://114.66.27.208:806",
-                "siteKey": "rectangleadsadxa",
-                "listKey": "aassddwwxxllsx1x",
-                "parsesKey": "aassddwwxxllsx1x"
-            }
-        },
-        {
-            "key": "方舟动漫",
-            "name": "🛶方舟动漫",
-            "type": 3,
-            "searchable": 1,
-            "api": "csp_AppGet",
-            "ext": {
-                "url": "https://www.cyfz.top",
-                "dataKey": "e72cdfd629e8895d",
-                "dataIv": "e72cdfd629e8895d"
-            }
-        },
-        {
-            "key": "曼波动漫",
-            "name": "🍸曼波动漫",
-            "type": 3,
-            "searchable": 1,
-            "api": "csp_AppGet",
-            "ext": {
-                "url": "https://app.omofun1.top",
-                "dataKey": "66dc309cbeeca454",
-                "dataIv": "66dc309cbeeca454"
-            }
-        },
         {
             "key": "咕咕动漫",
             "name": "🤣咕咕动漫",
@@ -36108,20 +35957,6 @@
                 "搜索url": "https://dmbus.cc/s----------.html?wd={wd}",
                 "倒序": "1"
             }
-        },
-        {
-            "key": "路漫漫",
-            "name": "🛣️路漫漫动漫",
-            "type": 3,
-            "api": "./js/drpy2.min.js",
-            "ext": "./js/路漫漫.js"
-        },
-        {
-            "key": "去看吧",
-            "name": "🍡去看吧动漫",
-            "type": 3,
-            "api": "./js/drpy2.min.js",
-            "ext": "./js/去看吧.js"
         },
 		{
             "key": "黑猫动漫",
@@ -36377,18 +36212,6 @@
             "name": "⚽88看球",
             "type": 3,
             "api": "csp_Sports88",
-            "searchable": 0,
-            "quickSearch": 0,
-            "changeable": 0,
-            "style": {
-                "type": "list"
-            }
-        },
-		{
-            "key": "球通体育",
-            "name": "⚽球通体育",
-            "type": 3,
-            "api": "csp_SportsQiutong",
             "searchable": 0,
             "quickSearch": 0,
             "changeable": 0,
