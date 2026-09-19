@@ -1,0 +1,221 @@
+name: 下载本地包解压并注入Sites生成rihou.json
+
+on:
+  schedule:
+    - cron: '0 */3 * * *' # 每3小时 自动运行
+  workflow_dispatch:     # 支持手动点击按钮运行
+
+# 增加并发排队锁：确保多个工作流同时运行时排队执行，防止抢占提交
+concurrency:
+  group: git-push-main
+  cancel-in-progress: false
+
+jobs:
+  download_and_process:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出仓库代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # 获取完整提交历史，方便后续 rebase 合并
+
+    - name: 1. 下载本地包并检测内容是否有更新
+      id: check_update
+      run: |
+        echo "开始下载 zip 本地包..."
+        curl -L "http://jiduo.rihou.cc:6250/jiduo.php/vox本地包.zip" -o vox_pack.zip
+
+        # 计算新下载包的 MD5
+        NEW_HASH=$(md5sum vox_pack.zip | awk '{print $1}')
+        echo "最新下载的 vox本地包 MD5: $NEW_HASH"
+
+        OLD_HASH=""
+        if [ -f "vox_hash.txt" ]; then
+          OLD_HASH=$(cat vox_hash.txt)
+          echo "仓库记录的上一次 MD5: $OLD_HASH"
+        fi
+
+        if [ "$NEW_HASH" = "$OLD_HASH" ]; then
+          echo "【提示】vox本地包未发生任何改变，跳过后续解压和推送流程。"
+          echo "is_updated=false" >> $GITHUB_OUTPUT
+          rm -f vox_pack.zip
+        else
+          echo "【检测到更新】vox本地包已更新，准备全量解压处理！"
+          echo "$NEW_HASH" > vox_hash.txt
+          echo "is_updated=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: 2. 全量覆盖解压并调整目录结构
+      if: steps.check_update.outputs.is_updated == 'true'
+      run: |
+        echo "【全量覆盖】彻底清理旧 vox 目录并重新解压..."
+        rm -rf vox
+        mkdir -p vox
+        unzip -o vox_pack.zip -d vox/
+        
+        # 兼容处理：如果 ZIP 包内部套了 pro 或其他单层子目录，自动将里面的内容移动到 vox 根目录下
+        if [ -d "vox/pro" ]; then
+          echo "检测到 ZIP 包内套有 pro 目录，正在提至 vox 根目录..."
+          mv vox/pro/* vox/ 2>/dev/null || true
+          mv vox/pro/.* vox/ 2>/dev/null || true
+          rm -rf vox/pro
+        fi
+
+        echo "清理压缩包临时文件..."
+        rm -f vox_pack.zip
+
+        echo "查看调整后的 vox 目录结构："
+        ls -la vox/
+
+    - name: 3. 运行 Python 逻辑：动态计算远程 JAR 的 MD5，注入 Sites 并生成 rihou.json
+      if: steps.check_update.outputs.is_updated == 'true'
+      shell: python
+      run: |
+        import json
+        import os
+        import glob
+        import hashlib
+        import urllib.request
+
+        VOX_DIR = "vox"
+        OUTPUT_JSON = "rihou.json"
+        BASE_PREFIX = "http://rihou.cc:88/"
+
+        # 定义官方在线 JAR 的真实下载地址映射
+        REMOTE_JARS = {
+            "vox.jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar",
+            "xbpq.jar": "http://rihou.cc:88/jar/xbpq.jar"
+        }
+
+        # 1. 递归深度搜索解压后的 JSON 配置文件 (优先 demo.json)
+        json_path = None
+        for root, dirs, files in os.walk(VOX_DIR):
+            if "demo.json" in files:
+                json_path = os.path.join(root, "demo.json")
+                break
+            elif "rihou_config.json" in files:
+                json_path = os.path.join(root, "rihou_config.json")
+                break
+
+        # 如果没搜到指定的，就找任何一个 .json 文件
+        if not json_path:
+            json_files = glob.glob(os.path.join(VOX_DIR, "**", "*.json"), recursive=True)
+            if json_files:
+                json_path = json_files[0]
+
+        if not json_path or not os.path.exists(json_path):
+            print("[-] 错误：在 vox 及其子目录下未找到任何 JSON 配置文件！")
+            exit(1)
+
+        print(f"[+] 成功定位到 JSON 配置文件: {json_path}")
+        with open(json_path, "r", encoding="utf-8") as f:
+            config_data = json.load(f)
+
+        # 保存原始配置镜像到仓库根目录
+        with open("rihou_config.json", "w", encoding="utf-8") as f:
+            json.dump(config_data, f, indent=2, ensure_ascii=False)
+
+        # 2. 动态下载远程 JAR 文件并计算 MD5
+        jar_url_md5_map = {}
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+
+        for jar_name, remote_url in REMOTE_JARS.items():
+            print(f"[+] 正在从远程请求下载最新的 {jar_name}: {remote_url}")
+            try:
+                req = urllib.request.Request(remote_url, headers=headers)
+                with urllib.request.urlopen(req, timeout=15) as response:
+                    content = response.read()
+                    
+                    # 计算 MD5
+                    md5_val = hashlib.md5(content).hexdigest()
+                    full_url_with_md5 = f"{remote_url};md5;{md5_val}"
+                    jar_url_md5_map[jar_name] = full_url_with_md5
+                    print(f"[+] 成功获取 {jar_name} -> MD5: {md5_val} -> 拼接结果: {full_url_with_md5}")
+            except Exception as e:
+                print(f"[!] 下载 {jar_name} 失败，将使用不加 MD5 的原链接: {e}")
+                jar_url_md5_map[jar_name] = remote_url
+
+        # 默认的主 spider 地址
+        main_spider_url = jar_url_md5_map.get("vox.jar", REMOTE_JARS["vox.jar"])
+
+        # 3. 深度递归逻辑：批量将相对路径 (./ 或 /) 替换为在线基础前缀
+        def fix_relative_paths(data):
+            if isinstance(data, dict):
+                return {k: fix_relative_paths(v) for k, v in data.items()}
+            elif isinstance(data, list):
+                return [fix_relative_paths(item) for item in data]
+            elif isinstance(data, str):
+                if data.startswith("./"):
+                    return BASE_PREFIX + data[2:]
+                elif data.startswith("/"):
+                    return BASE_PREFIX + data[1:]
+            return data
+
+        print("[+] 正在批量将相对路径拼接为完整在线 URL...")
+        config_data = fix_relative_paths(config_data)
+
+        # 4. 替换顶层 spider 链接为远程带 MD5 的 vox.jar 地址
+        config_data["spider"] = main_spider_url
+        print(f"[+] 已更新顶级 spider 链接为: {main_spider_url}")
+
+        # 5. 遍历 sites 列表，智能匹配并注入对应的远程 JAR（带 MD5）
+        sites_list = config_data.get("sites", [])
+        if isinstance(sites_list, list):
+            updated_count = 0
+            skipped_count = 0
+
+            for site in sites_list:
+                if isinstance(site, dict):
+                    current_jar = site.get("jar", "")
+
+                    matched_url = None
+                    if isinstance(current_jar, str) and current_jar.strip():
+                        for jname, jurl in jar_url_md5_map.items():
+                            if jname in current_jar:
+                                matched_url = jurl
+                                break
+
+                    if matched_url:
+                        site["jar"] = matched_url
+                        updated_count += 1
+                    elif current_jar and current_jar.startswith("http") and ";md5;" in current_jar:
+                        skipped_count += 1
+                    else:
+                        site["jar"] = main_spider_url
+                        updated_count += 1
+
+            print(f"[+] Sites 注入完成：更新/替换了 {updated_count} 个站点，跳过了 {skipped_count} 个站点")
+
+        # 6. 写出最终配置文件 rihou.json
+        with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+            json.dump(config_data, f, indent=2, ensure_ascii=False)
+        print(f"[+] 最终配置文件已成功生成: {OUTPUT_JSON}")
+
+    - name: 4. 全量提交 vox 目录、哈希记录和配置文件到远程仓库
+      if: steps.check_update.outputs.is_updated == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+
+        # 跟踪 vox 目录变化、哈希文件以及配置文件
+        git add -A vox/
+        if [ -f "vox_hash.txt" ]; then git add -f vox_hash.txt; fi
+        if [ -f "rihou_config.json" ]; then git add -f rihou_config.json; fi
+        if [ -f "rihou.json" ]; then git add -f rihou.json; fi
+
+        # 检测是否有修改并提交推送
+        if ! git diff --cached --quiet; then
+          git commit -m "检测到vox包更新，全量覆盖并自动同步配置: $(date +'%Y-%m-%d %H:%M:%S')"
+          
+          # 拉取远程变基合并
+          git pull origin main --rebase || true
+          
+          git push origin HEAD
+          echo "【成功】vox 目录全量更新及 rihou.json 已推送到远程仓库！"
+        else
+          echo "【提示】内容与上一版本完全一致，无需重复提交。"
+        fi

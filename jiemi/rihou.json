@@ -1,6 +1,5 @@
 {
-  "spider": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96",
-  "README": "http://rihou.cc:88/README.txt",
+  "spider": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e",
   "warningText": "禁止任何商业用途，仅限个人学习爬虫原理使用。",
   "logo": "http://rihou.cc:88/1.gif",
   "wallpaper": "http://饭太硬.top/深色壁纸/api.php",
@@ -60,7 +59,7 @@
       "changeable": 1,
       "indexs": 1,
       "ext": "http://rihou.cc:88/json/douban.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Config",
@@ -69,23 +68,16 @@
       "api": "csp_Config",
       "searchable": 0,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
-      "key": "wojh",
-      "name": "🎿玩偶┃[网盘]",
+      "key": "webhome",
+      "name": "Ⓜ️网页┃首页",
       "type": 3,
-      "api": "csp_Nostr",
-      "homePage": "http://rihou.cc:88/html/wo.html",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
-    },
-    {
-      "key": "Eclipse",
-      "name": "🚢Eclipse┃[盘搜]",
-      "type": 3,
-      "api": "csp_Nostr",
-      "homePage": "http://rihou.cc:88/html/Eclipse.html",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "api": "csp_WebHome",
+      "ext": "http://rihou.cc:88/vox_webhome/ext.json",
+      "changeable": 0,
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_MakkaPakka",
@@ -95,7 +87,7 @@
       "searchable": 0,
       "indexs": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_TgDouban",
@@ -108,7 +100,7 @@
       "ext": {
         "filters": "http://rihou.cc:88/json/douban.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "本地",
@@ -117,7 +109,7 @@
       "api": "csp_Local",
       "searchable": 0,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "直播转点播",
@@ -126,7 +118,7 @@
       "searchable": 0,
       "api": "http://rihou.cc:88/js/live2vod.js",
       "ext": "http://rihou.cc:88/json/feimaolive.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareQuark",
@@ -139,7 +131,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/quarkshare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareUC",
@@ -152,7 +144,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/ucshare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShare115",
@@ -165,7 +157,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/115share.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShare189",
@@ -178,7 +170,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/189share.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareBaidu",
@@ -191,7 +183,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/baidushare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareAli",
@@ -204,7 +196,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/alishare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareThunder",
@@ -217,7 +209,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/thundershare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShareGy",
@@ -230,7 +222,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/guangyashare.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanShare123",
@@ -243,7 +235,7 @@
       "ext": {
         "class": "http://rihou.cc:88/json/123share.txt"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_GuanYing",
@@ -259,7 +251,7 @@
         "sites": "https://www.xn--wcv59z.com,https://www.xn--74qz10cqsltibh40akss.com,https://www.xn--dpqv20e8ug6r8a.com,https://www.xn--10vr61a3xc5x3b.com,https://www.xn--kivn76b41nnhi.com",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "123社区",
@@ -276,7 +268,7 @@
         "filters": "http://rihou.cc:88/json/pan123fx.json",
         "comment": ""
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Pzzg123",
@@ -291,7 +283,7 @@
         "cookie": "",
         "comment": ""
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Gyzz",
@@ -306,7 +298,7 @@
         "cookie": "",
         "comment": ""
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_QiWei",
@@ -316,7 +308,7 @@
       "api": "csp_QiWei",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_SeedHub",
@@ -329,7 +321,7 @@
       "ext": {
         "host": "https://sidhub.cc"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_HDmoli",
@@ -339,7 +331,7 @@
       "timeout": 60,
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Xxzn",
@@ -354,7 +346,7 @@
         "filters": "http://rihou.cc:88/json/xxzn.json",
         "sites": "https://4kzn.cc"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Zmi",
@@ -369,7 +361,7 @@
         "filters": "",
         "sites": ""
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_JuTouShe",
@@ -379,7 +371,7 @@
       "api": "csp_JuTouShe",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Wogg",
@@ -395,7 +387,7 @@
         "filters": "http://rihou.cc:88/json/wogg.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "欧歌网盘",
@@ -411,7 +403,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "闪电网盘",
@@ -427,7 +419,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "二小网盘",
@@ -443,7 +435,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "木偶网盘",
@@ -459,7 +451,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "多多网盘",
@@ -475,7 +467,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "虎斑网盘",
@@ -491,7 +483,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "快映网盘",
@@ -507,7 +499,7 @@
         "filters": "http://rihou.cc:88/json/wogg2.json",
         "proxy": "noproxy"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Jianpian",
@@ -521,7 +513,7 @@
         "imgUrl": "https://img.zgbkz.com",
         "sites": "https://api.ztcgi.com"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Guazi",
@@ -530,7 +522,7 @@
       "api": "csp_Guazi",
       "searchable": 1,
       "changeable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Hanxiaoquan",
@@ -540,7 +532,7 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Kan90",
@@ -551,7 +543,7 @@
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_HongGuo",
@@ -560,7 +552,7 @@
       "api": "csp_HongGuo",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Jbdj",
@@ -569,7 +561,7 @@
       "api": "csp_Jhdj",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "mifun",
@@ -582,7 +574,7 @@
         "host": "https://miget-1313189639.cos.ap-guangzhou.myqcloud.com/mifun.txt",
         "datakey": "GETMIFUNGEIMIFUN"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "八天App",
@@ -595,7 +587,7 @@
         "host": "https://dy.8ttv.cn/",
         "datakey": "1111111111111111"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "王子4K",
@@ -606,7 +598,7 @@
         "host": "https://app.95112475.xyz",
         "datakey": "5a9w6x58dsq6z3a6"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "旺旺影视",
@@ -614,7 +606,7 @@
       "type": 3,
       "api": "csp_XBPQ",
       "ext": "http://rihou.cc:88/xb/旺旺影视.json",
-      "jar": "http://rihou.cc:88/jar/xbpq.jar"
+      "jar": "http://rihou.cc:88/jar/xbpq.jar;md5;19eb103c421f76b9a3b8a1c8fcdcbc38"
     },
     {
       "key": "韩剧看看",
@@ -622,7 +614,7 @@
       "type": 3,
       "api": "csp_XBPQ",
       "ext": "http://rihou.cc:88/xb/韩剧看看.json",
-      "jar": "http://rihou.cc:88/jar/xbpq.jar"
+      "jar": "http://rihou.cc:88/jar/xbpq.jar;md5;19eb103c421f76b9a3b8a1c8fcdcbc38"
     },
     {
       "key": "韩剧在线",
@@ -630,7 +622,7 @@
       "type": 3,
       "api": "csp_XBPQ",
       "ext": "http://rihou.cc:88/xb/韩剧在线.json",
-      "jar": "http://rihou.cc:88/jar/xbpq.jar"
+      "jar": "http://rihou.cc:88/jar/xbpq.jar;md5;19eb103c421f76b9a3b8a1c8fcdcbc38"
     },
     {
       "key": "啊哈DJ网",
@@ -638,7 +630,7 @@
       "type": 3,
       "api": "csp_XBPQ",
       "ext": "http://rihou.cc:88/xb/啊哈DJ网.json",
-      "jar": "http://rihou.cc:88/jar/xbpq.jar"
+      "jar": "http://rihou.cc:88/jar/xbpq.jar;md5;19eb103c421f76b9a3b8a1c8fcdcbc38"
     },
     {
       "key": "csp_AiWanMusic",
@@ -647,7 +639,7 @@
       "api": "csp_AiWanMusic",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "随身评书",
@@ -655,7 +647,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/随身评书.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "酷我听书",
@@ -663,7 +655,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/酷我听书.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "第一故事",
@@ -672,7 +664,7 @@
       "timeout": 60,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/第一故事.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "凤凰FM",
@@ -680,7 +672,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/凤凰FM.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "蜻蜓FM",
@@ -688,7 +680,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/蜻蜓FM.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "人人电影",
@@ -697,7 +689,7 @@
       "timeout": 60,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/人人电影.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "泥泥视频",
@@ -705,7 +697,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/泥泥视频.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "官采",
@@ -714,7 +706,7 @@
       "api": "https://cj.jusj.top/api.php/provide/vod/?ac=list",
       "searchable": 1,
       "changeable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "腾腾",
@@ -722,7 +714,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/腾腾.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "奇奇",
@@ -730,7 +722,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/奇奇.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "果果",
@@ -738,7 +730,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/果果.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "酷酷",
@@ -746,7 +738,7 @@
       "type": 3,
       "api": "http://rihou.cc:88/js/drpy2.min.js",
       "ext": "http://rihou.cc:88/js/酷酷.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_IkanBot",
@@ -758,7 +750,7 @@
       "ext": {
         "host": "https://www1.ikanbot.com/"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Cjhj",
@@ -767,7 +759,7 @@
       "api": "csp_Cjhj",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "电影天堂",
@@ -807,7 +799,7 @@
         "港台动漫",
         "动画片"
       ],
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_xq",
@@ -816,7 +808,7 @@
       "api": "csp_Lyxq",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Bili",
@@ -833,7 +825,7 @@
         "type": "rect",
         "ratio": 1.333
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_Biliyy",
@@ -850,7 +842,7 @@
         "type": "rect",
         "ratio": 1.333
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_mtv",
@@ -867,7 +859,7 @@
         "type": "rect",
         "ratio": 1.333
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_bilirt",
@@ -884,7 +876,7 @@
         "type": "rect",
         "ratio": 1.333
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_BeiLeHu",
@@ -893,7 +885,7 @@
       "api": "csp_BeiLeHu",
       "searchable": 0,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_bilims",
@@ -910,7 +902,7 @@
         "type": "rect",
         "ratio": 1.333
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_GuaziSport",
@@ -919,7 +911,7 @@
       "api": "csp_GuaziSport",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_JuheSport",
@@ -928,7 +920,7 @@
       "api": "csp_JuheSport",
       "searchable": 1,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "酷克PHP",
@@ -937,7 +929,7 @@
       "api": "http://jiduo.3116598.xyz/PHP/pkty.php",
       "searchable": 0,
       "changeable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_ShuaiJiao",
@@ -949,7 +941,7 @@
       "ext": {
         "sites": ""
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "AList",
@@ -962,7 +954,7 @@
       "timeout": 60,
       "playerType": 2,
       "ext": "http://rihou.cc:88/json/alist.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "WebDAV",
@@ -975,7 +967,20 @@
       "timeout": 60,
       "playerType": 2,
       "ext": "http://rihou.cc:88/json/webdav.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
+    },
+    {
+      "key": "Samba",
+      "name": "💎Samba┃[本地]",
+      "type": 3,
+      "api": "csp_Samba",
+      "searchable": 0,
+      "quickSearch": 0,
+      "changeable": 0,
+      "filterable": 0,
+      "timeout": 60,
+      "ext": "http://rihou.cc:88/json/samba.txt",
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "商店",
@@ -985,7 +990,7 @@
       "searchable": 0,
       "changeable": 0,
       "ext": "http://rihou.cc:88/json/market.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_PanSou",
@@ -1006,7 +1011,7 @@
           "花絮"
         ]
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "csp_MiSou",
@@ -1024,7 +1029,7 @@
           "http://www.misoso.shop"
         ]
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "夸克推送",
@@ -1032,7 +1037,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=quark",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "百度推送",
@@ -1040,7 +1045,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=baidu",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "UC推送",
@@ -1048,7 +1053,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=uc",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "天翼推送",
@@ -1056,7 +1061,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=tianyi",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "123推送",
@@ -1064,7 +1069,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=123",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "移动推送",
@@ -1072,7 +1077,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=mobile",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "迅雷",
@@ -1080,7 +1085,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/api.php?type=xunlei",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "短裤",
@@ -1088,7 +1093,7 @@
       "type": 4,
       "hide": 1,
       "api": "https://so.yinpai.xyz/duanju.php?type=dquark",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     },
     {
       "key": "push_agent",
@@ -1099,7 +1104,7 @@
       "changeable": 0,
       "hide": 1,
       "timeout": 60,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/vox.jar;md5;2ed2a6be7965e60313a7a892b1e89c96"
+      "jar": "http://xz.rihou.cc:88/xz/api.php/vox.jar;md5;246b7bab657e407e4919ddaabb3c2f2e"
     }
   ],
   "doh": [
