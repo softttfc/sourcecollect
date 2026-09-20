@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>世界地圖 - 互動版</title>
+<style>
+    /* ================= 全局設定 ================= */
+    :root {
+        --bg-color: #0b1120;
+        --card-bg: rgba(30, 41, 59, 0.85);
+        --text-main: #f1f5f9;
+        --text-sub: #94a3b8;
+        --theme-pink: #e5486a;
+        --theme-blue: #3b82f6;
+        --theme-green: #58f0a7;
+        --border-color: rgba(148, 163, 184, 0.15);
+        --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background: #0f172a;
+        color: var(--text-main);
+        font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 24px;
+        overflow: hidden; /* 防止地圖拖拽時出現滾動條 */
+    }
+
+    .app-container {
+        width: 100%;
+        max-width: 1400px;
+        height: calc(100vh - 48px);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* ================= 頂部資訊列 ================= */
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        padding: 12px 24px;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-soft);
+        flex-wrap: wrap;
+        gap: 16px;
+        flex-shrink: 0;
+    }
+
+    .header-info {
+        display: flex;
+        gap: 24px;
+        font-size: 14px;
+        color: var(--text-sub);
+        flex-wrap: wrap;
+    }
+    .header-info span strong {
+        color: var(--text-main);
+        font-size: 15px;
+        margin-left: 4px;
+    }
+    .header-points {
+        color: var(--theme-pink);
+        font-weight: bold;
+        font-size: 15px;
+        background: rgba(229, 72, 106, 0.1);
+        padding: 4px 12px;
+        border-radius: 50px;
+        border: 1px solid rgba(229, 72, 106, 0.3);
+    }
+
+    /* ================= 地圖容器 ================= */
+    .map-wrapper {
+        position: relative;
+        flex: 1;
+        background: #0b1120;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
+        cursor: grab;
+    }
+
+    .map-wrapper:active {
+        cursor: grabbing;
+    }
+
+    /* 地圖內部可縮放拖拽的容器 */
+    .map-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        /* 根據你的原圖，我們設定一個較大的固定畫布尺寸 */
+        width: 2400px;
+        height: 1600px;
+        transform-origin: 0 0;
+        transition: transform 0.1s ease-out;
+    }
+
+    /* 地圖底圖紋理 */
+    .map-background {
+        position: absolute;
+        inset: 0;
+        background-image: 
+            linear-gradient(rgba(148, 197, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 197, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+    }
+
+    /* ================= 區域區塊 (顏色框) ================= */
+    .region-box {
+        position: absolute;
+        border-radius: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        opacity: 0.15; /* 背景框透明度 */
+        pointer-events: none; /* 讓滑鼠可以穿透背景框點擊到底下的節點 */
+        z-index: 1;
+    }
+    /* 根據你的圖設定顏色 */
+    .region-forest { background: #00ff00; border-color: #00ff00; }
+    .region-desert { background: #a0522d; border-color: #a0522d; }
+    .region-snow { background: #ffffff; border-color: #ffffff; opacity: 0.05; }
+    .region-volcano { background: #ff0000; border-color: #ff0000; }
+    .region-yellow { background: #ffff00; border-color: #ffff00; }
+    .region-cyan { background: #00ffff; border-color: #00ffff; }
+    .region-green { background: #32cd32; border-color: #32cd32; }
+    .region-magenta { background: #ff00ff; border-color: #ff00ff; }
+    .region-darkgreen { background: #006400; border-color: #006400; }
+    .region-olive { background: #808000; border-color: #808000; }
+
+    /* ================= 節點樣式 ================= */
+    .map-node {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 40px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 2px solid #64748b;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 10;
+        user-select: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: #cbd5e1;
+        text-align: center;
+        padding: 4px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .map-node:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        z-index: 20;
+        border-color: #8fd6ff;
+        color: #fff;
+        box-shadow: 0 0 15px rgba(94, 161, 255, 0.5);
+    }
+
+    /* 目前位置 */
+    .map-node.current-location {
+        border-color: var(--theme-green);
+        color: var(--theme-green);
+        box-shadow: 0 0 15px rgba(88, 240, 167, 0.4);
+        animation: pulse-current 2s infinite;
+    }
+    @keyframes pulse-current {
+        0% { box-shadow: 0 0 0 0 rgba(88, 240, 167, 0.6); }
+        70% { box-shadow: 0 0 0 15px rgba(88, 240, 167, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(88, 240, 167, 0); }
+    }
+
+    /* 未探索 */
+    .map-node.unexplored {
+        border-color: #334155;
+        color: #475569;
+        background: rgba(15, 23, 42, 0.8);
+    }
+    .map-node.unexplored:hover {
+        border-color: #64748b;
+        color: #94a3b8;
+    }
+
+    /* ================= 路徑連線 SVG ================= */
+    .map-paths {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+    }
+    
+    .path-line {
+        fill: none;
+        stroke: rgba(94, 161, 255, 0.4);
+        stroke-width: 2;
+        transition: stroke 0.3s;
+    }
+    /* 雙向箭頭 */
+    .path-line.bidirectional {
+        marker-start: url(#arrowhead);
+        marker-end: url(#arrowhead);
+    }
+    /* 單向箭頭 */
+    .path-line.unidirectional {
+        marker-end: url(#arrowhead);
+    }
+
+    /* ================= 地點資訊彈出面板 ================= */
+    .map-info-panel {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        width: calc(100% - 48px);
+        max-width: 600px;
+        background: rgba(20, 34, 54, 0.95);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(148, 197, 255, 0.25);
+        border-radius: 16px;
+        padding: 20px 24px;
+        display: none;
+        z-index: 100;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .map-info-panel.active {
+        display: block;
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(148, 197, 255, 0.1);
+    }
+
+    .info-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #8fd6ff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-close {
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--text-sub);
+        transition: all 0.2s;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .info-close:hover { 
+        color: var(--theme-pink); 
+        background: rgba(229, 72, 106, 0.1);
+        transform: rotate(90deg);
+    }
+
+    .info-desc {
+        font-size: 14px;
+        color: var(--text-sub);
+        line-height: 1.6;
+    }
+
+    /* ================= 地圖控制項 ================= */
+    .map-controls {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 50;
+    }
+    .map-control-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(20, 34, 54, 0.9);
+        border: 1px solid rgba(148, 197, 255, 0.2);
+        color: #a0aec0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 18px;
+        backdrop-filter: blur(8px);
+    }
+    .map-control-btn:hover {
+        background: rgba(94, 161, 255, 0.25);
+        color: #fff;
+        border-color: rgba(94, 161, 255, 0.5);
+        transform: translateY(-2px);
+    }
+
+    /* 圖例 */
+    .map-legend {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: rgba(20, 34, 54, 0.8);
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 197, 255, 0.15);
+        backdrop-filter: blur(8px);
+        z-index: 50;
+        font-size: 12px;
+        color: var(--text-sub);
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+    }
+    .legend-dot.current { border: 2px solid var(--theme-green); }
+    .legend-dot.explored { border: 2px solid #64748b; background: #1e293b; }
+    .legend-dot.unexplored { border: 2px solid #334155; background: #0f172a; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- 頂部資訊列 -->
+    <div class="header-bar">
+        <div class="header-info">
+            <span>時間：<strong id="header-time">第 12 天 08:30</strong></span>
+            <span>天氣：<strong id="header-weather">晴朗</strong></span>
+            <span>位置：<strong id="header-location">楓葉潭 (營地)</strong></span>
+            <span>生命：<strong id="header-hp">85/100</strong></span>
+        </div>
+        <div class="header-points">求生點數: 1,250</div>
+    </div>
+
+    <!-- 地圖容器 -->
+    <div class="map-wrapper" id="mapWrapper">
+        <!-- 可縮放拖拽的畫布 -->
+        <div class="map-canvas" id="mapCanvas">
+            <div class="map-background"></div>
+            
+            <!-- 區域區塊 (背景顏色框) -->
+            <!-- 根據原圖座標估算的區域框 -->
+            <div class="region-box region-darkgreen" style="left: 380px; top: 980px; width: 300px; height: 250px;"></div> <!-- 左下綠 -->
+            <div class="region-box region-forest" style="left: 380px; top: 380px; width: 350px; height: 800px;"></div> <!-- 左側大綠 -->
+            <div class="region-box region-snow" style="left: 900px; top: 100px; width: 250px; height: 300px;"></div> <!-- 頂部雪地 -->
+            <div class="region-box region-desert" style="left: 800px; top: 380px; width: 350px; height: 350px;"></div> <!-- 頂部沙漠 -->
+            <div class="region-box region-olive" style="left: 1150px; top: 380px; width: 350px; height: 350px;"></div> <!-- 頂部橄欖 -->
+            <div class="region-box region-cyan" style="left: 750px; top: 750px; width: 400px; height: 250px;"></div> <!-- 中部青色 -->
+            <div class="region-box region-green" style="left: 1200px; top: 750px; width: 300px; height: 300px;"></div> <!-- 中部亮綠 -->
+            <div class="region-box region-yellow" style="left: 1550px; top: 380px; width: 300px; height: 250px;"></div> <!-- 右上黃 -->
+            <div class="region-box region-yellow" style="left: 1550px; top: 750px; width: 350px; height: 300px;"></div> <!-- 右中黃 -->
+            <div class="region-box region-volcano" style="left: 1900px; top: 380px; width: 300px; height: 500px;"></div> <!-- 最右紅 -->
+            <div class="region-box region-magenta" style="left: 1200px; top: 1100px; width: 350px; height: 300px;"></div> <!-- 右下粉紅 -->
+            <div class="region-box region-olive" style="left: 800px; top: 1050px; width: 350px; height: 300px;"></div> <!-- 右下橄欖 -->
+
+            <!-- 路徑連線 SVG (由 JS 動態生成) -->
+            <svg class="map-paths" id="mapPaths">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="rgba(94, 161, 255, 0.6)" />
+                    </marker>
+                </defs>
+            </svg>
+
+            <!-- ================= 節點們 (根據原圖座標定位) ================= -->
+            
+            <!-- 雪地區域 -->
+            <div class="map-node" style="left: 1025px; top: 100px;" data-id="古龍頂端" data-name="古龍頂端" data-desc="傳說中古龍的棲息地，終年積雪，寒風刺骨。">古龍頂端</div>
+            <div class="map-node" style="left: 1025px; top: 180px;" data-id="風蝕峭壁" data-name="風蝕峭壁" data-desc="被強風侵蝕的陡峭岩壁，行走時需格外小心。">風蝕峭壁</div>
+            <div class="map-node" style="left: 1025px; top: 260px;" data-id="冰碎斜坡" data-name="冰碎斜坡" data-desc="結冰的斜坡，非常濕滑，容易失足。">冰碎斜坡</div>
+            <div class="map-node" style="left: 1025px; top: 340px;" data-id="融雪溪谷" data-name="融雪溪谷" data-desc="雪水融化形成的溪谷，是下游水源的發源地。">融雪溪谷</div>
+
+            <!-- 左側大綠區域 -->
+            <div class="map-node" style="left: 525px; top: 380px;" data-id="交錯林地" data-name="交錯林地" data-desc="樹木交錯生長的茂密森林，容易迷失方向。">交錯林地</div>
+            <div class="map-node" style="left: 525px; top: 480px;" data-id="將果園丘" data-name="將果園丘" data-desc="長滿野生漿果的小山丘，是重要的食物來源。">將果園丘</div>
+            <div class="map-node" style="left: 525px; top: 580px;" data-id="楓葉潭 (營地)" data-name="楓葉潭 (營地)" data-desc="你的主要根據地。這裡有簡易的避難所、農田和儲物箱。">楓葉潭 (營地)</div>
+            <div class="map-node" style="left: 525px; top: 750px;" data-id="陽光溪谷" data-name="陽光溪谷" data-desc="陽光充足的山谷，適合種植作物。">陽光溪谷</div>
+            <div class="map-node" style="left: 525px; top: 900px;" data-id="古木邊界" data-name="古木邊界" data-desc="巨大古木構成的天然邊界，劃分了森林與其他區域。">古木邊界</div>
+            <div class="map-node" style="left: 400px; top: 580px;" data-id="巨人沉睡之地" data-name="巨人沉睡之地" data-desc="傳說中巨人長眠的地方，充滿神秘的氣息。">巨人沉睡之地</div>
+
+            <!-- 左側小綠區域 (下方) -->
+            <div class="map-node" style="left: 430px; top: 1000px;" data-id="林冠之上" data-name="林冠之上" data-desc="森林的最頂層，視野開闊，可以俯瞰整片森林。">林冠之上</div>
+            <div class="map-node" style="left: 430px; top: 1080px;" data-id="林下幽光界" data-name="林下幽光界" data-desc="森林底層，陽光難以穿透，充滿螢光植物。">林下幽光界</div>
+            <div class="map-node" style="left: 430px; top: 1160px;" data-id="林中空地" data-name="林中空地" data-desc="森林中的一片開闊地，是休息的好地方。">林中空地</div>
+
+            <!-- 頂部沙漠區域 -->
+            <div class="map-node" style="left: 880px; top: 380px;" data-id="回響松林" data-name="回響松林" data-desc="風吹過松林會發出奇特的回響聲。">回響松林</div>
+            <div class="map-node" style="left: 980px; top: 380px;" data-id="靜謐溪地" data-name="靜謐溪地" data-desc="安靜的溪流地帶，水質清澈。">靜謐溪地</div>
+            <div class="map-node" style="left: 1080px; top: 380px;" data-id="巨石丘陵" data-name="巨石丘陵" data-desc="布滿巨大岩石的丘陵地帶。">巨石丘陵</div>
+            <div class="map-node" style="left: 980px; top: 480px;" data-id="望湖台地" data-name="望湖台地" data-desc="可以眺望遠方湖泊的高地。">望湖台地</div>
+
+            <!-- 頂部橄欖區域 -->
+            <div class="map-node" style="left: 1230px; top: 380px;" data-id="升風崖" data-name="升風崖" data-desc="氣流上升的懸崖，適合滑翔。">升風崖</div>
+            <div class="map-node" style="left: 1330px; top: 380px;" data-id="龜裂平原" data-name="龜裂平原" data-desc="土地乾裂的平原，水源稀少。">龜裂平原</div>
+            <div class="map-node" style="left: 1430px; top: 380px;" data-id="石林迷陣" data-name="石林迷陣" data-desc="由巨石組成的迷宮，容易迷路。">石林迷陣</div>
+            <div class="map-node" style="left: 1330px; top: 480px;" data-id="乾涸河谷" data-name="乾涸河谷" data-desc="曾經的河流，現在只剩下乾涸的河床。">乾涸河谷</div>
+
+            <!-- 中部青色區域 -->
+            <div class="map-node" style="left: 850px; top: 750px;" data-id="斷崖瀑布" data-name="斷崖瀑布" data-desc="壯觀的瀑布，水流湍急。">斷崖瀑布</div>
+            <div class="map-node" style="left: 750px; top: 830px;" data-id="靜謐淺灘" data-name="靜謐淺灘" data-desc="水流平緩的淺灘，適合涉水而過。">靜謐淺灘</div>
+            <div class="map-node" style="left: 850px; top: 830px;" data-id="星核島" data-name="星核島" data-desc="湖中央的小島，據說夜間會發出微光。">星核島</div>
+            <div class="map-node" style="left: 950px; top: 830px;" data-id="環湖碎石灘" data-name="環湖碎石灘" data-desc="湖泊周圍的碎石灘，行走困難。">環湖碎石灘</div>
+            <div class="map-node" style="left: 850px; top: 910px;" data-id="千沼之葦" data-name="千沼之葦" data-desc="長滿蘆葦的沼澤地帶，暗藏危機。">千沼之葦</div>
+
+            <!-- 中部亮綠區域 -->
+            <div class="map-node" style="left: 1300px; top: 750px;" data-id="花海高地" data-name="花海高地" data-desc="開滿鮮花的高地，景色宜人。">花海高地</div>
+            <div class="map-node" style="left: 1400px; top: 750px;" data-id="枯骨河床" data-name="枯骨河床" data-desc="乾涸的河床，遍布動物骨骸。">枯骨河床</div>
+            <div class="map-node" style="left: 1300px; top: 830px;" data-id="聆風丘陵" data-name="聆風丘陵" data-desc="風聲環繞的丘陵地帶。">聆風丘陵</div>
+            <div class="map-node" style="left: 1400px; top: 830px;" data-id="長草之海" data-name="長草之海" data-desc="一望無際的草原，草長及腰。">長草之海</div>
+            <div class="map-node" style="left: 1300px; top: 910px;" data-id="菌龍草原" data-name="菌龍草原" data-desc="生長著巨大菌類的草原。">菌龍草原</div>
+            <div class="map-node" style="left: 1500px; top: 830px;" data-id="綠洲邊際" data-name="綠洲邊際" data-desc="沙漠與草原的交界處，有少量水源。">綠洲邊際</div>
+
+            <!-- 右上黃色區域 -->
+            <div class="map-node" style="left: 1650px; top: 380px;" data-id="赤色戈壁" data-name="赤色戈壁" data-desc="紅色的戈壁沙漠，炎熱乾燥。">赤色戈壁</div>
+            <div class="map-node" style="left: 1650px; top: 480px;" data-id="低窪盆地" data-name="低窪盆地" data-desc="地勢低窪的盆地，容易積水。">低窪盆地</div>
+
+            <!-- 右中黃色區域 -->
+            <div class="map-node" style="left: 1600px; top: 750px;" data-id="流沙之丘" data-name="流沙之丘" data-desc="危險的流沙區域，需小心通過。">流沙之丘</div>
+            <div class="map-node" style="left: 1700px; top: 750px;" data-id="巨物之骸" data-name="巨物之骸" data-desc="巨大生物的遺骸，場面震撼。">巨物之骸</div>
+            <div class="map-node" style="left: 1600px; top: 830px;" data-id="黃金沙海" data-name="黃金沙海" data-desc="金黃色的沙漠，沙粒細軟。">黃金沙海</div>
+            <div class="map-node" style="left: 1700px; top: 830px;" data-id="黑曜石之海" data-name="黑曜石之海" data-desc="遍布黑色曜石的區域，鋒利危險。">黑曜石之海</div>
+
+            <!-- 最右側紅色區域 -->
+            <div class="map-node" style="left: 2000px; top: 380px;" data-id="冷卻邊界" data-name="冷卻邊界" data-desc="火山岩冷卻形成的邊界。">冷卻邊界</div>
+            <div class="map-node" style="left: 2100px; top: 380px;" data-id="灰燼平原" data-name="灰燼平原" data-desc="覆蓋著火山灰的平原。">灰燼平原</div>
+            <div class="map-node" style="left: 2000px; top: 480px;" data-id="岩漿主脈" data-name="岩漿主脈" data-desc="主要岩漿流動的通道，極度危險。">岩漿主脈</div>
+            <div class="map-node" style="left: 2000px; top: 580px;" data-id="熔岩迷宮" data-name="熔岩迷宮" data-desc="由冷卻岩漿構成的迷宮。">熔岩迷宮</div>
+            <div class="map-node" style="left: 2000px; top: 680px;" data-id="結晶洞窟" data-name="結晶洞窟" data-desc="充滿美麗結晶的洞窟。">結晶洞窟</div>
+
+            <!-- 右下粉紅區域 -->
+            <div class="map-node" style="left: 1300px; top: 1100px;" data-id="螢光邊界" data-name="螢光邊界" data-desc="散發著奇異螢光的邊界地帶。">螢光邊界</div>
+            <div class="map-node" style="left: 1300px; top: 1200px;" data-id="巨蕈之柱" data-name="巨蕈之柱" data-desc="巨大的蘑菇狀柱子，支撐著這片區域。">巨蕈之柱</div>
+            <div class="map-node" style="left: 1400px; top: 1200px;" data-id="菌蓋天穹" data-name="菌蓋天穹" data-desc="巨大的菌蓋遮蔽了天空。">菌蓋天穹</div>
+            <div class="map-node" style="left: 1400px; top: 1300px;" data-id="菌絲深巢" data-name="菌絲深巢" data-desc="錯綜複雜的菌絲網絡。">菌絲深巢</div>
+
+            <!-- 右下橄欖區域 -->
+            <div class="map-node" style="left: 900px; top: 1100px;" data-id="根鬚隘口" data-name="根鬚隘口" data-desc="由巨大樹根形成的隘口。">根鬚隘口</div>
+            <div class="map-node" style="left: 900px; top: 1200px;" data-id="巨藤天梯" data-name="巨藤天梯" data-desc="由巨大藤蔓形成的天然階梯。">巨藤天梯</div>
+            <div class="map-node" style="left: 900px; top: 1300px;" data-id="紫杉回廊" data-name="紫杉回廊" data-desc="紫杉樹環繞的走廊。">紫杉回廊</div>
+            <div class="map-node" style="left: 1050px; top: 1100px;" data-id="沉寂神廟" data-name="沉寂神廟" data-desc="古老的神廟遺跡，充滿謎團。">沉寂神廟</div>
+            <div class="map-node" style="left: 1050px; top: 1200px;" data-id="沼澤水道" data-name="沼澤水道" data-desc="沼澤中的水道，水質混濁。">沼澤水道</div>
+            <div class="map-node" style="left: 1050px; top: 1300px;" data-id="癘氣之谷" data-name="癘氣之谷" data-desc="充滿有毒氣體的山谷。">癘氣之谷</div>
+            <div class="map-node" style="left: 1180px; top: 1100px;" data-id="絞殺林" data-name="絞殺林" data-desc="植物互相絞殺生長的森林。">絞殺林</div>
+            <div class="map-node" style="left: 1180px; top: 1200px;" data-id="菌光濕地" data-name="菌光濕地" data-desc="散發著螢光的濕地。">菌光濕地</div>
+            <div class="map-node" style="left: 1180px; top: 1300px;" data-id="哀泣柳林" data-name="哀泣柳林" data-desc="風吹過柳樹發出如哭泣般的聲音。">哀泣柳林</div>
+
+            <!-- 左側中間小節點 (根據原圖連線) -->
+            <div class="map-node" style="left: 600px; top: 900px;" data-id="白石淺灘" data-name="白石淺灘" data-desc="由白色石頭組成的淺灘。">白石淺灘</div>
+            <div class="map-node" style="left: 600px; top: 580px;" data-id="巨根高牆" data-name="巨根高牆" data-desc="由巨大樹根形成的高牆。">巨根高牆</div>
+
+        </div>
+
+        <!-- 地點資訊面板 -->
+        <div class="map-info-panel" id="mapInfoPanel">
+            <div class="info-header">
+                <div class="info-title">
+                    <span id="infoTitle">地點名稱</span>
+                </div>
+                <div class="info-close" onclick="closeMapInfo()">×</div>
+            </div>
+            <div class="info-desc" id="infoDesc">地點描述...</div>
+        </div>
+
+        <!-- 圖例 -->
+        <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot current"></div> 目前位置</div>
+            <div class="legend-item"><div class="legend-dot explored"></div> 已探索</div>
+            <div class="legend-item"><div class="legend-dot unexplored"></div> 未探索</div>
+        </div>
+
+        <!-- 地圖控制項 -->
+        <div class="map-controls">
+            <div class="map-control-btn" title="重置視圖" onclick="resetMapView()">⟳</div>
+            <div class="map-control-btn" title="放大" onclick="zoomMap(1.2)">+</div>
+            <div class="map-control-btn" title="縮小" onclick="zoomMap(0.8)">−</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ================= 地圖互動邏輯 =================
+    const mapWrapper = document.getElementById('mapWrapper');
+    const mapCanvas = document.getElementById('mapCanvas');
+    const mapPaths = document.getElementById('mapPaths');
+    
+    let mapScale = 1;
+    let mapTranslateX = 0;
+    let mapTranslateY = 0;
+    let isDragging = false;
+    let startX, startY;
+    let hasDragged = false;
+
+    // 初始視圖位置 (讓地圖一開始就居中)
+    function initMapView() {
+        const wrapperRect = mapWrapper.getBoundingClientRect();
+        const canvasWidth = 2400;
+        const canvasHeight = 1600;
+        
+        // 計算初始縮放比例，讓地圖寬度剛好填滿容器
+        mapScale = wrapperRect.width / canvasWidth;
+        if (mapScale > 1) mapScale = 1; // 最大縮放為1
+        
+        // 計算初始位移，讓地圖居中
+        mapTranslateX = (wrapperRect.width - canvasWidth * mapScale) / 2;
+        mapTranslateY = (wrapperRect.height - canvasHeight * mapScale) / 2;
+        
+        updateMapTransform();
+    }
+
+    // 更新地圖變換
+    function updateMapTransform() {
+        mapCanvas.style.transform = `translate(${mapTranslateX}px, ${mapTranslateY}px) scale(${mapScale})`;
+    }
+
+    // 重置視圖
+    function resetMapView() {
+        initMapView();
+    }
+
+    // 縮放
+    function zoomMap(factor) {
+        const newScale = mapScale * factor;
+        // 限制縮放範圍 0.2 ~ 3
+        mapScale = Math.min(Math.max(newScale, 0.2), 3);
+        updateMapTransform();
+    }
+
+    // 滾輪縮放 (以滑鼠位置為中心)
+    mapWrapper.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        const newScale = mapScale * delta;
+        const clampedScale = Math.min(Math.max(newScale, 0.2), 3);
+        
+        // 計算滑鼠相對於容器的位置
+        const rect = mapWrapper.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        
+        // 計算縮放後的位移補償
+        const scaleRatio = clampedScale / mapScale;
+        mapTranslateX = mouseX - (mouseX - mapTranslateX) * scaleRatio;
+        mapTranslateY = mouseY - (mouseY - mapTranslateY) * scaleRatio;
+        
+        mapScale = clampedScale;
+        updateMapTransform();
+    }, { passive: false });
+
+    // 拖拽地圖
+    mapWrapper.addEventListener('mousedown', (e) => {
+        // 如果點擊的是節點或控制按鈕，則不觸發拖拽
+        if (e.target.closest('.map-node') || e.target.closest('.map-control-btn') || e.target.closest('.map-info-panel')) {
+            return;
+        }
+        isDragging = true;
+        hasDragged = false;
+        startX = e.clientX - mapTranslateX;
+        startY = e.clientY - mapTranslateY;
+        mapWrapper.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        hasDragged = true;
+        mapTranslateX = e.clientX - startX;
+        mapTranslateY = e.clientY - startY;
+        updateMapTransform();
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        mapWrapper.style.cursor = 'grab';
+    });
+
+    // ================= 節點點擊邏輯 =================
+    document.querySelectorAll('.map-node').forEach(node => {
+        node.addEventListener('click', (e) => {
+            // 如果剛剛有拖拽，則不觸發點擊
+            if (hasDragged) return;
+            
+            e.stopPropagation();
+            
+            const name = node.dataset.name;
+            const desc = node.dataset.desc;
+            
+            document.getElementById('infoTitle').textContent = name;
+            document.getElementById('infoDesc').textContent = desc;
+            
+            document.getElementById('mapInfoPanel').classList.add('active');
+        });
+    });
+
+    // 關閉資訊面板
+    function closeMapInfo() {
+        document.getElementById('mapInfoPanel').classList.remove('active');
+    }
+
+    // 點擊地圖空白處關閉面板
+    mapWrapper.addEventListener('click', (e) => {
+        if (e.target === mapWrapper || e.target === mapCanvas || e.target.classList.contains('map-background')) {
+            closeMapInfo();
+        }
+    });
+
+    // ================= 動態繪製路徑 (根據原圖連線) =================
+    // 這裡我們手動定義所有連線，格式為 [起點ID, 終點ID, 是否雙向]
+    const connections = [
+        // 雪地內部
+        ['古龍頂端', '風蝕峭壁', true],
+        ['風蝕峭壁', '冰碎斜坡', true],
+        ['冰碎斜坡', '融雪溪谷', true],
+        
+        // 融雪溪谷 連接到 回響松林, 靜謐溪地, 巨石丘陵
+        ['融雪溪谷', '回響松林', true],
+        ['融雪溪谷', '靜謐溪地', true],
+        ['融雪溪谷', '巨石丘陵', true],
+        
+        // 左側大綠區域內部
+        ['交錯林地', '將果園丘', true],
+        ['將果園丘', '楓葉潭 (營地)', true],
+        ['楓葉潭 (營地)', '陽光溪谷', true],
+        ['陽光溪谷', '古木邊界', true],
+        ['楓葉潭 (營地)', '巨人沉睡之地', true],
+        
+        // 左側小綠區域
+        ['林冠之上', '林下幽光界', true],
+        ['林下幽光界', '林中空地', true],
+        ['林下幽光界', '巨根高牆', true],
+        
+        // 連接左側與頂部
+        ['交錯林地', '回響松林', true],
+        ['楓葉潭 (營地)', '巨人沉睡之地', true], // 重複但保留
+        ['巨人沉睡之地', '巨根高牆', true],
+        
+        // 頂部沙漠區域內部
+        ['回響松林', '靜謐溪地', true],
+        ['靜謐溪地', '巨石丘陵', true],
+        ['靜謐溪地', '望湖台地', true],
+        ['巨石丘陵', '望湖台地', true],
+        
+        // 頂部沙漠連接到頂部橄欖
+        ['巨石丘陵', '升風崖', true],
+        
+        // 頂部橄欖區域內部
+        ['升風崖', '龜裂平原', true],
+        ['龜裂平原', '石林迷陣', true],
+        ['龜裂平原', '乾涸河谷', true],
+        ['石林迷陣', '乾涸河谷', true],
+        
+        // 頂部橄欖連接到中部亮綠
+        ['乾涸河谷', '花海高地', true],
+        
+        // 中部青色區域內部
+        ['斷崖瀑布', '靜謐淺灘', true],
+        ['斷崖瀑布', '星核島', true],
+        ['靜謐淺灘', '星核島', true],
+        ['星核島', '環湖碎石灘', true],
+        ['靜謐淺灘', '千沼之葦', true],
+        ['星核島', '千沼之葦', true],
+        
+        // 中部青色連接到頂部沙漠
+        ['望湖台地', '斷崖瀑布', true],
+        
+        // 中部青色連接到左側大綠
+        ['靜謐淺灘', '白石淺灘', true],
+        ['白石淺灘', '陽光溪谷', true],
+        
+        // 中部亮綠區域內部
+        ['花海高地', '枯骨河床', true],
+        ['花海高地', '聆風丘陵', true],
+        ['枯骨河床', '長草之海', true],
+        ['聆風丘陵', '長草之海', true],
+        ['長草之海', '綠洲邊際', true],
+        ['菌龍草原', '聆風丘陵', true],
+        
+        // 中部亮綠連接到右上黃
+        ['石林迷陣', '赤色戈壁', true],
+        
+        // 右上黃區域內部
+        ['赤色戈壁', '低窪盆地', true],
+        
+        // 右上黃連接到右中黃
+        ['低窪盆地', '流沙之丘', true],
+        
+        // 右中黃區域內部
+        ['流沙之丘', '巨物之骸', true],
+        ['流沙之丘', '黃金沙海', true],
+        ['巨物之骸', '黑曜石之海', true],
+        ['黃金沙海', '黑曜石之海', true],
+        
+        // 右中黃連接到最右紅
+        ['黃金沙海', '結晶洞窟', true],
+        
+        // 最右紅區域內部
+        ['冷卻邊界', '灰燼平原', true],
+        ['冷卻邊界', '岩漿主脈', true],
+        ['灰燼平原', '岩漿主脈', true],
+        ['岩漿主脈', '熔岩迷宮', true],
+        ['熔岩迷宮', '結晶洞窟', true],
+        
+        // 中部亮綠連接到右下粉紅
+        ['菌龍草原', '螢光邊界', true],
+        
+        // 右下粉紅區域內部
+        ['螢光邊界', '巨蕈之柱', true],
+        ['巨蕈之柱', '菌蓋天穹', true],
+        ['巨蕈之柱', '菌絲深巢', true],
+        ['菌蓋天穹', '菌絲深巢', true],
+        
+        // 右下橄欖區域內部
+        ['根鬚隘口', '巨藤天梯', true],
+        ['巨藤天梯', '紫杉回廊', true],
+        ['巨藤天梯', '沉寂神廟', true],
+        ['沉寂神廟', '沼澤水道', true],
+        ['沼澤水道', '癘氣之谷', true],
+        ['沼澤水道', '菌光濕地', true],
+        ['菌光濕地', '哀泣柳林', true],
+        ['菌光濕地', '絞殺林', true],
+        
+        // 右下橄欖連接到中部青色
+        ['千沼之葦', '根鬚隘口', true],
+        
+        // 右下橄欖連接到右下粉紅
+        ['菌光濕地', '螢光邊界', true],
+        
+        // 左側大綠連接到右下橄欖 (根據原圖最左邊的線)
+        ['楓葉潭 (營地)', '根鬚隘口', true], // 這條線是跨區域的長線
+    ];
+
+    function drawPath(fromId, toId, isBidirectional) {
+        const fromNode = document.querySelector(`.map-node[data-id="${fromId}"]`);
+        const toNode = document.querySelector(`.map-node[data-id="${toId}"]`);
+        if (!fromNode || !toNode) {
+            console.warn(`找不到節點: ${fromId} 或 ${toId}`);
+            return;
+        }
+
+        // 獲取相對於 mapCanvas 的座標
+        const fromRect = fromNode.getBoundingClientRect();
+        const toRect = toNode.getBoundingClientRect();
+        const canvasRect = mapCanvas.getBoundingClientRect();
+
+        // 計算中心點，並轉換為相對於 canvas 的絕對像素座標
+        // 注意：這裡需要除以 mapScale，因為 getBoundingClientRect 返回的是螢幕像素
+        // 但 canvas 的寬高是固定的 CSS 像素，所以我們需要轉換回 canvas 的內部座標
+        // 由於我們使用了 transform scale，getBoundingClientRect 已經包含了縮放
+        // 所以我們需要用原始尺寸來計算
+        
+        // 更簡單的方法：直接讀取節點的 style.left 和 style.top (百分比)
+        const fromLeft = parseFloat(fromNode.style.left) / 100 * 2400;
+        const fromTop = parseFloat(fromNode.style.top) / 100 * 1600;
+        const toLeft = parseFloat(toNode.style.left) / 100 * 2400;
+        const toTop = parseFloat(toNode.style.top) / 100 * 1600;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', fromLeft);
+        line.setAttribute('y1', fromTop);
+        line.setAttribute('x2', toLeft);
+        line.setAttribute('y2', toTop);
+        
+        line.classList.add('path-line');
+        if (isBidirectional) {
+            line.classList.add('bidirectional');
+        } else {
+            line.classList.add('unidirectional');
+        }
+        
+        mapPaths.appendChild(line);
+    }
+
+    function drawAllPaths() {
+        mapPaths.innerHTML = '<defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="rgba(94, 161, 255, 0.6)" /></marker></defs>';
+        connections.forEach(([from, to, isBi]) => {
+            drawPath(from, to, isBi);
+        });
+    }
+
+    // 頁面載入完成後初始化
+    window.addEventListener('load', () => {
+        initMapView();
+        setTimeout(drawAllPaths, 100);
+    });
+    
+    // 視窗大小改變時重新初始化視圖和繪製路徑
+    window.addEventListener('resize', () => {
+        initMapView();
+        setTimeout(drawAllPaths, 100);
+    });
+
+</script>
+</body>
+</html>
