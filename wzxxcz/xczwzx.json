@@ -3,14 +3,8 @@
     "wallpaper": "./xcz.php",
     "logo": "./logo.php",
     "lives": [
-        {
-            "name": "央卫港台",
-            "type": 0,
-            "ua": "okhttp/5.3.2",
-            "url": "http://210.16.166.24:5555/getRss/dc2c0c88f3ce3c0d74a8e586746e83d1/paylist.m3u"
-        },
 		{
-            "name": "央卫港台1",
+            "name": "央卫港台",
             "type": 0,
             "ua": "okhttp/5.3.2",
             "url": "https://ds65.tv1288.xyz"
@@ -1483,6 +1477,24 @@
             "name": "🍊1234影视",
             "type": 3,
             "api": "./py/1234影视.py"
+        },
+		{
+            "key": "爱剧影视",
+            "name": "🍊爱剧影视",
+            "type": 3,
+            "api": "./py/爱剧影视.py",
+			"ext": "http://43.248.117.123:4680"
+        },
+		{
+            "key": "4K电影网",
+            "name": "🍊4K电影网",
+            "type": 3,
+            "api": "./py/4K电影网.py",
+            "searchable": 1,
+            "changeable": 1,
+            "quickSearch": 1,
+            "filterable": 1,
+            "playerType": 2
         },
 		{
             "key": "爬虫影视",
