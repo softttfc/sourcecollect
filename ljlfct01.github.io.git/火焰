@@ -26,7 +26,7 @@
       "key": "影探",
       "name": "影探4k",
       "type": 3,
-      "api": "http://tvv.tw/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/%E5%BD%B1%E6%8E%A2.py",
+      "api": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/index_video?token=q88iCMddNZirbvjO",
   
       "searchable": 1,
       "quickSearch": 1,
@@ -69,7 +69,7 @@
       "key": "哥哥玩",
       "name": "📢🌈哥哥4K",
       "type": 3,
-      "api": "csp_ZC4K",
+      "api": "csp_appys",
       "jar": "https://gitee.com/zhouyadong7033/box/raw/master/JS/ZC4KK.jar",
       "ext": "YUhSMGNEb3ZMekV4Tmk0Mk1pNHhNek11T0RZNk5UWTJPREV2VkRRdlZEVXZZWEJwTWk1d2FIQS9jMmwwWlQxdmRXZGxJeU1qYjNWblpRPT0="
     },
@@ -104,21 +104,18 @@
       "key": "影影1",
       "name": "影影4k1",
       "type": 4,
-      "api": "csp_ZC4K",
+      "api": "csp_AppYS",
       "jar": "http://111.170.151.121:9978/em/xinem?spider_key=q88iCMddNZirbvjO",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
+      "ext": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/"
     },
     {
       "key": "影影2",
       "name": "影影4k2",
-      "type": 4,
-      "api": "http://sf4.mftv.top/gy/ythy%E8%A7%82%E5%BD%B1.php?filter=true",
-     "jar": "http://yp2.mftv.top/jar/og/jar.jar",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
+      "type": 3,
+       "api": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/nav?token=",
+     "jar": "http://111.170.151.121:9978/em/xyemlb?spider_key=q88iCMddNZirbvjO"
+    
+     
     },
     {
       "name": "⭐瓜子|秒播",

@@ -22,13 +22,41 @@
  {
       "name": "光速4k",
       "type": 1,
-      "url": "https://coffee-5c93e1f751eb.edge.tvapp.eu.org:31000/api/?key=6f8622b2-8402-43c9-ae29-0adaa292bc71&url="
+      "url": "http://jiexi.fc8001.top/ymaPrADCwCsadQcF.php?url="
     }
 
 
 
 ],
   "sites": [
+    {
+      "key": "影影1",
+      "name": "影影4k1",
+      "type": 3,
+       "api": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/index_video?token=q88iCMddNZirbvjO",
+      "playerType": 1,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+      
+      
+     
+     
+     
+    },
+    {
+      "key": "cms",
+      "name": "推荐4k",
+      "type": 3,
+      "api": "http://125.208.22.184:6019/api/ranking/getRankingList?type=total&limit=8",
+      "ext": "http://111.170.151.121:9978/api/jar/config/duoduo?spider_key=q88iCMddNZirbvjO",
+      "playerType": 1,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    
+    },
+
     {
       "key": "腾讯6弹幕",
       "name": "📢🌈腾腾",
