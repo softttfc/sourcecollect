@@ -22,7 +22,7 @@
  {
       "name": "光速4k",
       "type": 1,
-      "url": "http://jiexi.fc8001.top/ymaPrADCwCsadQcF.php?url="
+      "url": "http://114.66.26.5:8686/api/index?parsesId=3&appid=10000&videoUrl="
     }
 
 
@@ -48,8 +48,9 @@
       "key": "cms",
       "name": "推荐4k",
       "type": 3,
-      "api": "http://125.208.22.184:6019/api/ranking/getRankingList?type=total&limit=8",
-      "ext": "http://111.170.151.121:9978/api/jar/config/duoduo?spider_key=q88iCMddNZirbvjO",
+      "api": "http://111.170.151.121:9978/api/jar/config/duoduo?spider_key=q88iCMddNZirbvjO",
+      "jar": "http://210.16.170.113:6699/uploads/tvbox/jar/spider2.jar",
+      
       "playerType": 1,
       "searchable": 1,
       "quickSearch": 1,
@@ -70,8 +71,9 @@
       "name": "📢🌈开心果4K",
       "type": 3,
       "searchable": 1,
-      "api": "https://raw.giteeusercontent.com/huotv/111/raw/master/drpy_libs/drpy2.min.js",
-      "ext": "https://gitee.com/zhouyadong7033/box/raw/master/JS/%E7%99%BE%E5%BF%99.js"
+      
+       "api": "https://pianku.api.mgtv.com/rider/list/pcweb/v3?platform=pcweb&channelId=2&pn=1&pc=80&hudong=1&_support=10000000&kind=a1&area=a1&year=all&sort=all&chargeInfo=all",
+      "ext": "http://114.66.26.5:8686/%E7%99%BE%E5%BF%99%E6%97%A0%E6%9E%9C[%E5%AE%98].js"
     },
     {
       "key": "全",
