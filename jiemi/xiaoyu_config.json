@@ -47,6 +47,18 @@
         "filterable": 1
     },
     {
+        "key": "exp_ui",
+        "name": "实验替代UI源",
+        "type": 3,
+        "api": "csp_ProxySpider",
+        "jar": "./jar/pro.jar",
+        "searchable": 0,
+        "changeable": 0,
+        "ext": {
+            "class": "ExperimentUiSpider"
+        }
+    },
+    {
         "key": "配置中心",
         "name": "网盘♦️配置",
         "type": 3,
@@ -97,13 +109,6 @@
         "api": "csp_Gz360"
     },
     {
-        "key": "爱看",
-        "name": "爱看🔹App",
-        "type": 3,
-        "api": "csp_AiKan",
-        "ext": "http://43.248.117.123:14680"
-    },
-    {
         "key": "咕噜",
         "name": "咕噜🔹App",
         "type": 3,
@@ -115,12 +120,6 @@
         "type": 3,
         "api": "csp_FengYe",
         "ext": "https://www.vip1949.com/"
-    },
-    {
-        "key": "云朵影视",
-        "name": "云朵🔹影视",
-        "type": 3,
-        "api": "./py/云朵影视.py"
     },
     {
         "key": "可可影视",
