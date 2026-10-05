@@ -22,7 +22,7 @@
  {
       "name": "光速4k",
       "type": 1,
-      "url": "http://114.66.26.5:8686/api/index?parsesId=3&appid=10000&videoUrl="
+      "url": "http://61.184.23.217:6163/api/index?parsesId=4&appid=10002&videoUrl="
     }
 
 
@@ -45,7 +45,14 @@
       "api": "https://raw.giteeusercontent.com/huotv/111/raw/master/drpy_libs/drpy2.min.js",
       "ext": "https://gitee.com/zhouyadong7033/box/raw/master/JS/%E7%99%BE%E5%BF%99.js"
     },
-
+    {
+      "key": "至臻木偶2",
+      "name": "📢🌈哥哥4K",
+      "type": 3,
+      "api": "csp_ZC4K",
+      "jar": "https://mpimg.cn/down.php/b4b695cf12db5356b2bf50afbccb7452.jar",
+      "ext": "YUhSMGNEb3ZMekV4Tmk0Mk1pNHhNek11T0RZNk5UWTJPREV2VkRRdlZEVXZZWEJwTWk1d2FIQS9jMmwwWlQxdGIyZG5NaU1qSTIxdloyY3k="
+    },
     {
       "key": "聚合",
       "name": "📢🌈聚合4K",
