@@ -41,18 +41,6 @@
       "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;61997ea5b31250517b723a50f3a9f6fa"
     },
     {
-      "key": "exp_ui",
-      "name": "实验替代UI源",
-      "type": 3,
-      "api": "csp_ProxySpider",
-      "jar": "http://2015888.xyz/tv/jar/pro.jar",
-      "searchable": 0,
-      "changeable": 0,
-      "ext": {
-        "class": "ExperimentUiSpider"
-      }
-    },
-    {
       "key": "配置中心",
       "name": "网盘♦️配置",
       "type": 3,
@@ -127,6 +115,13 @@
       "name": "可可🔹影视",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/kkys.py",
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;61997ea5b31250517b723a50f3a9f6fa"
+    },
+    {
+      "key": "影探",
+      "name": "影探🔹4K",
+      "type": 3,
+      "api": "http://2015888.xyz/tv/py/影探4K.py",
       "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;61997ea5b31250517b723a50f3a9f6fa"
     },
     {

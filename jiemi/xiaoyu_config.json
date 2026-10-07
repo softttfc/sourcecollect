@@ -47,18 +47,6 @@
         "filterable": 1
     },
     {
-        "key": "exp_ui",
-        "name": "实验替代UI源",
-        "type": 3,
-        "api": "csp_ProxySpider",
-        "jar": "./jar/pro.jar",
-        "searchable": 0,
-        "changeable": 0,
-        "ext": {
-            "class": "ExperimentUiSpider"
-        }
-    },
-    {
         "key": "配置中心",
         "name": "网盘♦️配置",
         "type": 3,
@@ -126,6 +114,12 @@
         "name": "可可🔹影视",
         "type": 3,
         "api": "./py/kkys.py"
+    },
+    {
+        "key": "影探",
+        "name": "影探🔹4K",
+        "type": 3,
+        "api": "./py/影探4K.py"
     },
     {
         "key": "橘汁",

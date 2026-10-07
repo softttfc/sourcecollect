@@ -168,6 +168,17 @@
         "site": "http://xiaomi666.fun"
       }
     },
+
+    {
+      "key": "依依1",
+      "name": "依依4k1",
+      "type": 4,
+      "api": "http://111.170.151.121:9578/appz.php?url=http://127.0.0/api.php/app/nav?token=2a11bcda858f403abdcdc00591e63863",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+   },
+
     {
       "key": "二小",
       "name": "二小|4k网盘",
