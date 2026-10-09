@@ -6,7 +6,7 @@
     {
       "name": "影院",
       "type": 0,
-      "url": "https://myds.momo.xx.kg/playlist.php?format=txt&auth=c3b0edc5a9826881",
+      "url": "http://43.249.195.13:10213/llll1llll.txt",
       "playerType": 2,
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}"
     },
@@ -43,6 +43,18 @@
       "type": 3,
       "api": "https://aaa.69mini.com/store/drpy_libs/drpy2.min.js",
       "ext": "https://app.69mini.com/js/qq.js"
+    },
+    {
+      "key": "cms",
+      "name": "推荐4k",
+      "type": 3,
+      "api": "csp_AppYsV2",
+      "jar": "http://app.lyyytv.cn/custom_spider.jar",
+      "playerType": 1,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "http://cms.lyyytv.cn/api.php/app/index_video/"
     }
 
 

@@ -5,25 +5,14 @@
   "logo": "http://2015888.xyz/tv/img/588.gif",
   "lives": [
     {
+      "name": "央视频",
+      "api": "http://2015888.xyz/tv/py/yangshipin.py",
+      "ext": {}
+    },
+    {
       "name": "咪咕HD-1",
       "type": 0,
       "url": "http://2015888.xyz/ysp/hb/hbgd.txt",
-      "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-      "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
-    },
-    {
-      "name": "湖北移动组播",
-      "type": 0,
-      "url": "http://2015888.xyz/tv/txt/HB_mobile.txt",
-      "playerType": 1,
-      "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
-      "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
-    },
-    {
-      "name": "湖北组播综合",
-      "type": 0,
-      "playerType": 1,
-      "url": "http://2015888.xyz/tv/txt/HB_zonghe.txt",
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
       "logo": "https://gitee.com/yf2026/TVLogo/raw/master/img/{name}.png"
     }
