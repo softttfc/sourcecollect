@@ -30,7 +30,16 @@ try:
     from Crypto.Cipher import AES as CryptoAES
 except ImportError:
     CryptoAES = None
-from base.spider import Spider
+try:
+    from base.spider import Spider as _BaseSpider
+except Exception:
+    try:
+        import sys as _sys
+        _sys.path.append("..")
+        from base.spider import Spider as _BaseSpider
+    except Exception:
+        class _BaseSpider:
+            pass
 
 # FongMi/TVBox 的 Chaquopy 环境未必带 cryptography，多数壳只带 pycryptodome。
 # 统一入口，避免调用点直接依赖某一个库。
@@ -213,6 +222,33 @@ def _aes_cbc_decrypt(key: bytes, iv: bytes, data: bytes) -> bytes:
 
 SITE = "https://hongguoduanju.com"
 EPISODE_PREFIX = "hg-episode-v1:"
+# 红果每集视频模型按清晰度返回多条独立线路（360/480/540/720/1080），
+# 每条带 main_url + backup_url 双 CDN 与独立加密材料。这里把清晰度作为
+# TVBox 多线路暴露；内封音/视轨在解密 _rewrite_moov 时天然全部保留。
+_HG_QUALITY_LINES = (
+    ("1080", "红果超清"),
+    ("720",  "红果高清"),
+    ("540",  "红果标准"),
+    ("480",  "红果流畅"),
+    ("360",  "红果极速"),
+)
+_QUALITY_LINE_NAME_TO_Q = {
+    "超清": "1080", "高清": "720", "标准": "540",
+    "流畅": "480", "极速": "360", "1080": "1080", "720": "720",
+    "540": "540", "480": "480", "360": "360",
+}
+
+
+def _split_episode_token(token: str) -> tuple[str, str]:
+    """把 'hg-episode-v1:<q>:<vid>' 解析为 (清晰度, vid)；兼容旧格式 'hg-episode-v1:<vid>'。"""
+    body = str(token or "")
+    if body.startswith(EPISODE_PREFIX):
+        body = body[len(EPISODE_PREFIX):]
+    if ":" in body:
+        head, tail = body.split(":", 1)
+        if head.isdigit():
+            return head, tail
+    return "1080", body
 
 # 官网搜索 SSR 固定约 10 条且几乎不认 page；用多关键词轮换实现“翻页”
 _AI_MANJU_KEYWORDS = [
@@ -851,8 +887,21 @@ def _range_get(url: str, start: int, end: int) -> tuple[bytes, int]:
             )
             continue
         body = response.content
+        if response.status_code == 200:
+            total = len(body)
+            return body[start:end + 1], total
+        content_range = response.headers.get("Content-Range") or ""
+        # 末尾 probe 可合法少于请求长度；其它短包仍然重试。
+        match = re.fullmatch(r"bytes (\d+)-(\d+)/(\d+)", content_range.strip())
+        actual_expected = expected
+        if match:
+            actual_start, actual_end, total = map(int, match.groups())
+            if actual_start != start or actual_end != min(end, total - 1):
+                last_error = HongguoPluginError("媒体分片偏移不符")
+                continue
+            actual_expected = actual_end - actual_start + 1
         # 上游偶发返回短包；短于请求长度时重试，避免播放器收到截断数据。
-        if not body or (response.status_code == 206 and len(body) < expected):
+        if not body or len(body) != actual_expected:
             last_error = HongguoPluginError(
                 "媒体分片长度不足 %d/%d" % (len(body), expected)
             )
@@ -1048,16 +1097,18 @@ class _StreamSession:
             cursor += len(block)
 
 
-def _stream_session(video_id: str, config: Mapping[str, Any]) -> "_StreamSession":
+def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "1080") -> "_StreamSession":
+    quality = quality if quality in _QUALITY_LINE_NAME_TO_Q else "1080"
+    cache_key = "%s|%s" % (video_id, quality)
     with _STREAM_LOCK:
         sessions = _STREAM_STATE["sessions"]
         for key in [key for key, item in sessions.items() if item.expired()]:
             sessions.pop(key, None)
-        session = sessions.get(video_id)
+        session = sessions.get(cache_key)
     if session is not None:
         return session
     model = _video_model(video_id, config)
-    _, item = _select_quality(_video_list_from_model(model), "1080")
+    _, item = _select_quality(_video_list_from_model(model), quality)
     url = _media_url(item)
     spade = _spade_value(item)
     if not url or not spade:
@@ -1074,7 +1125,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any]) -> "_StreamSession
         sessions = _STREAM_STATE["sessions"]
         while len(sessions) >= _STREAM_MAX_SESSIONS:
             sessions.pop(next(iter(sessions)), None)
-        sessions[video_id] = session
+        sessions[cache_key] = session
     return session
 
 
@@ -1121,6 +1172,7 @@ class _StreamHandler(BaseHTTPRequestHandler):
             video_id = parsed.path.rsplit("/", 1)[-1].split(".")[0]
         return {
             "vid": video_id if video_id.isdigit() else "",
+            "quality": (query.get("q") or ["1080"])[0],
             "device_id": (query.get("did") or [""])[0],
             "install_id": (query.get("iid") or [""])[0],
         }
@@ -1158,6 +1210,7 @@ class _StreamHandler(BaseHTTPRequestHandler):
                     "device_id": params["device_id"],
                     "install_id": params["install_id"],
                 },
+                params["quality"],
             )
         except Exception:
             self._fail(502, b"media session failed")
@@ -3677,7 +3730,7 @@ def _category_loader(page: int, q: dict) -> dict:
     for attempt in range(3):
         try:
             data = _data(SITE + "/category?" + urlencode(q))
-            p = (data.get("loaderData") or {}).get("category_page") or {}
+            p = (data.get("loaderData") or {}).get("category_$") or (data.get("loaderData") or {}).get("category_page") or {}
             rows = p.get("recommendList") or []
             if rows or page > 1:
                 return p
@@ -3690,10 +3743,35 @@ def _category_loader(page: int, q: dict) -> dict:
             pass
     return last
 
-class Spider(Spider):
+class Spider(_BaseSpider):
     def __init__(self):
         self.device_id = str(random.randint(10**17, 10**18 - 1))
         self.install_id = str(random.randint(10**17, 10**18 - 1))
+
+    def getName(self):
+        return "红果短剧"
+
+    def isVideoFormat(self, url):
+        u = str(url or "").lower()
+        return (".mp4" in u) or ("video_mp4" in u) or ("m3u8" in u) or ("mime_type=video" in u) or ("qznovelvod" in u)
+
+    def manualVideoCheck(self):
+        return False
+
+    def getDependence(self):
+        return []
+
+    def download(self, path, url):
+        return ""
+
+    def liveContent(self):
+        return {}
+
+    def isVPAYard(self, flag):
+        return False
+
+    def action(self, action):
+        return ""
 
     def init(self, extend=""):
         # 每次源实例使用随机合法设备标识；不依赖用户私有配置。
@@ -3704,6 +3782,13 @@ class Spider(Spider):
         return None
 
     def destroy(self):
+        with _STREAM_LOCK:
+            server = _STREAM_STATE["server"]
+            _STREAM_STATE.update(port=0, server=None)
+            _STREAM_STATE["sessions"].clear()
+        if server is not None:
+            server.shutdown()
+            server.server_close()
         try:
             _hg_cache_cleanup(False)
         except Exception:
@@ -3711,6 +3796,7 @@ class Spider(Spider):
 
     def homeContent(self, filter):
         class_list = [
+            {"type_id": "all", "type_name": "短剧"},
             {"type_id": "ai_comic", "type_name": "AI漫剧"},
             {"type_id": "latest", "type_name": "最新"},
             {"type_id": "hot", "type_name": "最热"},
@@ -3759,9 +3845,37 @@ class Spider(Spider):
             ]},
         ]
         filter_dict = {c["type_id"]: groups for c in class_list}
-        return {"class": class_list, "filters": filter_dict}
+        home_list = []
+        try:
+            data = _data(SITE + "/")
+            page = (data.get("loaderData") or {}).get("page") or {}
+            seen = set()
+            for sec in (page.get("homeSections") or []):
+                for v in (sec.get("video_list") or []):
+                    it = _item(v)
+                    vid = str(it.get("vod_id") or "")
+                    if vid and vid not in seen:
+                        seen.add(vid)
+                        home_list.append(it)
+        except Exception:
+            home_list = []
+        return {"class": class_list, "filters": filter_dict, "list": home_list[:40]}
     def homeVideoContent(self):
-        return {"list": []}
+        try:
+            data = _data(SITE + "/")
+            page = (data.get("loaderData") or {}).get("page") or {}
+            out = []
+            seen = set()
+            for sec in (page.get("homeSections") or []):
+                for v in (sec.get("video_list") or []):
+                    it = _item(v)
+                    vid = str(it.get("vod_id") or "")
+                    if vid and vid not in seen:
+                        seen.add(vid)
+                        out.append(it)
+            return {"list": out[:60]}
+        except Exception:
+            return {"list": []}
 
     def _query(self, pg, q=None):
         try:
@@ -3771,13 +3885,11 @@ class Spider(Spider):
         if q is None:
             q = {"tab": "1", "sort_type": "1"}
         return _category_loader(pg, q)
-
     def categoryContent(self, tid, pg, filter, extend):
         try:
             page = max(1, int(pg))
         except (TypeError, ValueError):
             page = 1
-
         # 漫剧 / AI漫剧：官网搜索不支持真翻页，多关键词轮换
         if tid in ("comic", "manju", "漫剧"):
             try:
@@ -3795,10 +3907,8 @@ class Spider(Spider):
             except Exception:
                 pass
             return _search_by_keywords(_MANJU_KEYWORDS, page)
-
         if tid in ("ai_comic", "ai_manju", "AI漫剧", "ai漫剧"):
             return _search_by_keywords(_AI_MANJU_KEYWORDS, page)
-
         q = {"tab": "1", "sort_type": "1"}
         if tid == "latest":
             q["sort_type"] = "2"
@@ -3827,8 +3937,6 @@ class Spider(Spider):
             "total": int(page_data.get("total") or len(rows)),
             "list": [_cat_item(x) for x in rows],
         }
-
-
     def searchContent(self, key, quick=False, pg="1"):
         try:
             page = max(1, int(pg))
@@ -3862,12 +3970,28 @@ class Spider(Spider):
         s = p.get("seriesDetail") or {}
         vids = s.get("vid_list") or []
         actors = [str(x.get("nickname")) for x in (s.get("celebrities") or []) if isinstance(x, dict) and x.get("nickname")]
-        eps = "#".join("第%d集%s%s" % (i + 1, "$", EPISODE_PREFIX + str(v)) for i, v in enumerate(vids))
-        return {"list": [{"vod_id": sid, "vod_name": str(s.get("series_name") or ""), "vod_pic": str(s.get("series_cover") or ""), "vod_year": "", "vod_area": "", "vod_director": "", "vod_actor": ",".join(actors), "vod_content": str(s.get("series_intro") or ""), "vod_remarks": str(s.get("episode_right_text") or ""), "vod_play_from": "红果", "vod_play_url": eps}]}
-
+        play_from = []
+        play_url = []
+        for q, line_name in _HG_QUALITY_LINES:
+            eps = "#".join(
+                "第%d集%s%s%s%s" % (i + 1, "$", EPISODE_PREFIX, q + ":", str(v))
+                for i, v in enumerate(vids)
+            )
+            play_from.append(line_name)
+            play_url.append(eps)
+        return {"list": [{"vod_id": sid, "vod_name": str(s.get("series_name") or ""), "vod_pic": str(s.get("series_cover") or ""), "vod_year": "", "vod_area": "", "vod_director": "", "vod_actor": ",".join(actors), "vod_content": str(s.get("series_intro") or ""), "vod_remarks": str(s.get("episode_right_text") or ""), "vod_play_from": "$$$".join(play_from), "vod_play_url": "$$$".join(play_url)}]}
     def playerContent(self, flag, id, vipFlags=None):
-        vid = str(id).replace(EPISODE_PREFIX, "")
-        if not vid.isdigit():
+        # 从线路名（flag，如“红果超清/红果高清”）与集 token 双路解析清晰度。
+        # token 已是 'hg-episode-v1:<q>:<vid>'，flag 用于旧壳只传线路名时兜底。
+        token_q, vid = _split_episode_token(id)
+        line_q = "1080"
+        for name_key, candidate_q in _QUALITY_LINE_NAME_TO_Q.items():
+            if name_key in str(flag or ""):
+                line_q = candidate_q
+                break
+        q = line_q if token_q == "1080" and str(flag) else token_q
+        q = q if q in _QUALITY_LINE_NAME_TO_Q else "1080"
+        if not str(vid).isdigit():
             return {
                 "parse": 1,
                 "jx": 0,
@@ -3875,7 +3999,27 @@ class Spider(Spider):
                 "url": SITE + "/",
                 "header": {"User-Agent": UA},
             }
-
+        # 优先本机 Range 流：避免壳代理整集下载/解密的执行期限与响应大小限制。
+        try:
+            port = _start_stream_server()
+        except Exception:
+            port = 0
+        if port:
+            query = urlencode(
+                {
+                    "vid": vid,
+                    "q": q,
+                    "did": self.device_id or "",
+                    "iid": self.install_id or "",
+                }
+            )
+            return {
+                "parse": 0,
+                "jx": 0,
+                "playUrl": "",
+                "url": "http://127.0.0.1:%d/hg.mp4?%s" % (port, query),
+                "header": {"User-Agent": UA},
+            }
         # OK影视 / 多数壳：必须走 getProxyUrl（通常已带 do=py），不要覆盖 do
         proxy = ""
         try:
@@ -3885,10 +4029,11 @@ class Spider(Spider):
             proxy = ""
         if proxy:
             sep = "&" if "?" in proxy else "?"
-            # 保留壳自带的 do=py，只追加业务参数
+            # 保留壳自带的 do=py，只追加业务参数与清晰度线路
             url = proxy + sep + urlencode(
                 {
                     "vid": vid,
+                    "q": q,
                     "hg": "cenc",
                     "did": self.device_id or "",
                     "iid": self.install_id or "",
@@ -3903,27 +4048,6 @@ class Spider(Spider):
                     "User-Agent": MEDIA_UA,
                     "Referer": "https://novel.snssdk.com/",
                 },
-            }
-
-        # 备用：本机 Range 流（FongMi 更友好）
-        try:
-            port = _start_stream_server()
-        except Exception:
-            port = 0
-        if port:
-            query = urlencode(
-                {
-                    "vid": vid,
-                    "did": self.device_id or "",
-                    "iid": self.install_id or "",
-                }
-            )
-            return {
-                "parse": 0,
-                "jx": 0,
-                "playUrl": "",
-                "url": "http://127.0.0.1:%d/hg.mp4?%s" % (port, query),
-                "header": {"User-Agent": UA},
             }
         return {
             "parse": 1,
@@ -3957,6 +4081,23 @@ class Spider(Spider):
         if not vid:
             return [400, "text/plain; charset=utf-8", b"missing vid"]
 
+        # 兼容播放器缓存的旧 /proxy?do=py&hg=cenc 地址。
+        # 重定向响应只含 URL，媒体由独立 HTTP 服务按 Range 分块解密。
+        try:
+            port = _start_stream_server()
+        except Exception:
+            port = 0
+        if port:
+            query = urlencode({
+                "vid": vid,
+                "q": str(param.get("q") or param.get("quality") or "1080"),
+                "did": str(param.get("did") or self.device_id or ""),
+                "iid": str(param.get("iid") or self.install_id or ""),
+            })
+            return [302, "text/plain", b"", {
+                "Location": "http://127.0.0.1:%d/hg.mp4?%s" % (port, query),
+            }]
+
         try:
             cfg = {
                 "device_id": str(param.get("did") or self.device_id or ""),
@@ -3978,8 +4119,13 @@ class Spider(Spider):
                     seen_q.add(q)
                     quals.append(q)
 
-            # 缓存命中直接返回
-            for q in quals:
+            # 缓存命中直接返回。用户指定线路清晰度(user_q)时，只认该清晰度缓存，
+            # 不能回退命中其它清晰度缓存（否则请求480会拿到360内容）。
+            if user_q:
+                primary = [user_q]
+            else:
+                primary = quals
+            for q in primary:
                 cached = _hg_cache_get(vid, q)
                 if cached:
                     return [200, "video/mp4", cached]
