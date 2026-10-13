@@ -1,5 +1,5 @@
 {
-  "spider": "https://332.qaz868555.top/Yoursmile.jar;md5;c6aaf6a9498e1e1d07126779c687bdd8",
+  "spider": "https://8960.kstore.space/lib/mi260903.png",
   "wallpaper": "https://深色壁纸.xxooo.cf/",
   "logo": "https://13935.kstore.space/b/logo.gif",
   "sites": [
@@ -32,7 +32,7 @@
             "key": "影探影视",
             "name": "影探",
             "type": 3,
-            "api": "http://tvv.tw/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/%E5%BD%B1%E6%8E%A2.py",
+            "api": "https://fastlink.cokey.xyz/f/PkWZt1/影探.py",
             "timeout": 10,
             "searchable": 1,
             "quickSearch": 0,
@@ -329,8 +329,15 @@
   ],
   "lives": [
      {
+      "name": "jackTV",
+      "url": "https://php.946985.filegear-sg.me/jackTV.m3u",
+      "type": 0,
+      "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+     {
       "name": "直播",
-      "url": "https://myds.momo.xx.kg/playlist.php?format=txt&auth=6f6821898135d974",
+      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/Jsnzkpg/Jsnzkpg/Jsnzkpg/Jsnzkpg",
       "type": 0,
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
