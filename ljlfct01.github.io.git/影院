@@ -3,17 +3,21 @@
   "wallpaper": "https://深色壁纸.xxooo.cf/",
   "logo": "https://13935.kstore.space/b/logo.gif",
   "sites": [
-   
-      {
-            "key": "影探影视",
-            "name": "影探",
-            "type": 3,
-            "api": "http://tvv.tw/https://raw.githubusercontent.com/ljlfct01/ljlfct01.github.io/refs/heads/main/%E5%BD%B1%E6%8E%A2.py",
-            "timeout": 10,
-            "searchable": 1,
-            "quickSearch": 0,
-            "changeable": 0
-        },
+       {
+      "key": "设置",
+      "name": "网弹|设置",
+      "type": 3,
+      "api": "csp_ConfigCAT",
+      "jar": "http://103.236.85.3:25252/仅供测试/custom_spider.jar;md5;3cb6cb488ddfc0dfe8ec69d5015aef72",
+      "searchable": 0,
+      "changeable": 0,
+      "indexs": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 1.618
+      }
+    },
+
     {
       "key": "fgd",
       "name": "希尔👑4K①",
@@ -369,12 +373,13 @@
 
   ],
   "parses": [
-
- {
-      "name": "自动解析",
+    {
+      "name": "自定：请先设置",
       "type": 1,
       "url": "https://niubi.69mini.com/api/?key=0a93b8f6303b79f7be0465c30d305c44&url="
+
     }
+
   ],
   "flags": [
     "youku",
