@@ -19,6 +19,19 @@
     },
 
     {
+      "key": "藤藤",
+      "name": "❤藤藤｜4K测试",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/drpy2.min.js",
+      "ext": "https://gh-proxy.org/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/藤藤.png"
+    },
+    {
+      "key": "bl",
+      "name": "❤小哩｜4K测试",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/bl.py"
+    },
+    {
       "key": "fgd",
       "name": "希尔👑4K①",
       "playerType": "2",
@@ -46,7 +59,17 @@
             "key": "影探影视",
             "name": "影探",
             "type": 3,
-            "api": "https://fastlink.cokey.xyz/f/PkWZt1/影探.py",
+            "api": "http://103.236.73.178:40782/mob/lib/%E8%81%9A%E5%90%88.py",
+            "timeout": 10,
+            "searchable": 1,
+            "quickSearch": 0,
+            "changeable": 0
+        },
+      {
+            "key": "懂帝影视",
+            "name": "懂帝",
+            "type": 3,
+            "api": "http://103.236.73.178:40782/mob/lib/%E6%87%82%E7%89%87%E5%B8%9D.py",
             "timeout": 10,
             "searchable": 1,
             "quickSearch": 0,
@@ -184,60 +207,6 @@
       "filterable": 1,
       "ext": ""
     },
-    {
-      "key": "wanou_sites",
-      "name": "主线路-换源更换备用线路",
-      "type": 4,
-      "api": "http://103.236.77.248:36245/video/wanou_sites",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "header": {
-        "token": "57c04171f9d2f903"
-      }
-    },
-    
-    {
-      "key": "wanou_sites1",
-      "name": "备用线路",
-      "type": 4,
-      "api": "http://103.236.77.205:35246/video/wanou_sites",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "header": {
-        "token": "0e5b643ffc5ef558"
-      }
-    },
-
-        
-      
-      {
-      "key": "mogg",
-      "name": "主线木偶仅搜索",
-      "type": 4,
-      "api": "http://103.236.77.248:36245/video/mogg",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 0,
-      "header": {
-        "token": "ae02bc3756eaf024"
-      }
-    },
-     
-     {
-      "key": "mogg1",
-      "name": "备用木偶仅搜索",
-      "type": 4,
-      "api": "http://103.236.77.205:34216/video/mogg",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 0,
-      "header": {
-        "token": "0e5b643ffc5ef558"
-      }
-    },
-     
 
     {
       "key": "✨飞碟木偶",
@@ -376,7 +345,7 @@
     {
       "name": "自定：请先设置",
       "type": 1,
-      "url": "https://niubi.69mini.com/api/?key=0a93b8f6303b79f7be0465c30d305c44&url="
+      "url": "http://4kzj.lyyytv.cn/api/index?parsesId=11&appid=10001&videoUrl="
 
     }
 
