@@ -89,14 +89,7 @@
         "key": "咕噜",
         "name": "咕噜🔹App",
         "type": 3,
-        "api": "csp_Gulu"
-    },
-    {
-        "key": "枫叶影视",
-        "name": "枫叶🔹影视",
-        "type": 3,
-        "api": "csp_FengYe",
-        "ext": "https://www.vip1949.com/"
+        "api": "./py/咕噜咕噜4K.py"
     },
     {
         "key": "多多影视",
@@ -135,7 +128,7 @@
     },
     {
         "key": "懒懒视频APP",
-        "name": "懒懒🔹App",
+        "name": "懒懒🔹视频ᵃᵖᵖ",
         "type": 3,
         "api": "./js/llsp.min.js",
         "ext": {
@@ -233,18 +226,6 @@
         }
     },
     {
-        "key": "飞娱影视",
-        "name": "飞娱🔹影视",
-        "type": 3,
-        "api": "csp_Feiyu"
-    },
-    {
-        "key": "独播影视",
-        "name": "独播🔹影视",
-        "type": 3,
-        "api": "csp_Duboku"
-    },
-    {
         "key": "旺旺影视",
         "name": "旺旺🔹影视",
         "type": 3,
@@ -260,20 +241,6 @@
         "ext": "https://cz01.vip"
     },
     {
-        "key": "小宝影视",
-        "name": "小宝🔹影视",
-        "type": 3,
-        "api": "csp_XBPQ",
-        "ext": "./json/小宝影视.json"
-    },
-    {
-        "key": "飞快TV",
-        "name": "飞快🔹影视",
-        "type": 3,
-        "api": "csp_XBPQ",
-        "ext": "./json/feikuaiTV.json"
-    },
-    {
         "key": "骚火影视",
         "name": "骚火🔹影视",
         "type": 3,
@@ -281,23 +248,10 @@
         "ext": "https://shdy5.us"
     },
     {
-        "key": "独播影视",
-        "name": "独播🔹影视",
-        "type": 3,
-        "api": "csp_Duboku"
-    },
-    {
-        "key": "机器人",
-        "name": "爱看🔹机器",
-        "type": 3,
-        "api": "csp_Ikanbot"
-    },
-    {
-        "key": "360资源",
-        "name": "🐝360🔹采集",
+        "key": "创享",
+        "name": "创享🔹影视",
         "type": 1,
-        "api": "https://360zyzz.com/api.php/provide/vod",
-        "categories": ["国产动漫","国产剧","动作片","喜剧片","爱情片","剧情片","恐怖片","悬疑片","科幻片","欧美动漫","灾难片","欧美剧","战争片","连续剧","伦理片","香港剧","韩国剧","体育","NBA","惊悚片","家庭篇","古装片","历史片","犯罪片","纪录片","短片","动画片","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","未分类","西部片","爽文短剧","现代都市","脑洞悬疑","年代穿越","古装仙侠","女频恋爱","成长逆袭"]
+        "api": "https://ys.cxkjg.cn/api/provide/vod"
     },
     {
         "key": "电影天堂",
