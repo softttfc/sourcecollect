@@ -44,7 +44,7 @@
       "delete": true
     },
     {
-      "key": "易听音乐",
+      "key": "听友听书",
       "delete": true
     },
     {
@@ -57,10 +57,6 @@
     },
     {
       "key": "凤凰FM",
-      "delete": true
-    },
-    {
-      "key": "随身评书",
       "name": "📺体育｜点播",
       "type": 3,
       "api": "https://cdn.jsdmirror.com/gh/ouhaibo1980/tvbox@main/js/体育聚合.js",
