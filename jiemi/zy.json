@@ -2472,6 +2472,13 @@
       "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;6ba5adb70378a958c4359a2a98175f2b"
     },
     {
+      "key": "QQ音乐",
+      "name": "🎸QQ🔹音乐",
+      "type": 3,
+      "api": "http://2015888.xyz/tv/py/music/QQ音乐.py",
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;6ba5adb70378a958c4359a2a98175f2b"
+    },
+    {
       "key": "爱听音乐",
       "name": "🎸爱听🔹音乐",
       "type": 3,

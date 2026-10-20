@@ -3,7 +3,12 @@
 
 import os
 import shutil
+import sys
 from pathlib import Path
+
+# 兼容 Windows GBK 控制台，避免 emoji 输出导致 UnicodeEncodeError
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # Latest Version Numbers
 VERSIONS = {
@@ -16,7 +21,8 @@ VERSIONS = {
     'lx': '6',
     'sixyin': '1.2.1',
     'juhe': '3',
-    'qdy': '9.3'
+    'qdy': '9.3',
+    'xinghai': '2.3.15'
 }
 
 def main():

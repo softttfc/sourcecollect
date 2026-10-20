@@ -1,0 +1,32 @@
+name: 音源可用性检查
+
+on:
+  schedule:
+    # UTC 17:00 = 北京时间每天 01:00
+    - cron: '0 17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 运行音源可用性探测
+        run: python probe.py --update-readme
+
+      - name: 提交表格更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # 仅当 README 或状态文件发生变化时才提交，避免无意义 commit
+          if [ -z "$(git status --porcelain README.md .health-state.json)" ]; then
+            echo "无变化，跳过提交"
+          else
+            git add README.md .health-state.json
+            git commit -m "[ci] Update availability table $(TZ=Asia/Shanghai date +%Y-%m-%d)"
+            git push
+          fi

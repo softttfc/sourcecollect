@@ -425,6 +425,12 @@
         "api": "./py/music/酷我音乐.py"
     },
     {
+        "key": "QQ音乐",
+        "name": "🎸QQ🔹音乐",
+        "type": 3,
+        "api": "./py/music/QQ音乐.py"
+    },
+    {
         "key": "爱听音乐",
         "name": "🎸爱听🔹音乐",
         "type": 3,

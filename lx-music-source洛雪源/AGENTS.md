@@ -11,6 +11,7 @@
 - `ikun/` - ikun 源
 - `grass/` - Grass 源
 - `juhe/` - 聚合 API 源
+- `xinghai/` - 星海源
 - `CreateLatest.py` - 更新 latest.js 的脚本
 
 ## 命令
@@ -28,6 +29,11 @@ python CreateLatest.py
 1. 将新版本 JS 文件放入对应源目录（如 `sixyin/1.2.2.js`）
 2. 编辑 `CreateLatest.py`，更新 `VERSIONS` 字典中的版本号
 3. 运行 `python CreateLatest.py`
+
+### 新增音源
+
+1. 完成"添加新版本"的三个步骤
+2. 在 `README.md` 的"在线导入"章节按音源名字母升序插入对应小节，格式为：小节标题上方添加显式锚点 `<a id="<目录名>"></a>`（锚点名与音源目录名一致，"音源可用性"表格中的链接依赖它），小节内含两个独立代码块（第一个为原始链接、第二个为加速链接，含义见章节开头说明）
 
 ## 代码风格
 
