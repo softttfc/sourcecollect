@@ -106,11 +106,6 @@
 
   ],
   "parses": [
-    {
-      "name": "Web聚合",
-      "type": 3,
-      "url": "Web"
-    },
 
     {
       "name": "自定",

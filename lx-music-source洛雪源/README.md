@@ -149,12 +149,12 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai
 | [xinghai](#xinghai) | 🟢 可用 |
 | [huibq](#huibq) | 🟡 异常 |
 | [juhe](#juhe) | 🟡 异常 |
+| [lx](#lx) | 🟡 异常 |
 | [flower](#flower) | 🔴 失效 |
 | [grass](#grass) | 🔴 失效 |
 | [ikun](#ikun) | 🔴 失效 |
-| [lx](#lx) | 🔴 失效 |
 
-检测时间：2026-10-20 01:12（北京时间）
+检测时间：2026-10-21 01:15（北京时间）
 <!-- HEALTH-CHECK:END -->
 
 ## 数据来源
