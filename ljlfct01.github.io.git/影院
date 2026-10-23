@@ -85,7 +85,20 @@
       "quickSearch": 1,
       "filterable": 1,
       "ext": "https://yp.wya6.cn/nbwj/哔哩视频.js"
-    }
+    },
+    {
+      "key": "4k-av",
+      "name": "zhibo",
+      "type": 3,
+      "api": "https://pan.szfx.top/down.php/5fd409fd0c36c3266814af80c330de4f.py"
+    },
+     {"key": "4k-av","name": "zhibo","type": 3,"api": "https://pan.szfx.top/down.php/5fd409fd0c36c3266814af80c330de4f.py"},
+     {"key": "set","name": "set","type": 3,"api": "https://pan.szfx.top/down.php/f4f66396d0f07967266664a5d42e30aa.py"},
+     {"key": "scan","name": "seting","type": 3,"api": "https://pan.szfx.top/down.php/d41211cab0012d74d2494899ee83dfda.py"},
+     {"key": "4k3","name": "黄豆","type": 3,"api": "https://nas-b84f2.any168.net/py/zhibo3新.py"},    
+     {"key": "4k2","name": "红果","type": 3,"api": "https://mpimg.cn/down.php/febec88264f5f233116af369fab47bf1.py"},
+     {"key": "4k4","name": "zhibo4","type": 3,"api": "https://pan.szfx.top/down.php/d6fe711fb39a6bfe1a21dc2da5297760.py"},
+     {"key": "4k5","name": "zhibo5","type": 3,"api": "https://pan.szfx.top/down.php/12cb6d9dafbf1303bf9408edc1b108e6.py"}
   ],
   "lives": [
 
@@ -98,7 +111,7 @@
     },
    {
       "name": "直播3",
-      "url": "http://43.249.195.13:10213/llll1llll.txt",
+      "url": "http://lzzlj.xyys.site/simple-play1.php?mode=play1;id=b654513ab752f7a72e6445fcb756a74f;token=s95yF93zdQagdsZXDU4Fghj7vPQPj1VC",
       "type": 0,
       "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
