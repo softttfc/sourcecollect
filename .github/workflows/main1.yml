@@ -96,7 +96,8 @@ jobs:
                 [recha18]="https://gitlab.com/tenrecha/recha.git"
                [TVBOX-merge18]="https://github.com/leexuben/TVBOX-merge.git"
                [ycc1195835265-18]="https://github.com/ycc1195835265/18.git"
-                [666tv_69-18]="https://github.com/666tv/69.git"            
+                [666tv_69-18]="https://github.com/666tv/69.git"     
+                [wliqi495-create-jaychou123-18]="https://github.com/wliqi495-create/jaychou123.git"     
             # 可以继续添加其他仓库
           ) 
  
