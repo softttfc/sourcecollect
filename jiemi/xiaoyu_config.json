@@ -92,6 +92,18 @@
         "api": "./py/咕噜咕噜4K.py"
     },
     {
+        "key": "山楂4K",
+        "name": "山楂🔹4K",
+        "type": 3,
+        "api": "./py/山楂4K.py"
+    },
+    {
+        "key": "看看剧",
+        "name": "看看🔹影视",
+        "type": 3,
+        "api": "./py/看看剧.py"
+    },
+    {
         "key": "多多影视",
         "name": "多多🔹影视",
         "type": 3,
@@ -474,10 +486,8 @@
 
 {"key":"UC网盘","name":"💾UC🔹网盘","type":3,"api":"csp_PanUC","searchable":0,"filterable":0,"changeable":0,"style":{"type":"list","ratio":1.433}},
 
-{"key": "百酷","name": "🔍百酷🔹搜索","type": 3,"api": "csp_Baiku","changeable": 0,"timeout": 30},
-{"key": "酷乐","name": "🔍酷乐🔹搜索","type": 3,"api": "csp_KuLe","changeable": 0,"timeout": 30},
 {"key": "趣盘","name": "🔍趣盘🔹搜索","type": 3,"api": "csp_QuPanSo","changeable": 0,"timeout": 30},
-{"key": "米搜","name": "🔍米搜🔹搜索","type": 3,"api": "csp_MiSou","ext":{"site":["http://www.misoso.shop"]},"changeable": 0,"timeout": 30},
+{"key": "觅盘","name": "🔍觅盘🔹搜索","type": 3,"api": "csp_MiPan","changeable": 0,"timeout": 30},
 {"key": "盘搜","name": "🔍盘搜🔹搜索","type": 3,"api": "csp_PanSou","changeable": 0,"timeout": 30},
 
 {"key": "push_agent","name": "📲手机🔹推送","type": 3,"api": "csp_Push","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1},
