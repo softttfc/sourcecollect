@@ -145,6 +145,7 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai
 | --- | --- |
 | [changqing](#changqing) | 🟢 可用 |
 | [huanyin](#huanyin) | 🟢 可用 |
+| [lx](#lx) | 🟢 可用 |
 | [qdy](#qdy) | 🟢 可用 |
 | [xinghai](#xinghai) | 🟢 可用 |
 | [huibq](#huibq) | 🟡 异常 |
@@ -152,9 +153,8 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai
 | [flower](#flower) | 🔴 失效 |
 | [grass](#grass) | 🔴 失效 |
 | [ikun](#ikun) | 🔴 失效 |
-| [lx](#lx) | 🔴 失效 |
 
-检测时间：2026-10-26 01:12（北京时间）
+检测时间：2026-10-27 01:14（北京时间）
 <!-- HEALTH-CHECK:END -->
 
 ## 数据来源

@@ -1,0 +1,744 @@
+[
+  {
+    "name": "🎨74P福利社",
+    "type": 12,
+    "api": "https://www.74p.net",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+      "Referer": "https://www.74p.net/",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "categories": [
+      {
+        "name": "漫画最新",
+        "url": "/comic?page={{page}}",
+        "url2": "/comic"
+      },
+      {
+        "name": "日本漫画",
+        "url": "/comic/category/jp/page/{{page}}",
+        "url2": "/comic/category/jp"
+      },
+      {
+        "name": "韩国漫画",
+        "url": "/comic/category/kr/page/{{page}}",
+        "url2": "/comic/category/kr"
+      },
+      {
+        "name": "全部标签",
+        "url": "/comic/tags"
+      },
+      {
+        "name": "写真最新",
+        "url": "/meitu?page={{page}}",
+        "url2": "/meitu"
+      },
+      {
+        "name": "秀人网",
+        "url": "/meitu/category/xiurenwang/page/{{page}}",
+        "url2": "/meitu/category/xiurenwang"
+      },
+      {
+        "name": "Cosplay",
+        "url": "/meitu/category/cosplay/page/{{page}}",
+        "url2": "/meitu/category/cosplay"
+      },
+      {
+        "name": "语画界",
+        "url": "/meitu/category/yuhuajie/page/{{page}}",
+        "url2": "/meitu/category/yuhuajie"
+      },
+      {
+        "name": "花漾",
+        "url": "/meitu/category/huayang/page/{{page}}",
+        "url2": "/meitu/category/huayang"
+      },
+      {
+        "name": "爱蜜社",
+        "url": "/meitu/category/aimishe/page/{{page}}",
+        "url2": "/meitu/category/aimishe"
+      },
+      {
+        "name": "波萝社",
+        "url": "/meitu/category/boluoshe/page/{{page}}",
+        "url2": "/meitu/category/boluoshe"
+      },
+      {
+        "name": "魅妍社",
+        "url": "/meitu/category/meiyanshe/page/{{page}}",
+        "url2": "/meitu/category/meiyanshe"
+      }
+    ],
+    "list": {
+      "list": "li.i_list, .update_area_lists li",
+      "name": "a.meta-title@text||img@alt||a.thumb-srcbox@title",
+      "coverUrl": "img@data-original||img@src",
+      "detailUrl": "a.thumb-srcbox@href||a.meta-title@href||a@href",
+      "tips": ".postlist-imagenum@text||.meta-post@text"
+    },
+    "search": {
+      "url": "/search/comic/?s={{key}}",
+      "list": "li.i_list, .update_area_lists li",
+      "name": "a.meta-title@text||img@alt",
+      "coverUrl": "img@data-original||img@src",
+      "detailUrl": "a.thumb-srcbox@href||a.meta-title@href||a@href"
+    },
+    "detail": {
+      "intro": ".jianjie@text||.content@text||h1@text",
+      "tips": ".meta-post@text"
+    },
+    "toc": {
+      "list": "section.zxjz li a, .zxjz a[href*='/comic/chapter/'], a[href*='/comic/chapter/']",
+      "name": "text",
+      "url": "href",
+      "reverse": false
+    },
+    "content": {
+      "content": ".content img@src||.content img@data-original||.page_imges img@src||.nav-links img@src||img[src*='uploads/comic']@src||img[data-original*='uploads/comic']@data-original"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨老司机禁漫",
+    "type": 12,
+    "api": "https://www.laosijix.com",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+      "Referer": "https://www.laosijix.com/",
+      "Accept-Language": "zh-CN,zh;q=0.9,zh-TW;q=0.8"
+    },
+    "categories": [
+      {
+        "name": "更新",
+        "url": "/update"
+      },
+      {
+        "name": "排行",
+        "url": "/ranking"
+      },
+      {
+        "name": "全部",
+        "url": "/comics/all/ob/time/st/all/page/{{page}}",
+        "url2": "/comics/all/ob/time/st/all"
+      },
+      {
+        "name": "已完结",
+        "url": "/comics/all/ob/time/st/completed/page/{{page}}",
+        "url2": "/comics/all/ob/time/st/completed"
+      },
+      {
+        "name": "连载中",
+        "url": "/comics/all/ob/time/st/serialized/page/{{page}}",
+        "url2": "/comics/all/ob/time/st/serialized"
+      },
+      {
+        "name": "按热度",
+        "url": "/comics/all/ob/hits/st/all/page/{{page}}",
+        "url2": "/comics/all/ob/hits/st/all"
+      },
+      {
+        "name": "按评分",
+        "url": "/comics/all/ob/stars/st/all/page/{{page}}",
+        "url2": "/comics/all/ob/stars/st/all"
+      }
+    ],
+    "list": {
+      "list": "a[href^='/comic/']",
+      "name": ".title@text||title||img@alt",
+      "coverUrl": "img@src||source@srcset",
+      "detailUrl": "href",
+      "tips": ".last-time@text"
+    },
+    "search": {
+      "url": "/catalog.php?key={{key}}",
+      "list": "a[href*='/comic/']",
+      "name": ".title@text||title||img@alt",
+      "coverUrl": "img@src||source@srcset",
+      "detailUrl": "href"
+    },
+    "detail": {
+      "intro": "h1@text||.title@text||title@text",
+      "tips": ".last-time@text||.score@text"
+    },
+    "toc": {
+      "list": "span.vol-item-info a, .vol-item a",
+      "name": "text",
+      "url": "href",
+      "reverse": true
+    },
+    "content": {
+      "content": ".img-wrap img@data-src||.img-wrap img@src||#m_r_imgbox_0 img@data-src||img[data-src*='nnpic']@data-src||img[src*='nnpic']@src"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨A漫天堂",
+    "type": 12,
+    "api": "https://aman3.org",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "Referer": "https://aman3.org/",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "categories": [
+      {
+        "name": "最新",
+        "url": "/nbook"
+      },
+      {
+        "name": "排行",
+        "url": "/booktop"
+      },
+      {
+        "name": "全部",
+        "url": "/bookcata/all/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/all/ob/time/st/all"
+      },
+      {
+        "name": "韩漫",
+        "url": "/bookcata/韩漫/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/韩漫/ob/time/st/all"
+      },
+      {
+        "name": "日漫",
+        "url": "/bookcata/日漫/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/日漫/ob/time/st/all"
+      },
+      {
+        "name": "3D漫画",
+        "url": "/bookcata/3D漫画/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/3D漫画/ob/time/st/all"
+      },
+      {
+        "name": "美女",
+        "url": "/bookcata/美女/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/美女/ob/time/st/all"
+      },
+      {
+        "name": "单本",
+        "url": "/bookcata/单本/ob/time/st/all/page/{{page}}",
+        "url2": "/bookcata/单本/ob/time/st/all"
+      },
+      {
+        "name": "已完结",
+        "url": "/bookcata/all/ob/time/st/completed/page/{{page}}",
+        "url2": "/bookcata/all/ob/time/st/completed"
+      },
+      {
+        "name": "更新中",
+        "url": "/bookcata/all/ob/time/st/serialized/page/{{page}}",
+        "url2": "/bookcata/all/ob/time/st/serialized"
+      },
+      {
+        "name": "按阅读",
+        "url": "/bookcata/all/ob/hits/st/all/page/{{page}}",
+        "url2": "/bookcata/all/ob/hits/st/all"
+      }
+    ],
+    "list": {
+      "list": ".hl-list-item, .hl-vod-list .hl-list-item",
+      "name": "a.hl-item-thumb@title||.hl-item-title@text||img@alt",
+      "coverUrl": "a.hl-item-thumb@data-original||img@data-original||img@src",
+      "detailUrl": "a.hl-item-thumb@href||a@href",
+      "tips": ".hl-item-sub@text||.hl-item-text@text"
+    },
+    "search": {
+      "url": "/cata.php?key={{key}}",
+      "list": ".hl-list-item, .hl-vod-list .hl-list-item",
+      "name": "a.hl-item-thumb@title||.hl-item-title@text||img@alt",
+      "coverUrl": "a.hl-item-thumb@data-original||img@data-original||img@src",
+      "detailUrl": "a.hl-item-thumb@href||a@href"
+    },
+    "detail": {
+      "intro": ".hl-content-text@text||.hl-dc-content@text||h1@text",
+      "tips": ".hl-data-item@text||.hl-item-sub@text"
+    },
+    "toc": {
+      "list": "a.module-play-list-link, #hl-plays-list a, .hl-plays-list a",
+      "name": "title||text",
+      "url": "href",
+      "reverse": false
+    },
+    "content": {
+      "content": ".img-wrap img@data-src||.img-wrap img@src||img[data-src*='nnpic']@data-src||img[data-src*='upload']@data-src||img[src*='nnpic']@src"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨HO5HO全彩",
+    "type": 12,
+    "api": "https://www.ho5ho.com",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+      "Referer": "https://www.ho5ho.com/",
+      "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8"
+    },
+    "categories": [
+      {
+        "name": "最新",
+        "url": "/page/{{page}}/",
+        "url2": "/"
+      },
+      {
+        "name": "最高评分",
+        "url": "/?m_orderby=rating"
+      },
+      {
+        "name": "最多观看",
+        "url": "/?m_orderby=views"
+      },
+      {
+        "name": "最新排序",
+        "url": "/?m_orderby=latest"
+      },
+      {
+        "name": "无码",
+        "url": "/h漫標籤/%e7%84%a1%e7%a2%bc/page/{{page}}/",
+        "url2": "/h漫標籤/%e7%84%a1%e7%a2%bc/"
+      },
+      {
+        "name": "中字H漫",
+        "url": "/h漫標籤/%e4%b8%ad%e5%ad%97h%e6%bc%ab/page/{{page}}/",
+        "url2": "/h漫標籤/%e4%b8%ad%e5%ad%97h%e6%bc%ab/"
+      },
+      {
+        "name": "剧情",
+        "url": "/h漫標籤/%e5%8a%87%e6%83%85/page/{{page}}/",
+        "url2": "/h漫標籤/%e5%8a%87%e6%83%85/"
+      },
+      {
+        "name": "短篇",
+        "url": "/h漫標籤/%e7%9f%ad%e7%af%87/page/{{page}}/",
+        "url2": "/h漫標籤/%e7%9f%ad%e7%af%87/"
+      },
+      {
+        "name": "口交",
+        "url": "/h漫標籤/%e5%8f%a3%e4%ba%a4/page/{{page}}/",
+        "url2": "/h漫標籤/%e5%8f%a3%e4%ba%a4/"
+      },
+      {
+        "name": "内射",
+        "url": "/h漫標籤/%e5%86%85%e5%b0%84/page/{{page}}/",
+        "url2": "/h漫標籤/%e5%86%85%e5%b0%84/"
+      },
+      {
+        "name": "女学生",
+        "url": "/h漫標籤/%e5%a5%b3%e5%ad%b8%e7%94%9f/page/{{page}}/",
+        "url2": "/h漫標籤/%e5%a5%b3%e5%ad%b8%e7%94%9f/"
+      },
+      {
+        "name": "爆乳",
+        "url": "/h漫標籤/%e7%88%86%e4%b9%b3/page/{{page}}/",
+        "url2": "/h漫標籤/%e7%88%86%e4%b9%b3/"
+      }
+    ],
+    "list": {
+      "list": "article.ho5ho-v2-card, .ho5ho-v2-card, .page-item-detail, .c-tabs-item__content",
+      "name": ".ho5ho-v2-card-title a@text||.post-title a@text||h3 a@text||a@aria-label||img@alt",
+      "coverUrl": "img@src||img@data-src||.ho5ho-v2-card-image@src",
+      "detailUrl": "a.ho5ho-v2-card-cover@href||.ho5ho-v2-card-title a@href||a@href",
+      "tips": ".chapter a@text||.meta-item@text"
+    },
+    "search": {
+      "url": "/?s={{key}}&post_type=wp-manga",
+      "list": "article.ho5ho-v2-card, .c-tabs-item__content, .page-item-detail",
+      "name": ".ho5ho-v2-card-title a@text||.post-title a@text||h3 a@text||img@alt",
+      "coverUrl": "img@src||img@data-src",
+      "detailUrl": "a.ho5ho-v2-card-cover@href||.post-title a@href||a@href"
+    },
+    "detail": {
+      "intro": ".description-summary@text||.summary__content@text||.manga-excerpt@text||.ho5ho-v2-card-body@text",
+      "tips": ".post-status@text||.post-content_item@text"
+    },
+    "toc": {
+      "list": "li.wp-manga-chapter a, .chapter-item a, .version-chap li a, .listing-chapters_wrap a, .ho5ho-chapter-list a",
+      "name": "text",
+      "url": "href",
+      "reverse": true
+    },
+    "content": {
+      "content": ".reading-content img@data-src||.reading-content img@src||.page-break img@data-src||.page-break img@src||.wp-manga-chapter-img@src||.ho5ho-reader img@src||.ho5ho-reader img@data-src"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨ACG漫画",
+    "type": 12,
+    "api": "https://www.acgxmh.com",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "Referer": "https://www.acgxmh.com/",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "categories": [
+      {
+        "name": "漫画",
+        "url": "/h/index-{{page}}.html",
+        "url2": "/h/"
+      },
+      {
+        "name": "图集",
+        "url": "/hentai/index-{{page}}.html",
+        "url2": "/hentai/"
+      },
+      {
+        "name": "全彩",
+        "url": "/tags/full-color.html"
+      },
+      {
+        "name": "西漫",
+        "url": "/western/index-{{page}}.html",
+        "url2": "/western/"
+      },
+      {
+        "name": "动画",
+        "url": "/animation/index-{{page}}.html",
+        "url2": "/animation/"
+      },
+      {
+        "name": "写真",
+        "url": "/cos/index-{{page}}.html",
+        "url2": "/cos/"
+      },
+      {
+        "name": "有声",
+        "url": "/asmr/index-{{page}}.html",
+        "url2": "/asmr/"
+      },
+      {
+        "name": "专题",
+        "url": "/special/"
+      },
+      {
+        "name": "网漫",
+        "url": "/webtoon/"
+      }
+    ],
+    "list": {
+      "list": "#list li, ul#list li, .list a.thumb, a.thumb",
+      "name": "span.title a@text||a.thumb@title||img@alt||title",
+      "coverUrl": "a.thumb img@src||img@src||img@data-src",
+      "detailUrl": "a.thumb@href||span.title a@href||a@href"
+    },
+    "search": {
+      "url": "/?q={{key}}",
+      "list": "#list li, ul#list li, a.thumb",
+      "name": "span.title a@text||a.thumb@title||img@alt",
+      "coverUrl": "a.thumb img@src||img@src",
+      "detailUrl": "a.thumb@href||a@href"
+    },
+    "detail": {
+      "intro": "h1.title@text||title@text",
+      "tips": "h1.title@text"
+    },
+    "toc": {
+      "list": "#pages a[href*='.html'], a[href*='-'][href$='.html']",
+      "name": "text",
+      "url": "href"
+    },
+    "content": {
+      "content": ".manga-page img@src||.manga-picture img@src||.page img@src||#content img@src||img[src*='acgn']@src||img[src*='file']@src"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨风车漫画",
+    "type": 12,
+    "api": "https://m.qyy158.com",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "Referer": "https://m.qyy158.com/",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "categories": [
+      {
+        "name": "全部漫画",
+        "url": "/sort/?page={{page}}",
+        "url2": "/sort/"
+      },
+      {
+        "name": "大陆漫画",
+        "url": "/sort/?area=1&page={{page}}",
+        "url2": "/sort/?area=1"
+      },
+      {
+        "name": "日本漫画",
+        "url": "/sort/?area=2&page={{page}}",
+        "url2": "/sort/?area=2"
+      },
+      {
+        "name": "韩国漫画",
+        "url": "/sort/?area=3&page={{page}}",
+        "url2": "/sort/?area=3"
+      },
+      {
+        "name": "欧美漫画",
+        "url": "/sort/?area=4&page={{page}}",
+        "url2": "/sort/?area=4"
+      },
+      {
+        "name": "最新更新",
+        "url": "/"
+      },
+      {
+        "name": "排行榜",
+        "url": "/rank/"
+      }
+    ],
+    "list": {
+      "list": ".block-content li, .cartoon-block-box li, li",
+      "name": ".article-info a@text||.cart-info p@text||img@alt||a@text",
+      "coverUrl": "img@src||img@data-original||img@data-src",
+      "detailUrl": "a@href",
+      "tips": ".new-chapter@text||.article-info a:nth-child(3)@text||p@text"
+    },
+    "search": {
+      "url": "/search/?searchkey={{key}}",
+      "list": ".block-content li, .cartoon-block-box li, li",
+      "name": ".article-info a@text||.cart-info p@text||img@alt",
+      "coverUrl": "img@src||img@data-original",
+      "detailUrl": "a@href",
+      "tips": ".new-chapter@text||.article-info p@text"
+    },
+    "detail": {
+      "intro": ".article-desc@text||.comic-infos@text||h1@text",
+      "tips": ".comic-infos li@text||.article-info@text"
+    },
+    "toc": {
+      "list": ".chapter-list li a, .chapter-list li, ul.chapter-list a",
+      "name": "text",
+      "url": "href||a@href",
+      "reverse": false
+    },
+    "content": {
+      "content": "img@data-original||img@data-src||img@src||.comic-page img@data-original||.comic-page img@src"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨漫客栈",
+    "type": 12,
+    "api": "https://comic.mkzcdn.com",
+    "header": {
+      "User-Agent": "Mozilla/5.0 (Linux; Android 12; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
+      "Referer": "https://www.mkzhan.com/",
+      "Origin": "https://www.mkzhan.com",
+      "Accept": "application/json, text/plain, */*",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "categories": [
+      {
+        "name": "热门人气",
+        "url": "/search/filter/?order=1&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "更新时间",
+        "url": "/search/filter/?order=2&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "连载",
+        "url": "/search/filter/?finish=1&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "完结",
+        "url": "/search/filter/?finish=2&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "免费",
+        "url": "/search/filter/?is_free=1&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "霸总",
+        "url": "/search/filter/?theme_id=1&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "修真",
+        "url": "/search/filter/?theme_id=2&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "恋爱",
+        "url": "/search/filter/?theme_id=3&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "古风",
+        "url": "/search/filter/?theme_id=4&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "玄幻",
+        "url": "/search/filter/?theme_id=5&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "穿越",
+        "url": "/search/filter/?theme_id=6&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "都市",
+        "url": "/search/filter/?theme_id=7&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "搞笑",
+        "url": "/search/filter/?theme_id=8&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "冒险",
+        "url": "/search/filter/?theme_id=12&page_num={{page}}&page_size=24"
+      },
+      {
+        "name": "科幻",
+        "url": "/search/filter/?theme_id=19&page_num={{page}}&page_size=24"
+      }
+    ],
+    "list": {
+      "list": "$.data.list[*]",
+      "name": "$.title",
+      "author": "$.author_title",
+      "coverUrl": "$.cover",
+      "detailUrl": "https://comic.mkzcdn.com/comic/info/?comic_id={{$.comic_id}}",
+      "tips": "$.chapter_title||$.feature",
+      "params": "{\"comic_id\":\"{{$.comic_id}}\"}"
+    },
+    "search": {
+      "url": "/search/keyword/?keyword={{key}}&page_num=1&page_size=24",
+      "list": "$.data.list[*]",
+      "name": "$.title",
+      "author": "$.author_title",
+      "coverUrl": "$.cover",
+      "detailUrl": "https://comic.mkzcdn.com/comic/info/?comic_id={{$.comic_id}}",
+      "tips": "$.chapter_title",
+      "params": "{\"comic_id\":\"{{$.comic_id}}\"}"
+    },
+    "detail": {
+      "intro": "$.data.content||$.data.feature||$.data.notice",
+      "tips": "$.data.chapter_title||$.data.author_title",
+      "tocUrl": "https://comic.mkzcdn.com/chapter/v1/?comic_id={{comic_id}}"
+    },
+    "toc": {
+      "list": "$.data[*]",
+      "name": "$.title",
+      "url": "https://comic.mkzcdn.com/chapter/content/?chapter_id={{$.chapter_id}}&comic_id={{comic_id}}",
+      "reverse": false,
+      "params": "{\"chapter_id\":\"{{$.chapter_id}}\",\"comic_id\":\"{{comic_id}}\"}"
+    },
+    "content": {
+      "content": "$.data[*].image||$.data.page[*].image"
+    },
+    "searchable": true,
+    "discoverable": true
+  },
+  {
+    "name": "🎨看漫画",
+    "type": 12,
+    "api": "https://m.kanman.com",
+    "categories": [
+      {
+        "name": "人气",
+        "url": "/api/getsortlist/?comic_sort=&orderby=click&search_type=&search_key=&page={{page}}&size=48"
+      },
+      {
+        "name": "更新",
+        "url": "/api/getsortlist/?comic_sort=&orderby=date&search_type=&search_key=&page={{page}}&size=48"
+      },
+      {
+        "name": "评分",
+        "url": "/api/getsortlist/?comic_sort=&orderby=score&search_type=&search_key=&page={{page}}&size=48"
+      },
+      {
+        "name": "收藏",
+        "url": "/api/getsortlist/?comic_sort=&orderby=shoucang&search_type=&search_key=&page={{page}}&size=48"
+      },
+      {
+        "name": "推理",
+        "url": "/api/getsortlist/?comic_sort=tuili&orderby=&search_type=&search_key=&page={{page}}&size=48"
+      },
+      {
+        "name": "冒险",
+        "url": "/api/getsortlist/?comic_sort=maoxian&orderby=&search_type=&search_key=&page={{page}}&size=48"
+      }
+    ],
+    "detail": {
+      "category": "[property=\"og:novel:category\"]@content",
+      "tocUrl": "/api/getchapterlist?product_id=1&productname=kmh&platformname=wap&comic_id={{$.comic_id}}"
+    },
+    "content": {
+      "content": "$.data.current_chapter.chapter_img_list"
+    },
+    "list": {
+      "list": "$.data.data",
+      "author": "$.comic_author",
+      "detailUrl": "/{{$.comic_id}}/",
+      "tips": "$.latest_cartoon_topic_name",
+      "coverUrl": "https://image.yqmh.com/mh/{{$.comic_id}}.jpg-300x400.webp",
+      "name": "$.comic_name",
+      "params": "{\"comic_id\":{{$.comic_id}}}"
+    },
+    "search": {
+      "author": "$.cartoon_author_list_name",
+      "list": "$.data",
+      "detailUrl": "/{{$.comic_id}}/",
+      "coverUrl": "https://image.yqmh.com/mh/{{$.comic_id}}.jpg-300x400.webp",
+      "intro": "$.cartoon_desc",
+      "category": "$.comic_type##[a-zA-Z]|\\|",
+      "name": "$.comic_name",
+      "params": "{\"comic_id\":{{$.comic_id}}}",
+      "url": "/api/serachcomic/?product_id=1&productname=kmh&platformname=wap&serachKey={{key}}&topNumber=10"
+    },
+    "toc": {
+      "list": "$.data",
+      "name": "$.chapter_name",
+      "reverse": true,
+      "url": "/api/getchapterinfov2?product_id=1&productname=kmh&platformname=wap&comic_id={{$.comic_id}}&chapter_newid={{$.chapter_newid}}&isWebp=1&quality=low"
+    }
+  },
+  {
+    "name": "🎨漫画大全",
+    "remark": "1.0.8",
+    "type": 12,
+    "api": "http://android.007ting.com",
+    "category": {
+      "url": "",
+      "method": "POST",
+      "post": "",
+      "params": {
+        "area": [],
+        "year": [],
+        "category": []
+      }
+    },
+    "detail": {
+      "url": "/android_rest.action",
+      "method": "POST",
+      "post": "type=product&userId=0&id={{$.comicId}}",
+      "intro": "$.desc",
+      "author": "$.comicAuthor"
+    },
+    "content": {
+      "url": "/android_rest.action",
+      "method": "POST",
+      "post": "@js:'chapterId={{$.partId}}&videoSign='+ md5('-{{$.comicId}}-{{$.partId}}-TcbmGhl247Bc-Rd-android')+'&id={{$.comicId}}&type=imagesList'",
+      "content": "$.imagesList[*].imageURL"
+    },
+    "search": {
+      "url": "/android_rest.action",
+      "method": "POST",
+      "post": "type=search&userId=0&word={{key}}",
+      "list": "$.searchList",
+      "name": "$.title",
+      "tips": "$.updateMsg",
+      "coverUrl": "$.imageURL",
+      "params": "{\"comicId\":{{$.comicId}}}"
+    },
+    "toc": {
+      "list": "$.chapterList",
+      "name": "$.partName",
+      "params": "{\"comicId\":{{$.comicId}},\"partId\":{{$.partId}}}"
+    },
+    "searchable": true,
+    "discoverable": false
+  }
+]
