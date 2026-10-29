@@ -4,18 +4,24 @@
   "wallpaper": "http://127.0.0.1:9978/proxy?do=AowuWapper&mode=2",
   "sites": [
     {
-      "key": "设置",
-      "name": "网弹|设置",
+      "name": "🔥豆瓣┃推荐",
+      "key": "Douban",
       "type": 3,
-      "api": "csp_ConfigCAT",
-      "jar": "https://gitee.com/xhuban/getjar/raw/master/jar/custom_spider_cat.jar;md5;0ac3913718d1e3f7fbfbc6a518d0ee8e",
+      "api": "csp_DoubanAmns",
+      "indexs": 1,
       "searchable": 0,
-      "changeable": 0,
-      "indexs": 0,
-      "style": {
-        "type": "rect",
-        "ratio": 1.618
-      }
+      "quickSearch": 0,
+      "changeable": 1,
+      "ext": "Douban"
+    },
+    {
+      "name": "⚙️配置┃中心",
+      "key": "MyConfig",
+      "type": 3,
+      "api": "csp_AAConfigAmns",
+      "searchable": 0,
+      "quickSearch": 0,
+      "changeable": 0
     },
     {
       "key": "fgd",
@@ -68,7 +74,7 @@
             "key": "影探影视",
             "name": "影探",
             "type": 3,
-            "api": "https://fastlink.cokey.xyz/f/PkWZt1/影探.py",
+            "api": "https://8960.kstore.space/py/yt%E6%96%B0.py",
             "timeout": 10,
             "searchable": 1,
             "quickSearch": 0,
@@ -76,7 +82,7 @@
         },
     {
       "key": "qq",
-      "name": "腾讯🍋4K",
+      "name": "主·QQ4K",
       "playerType": 2,
       "type": 3,
       "api": "https://aaa.69mini.com/store/drpy_libs/drpy2.min.js",
@@ -84,21 +90,18 @@
     },
     {
       "key": "mg",
-      "name": "芒果🍋4K",
-      "playerType": 2,
+      "name": "🔥茫茫|4K②",
       "type": 3,
       "api": "https://aaa.69mini.com/store/drpy_libs/drpy2.min.js",
       "ext": "https://app.69mini.com/js/mg.js"
     },
-   {
-      "key": "无意哔哩",
-      "name": "哔哩┃无意",
+
+
+    {
+      "key": "bl",
+      "name": "❤小哩｜4K测试",
       "type": 3,
-      "api": "https://yc.wya6.cn/zhwj/js/drpy2.min.js",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "ext": "https://yp.wya6.cn/nbwj/哔哩视频.js"
+      "api": "https://gh-proxy.com/raw.githubusercontent.com/IY-CPU/IY/main/lib/bl.py"
     },
     {
       "name": "💥玩偶┃4K",
