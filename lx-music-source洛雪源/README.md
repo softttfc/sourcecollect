@@ -17,6 +17,17 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/changqing/latest.js
 https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/changqing/latest.js
 ```
 
+<a id="fish"></a>
+### Fish
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/fish/latest.js
+```
+
+```
+https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/fish/latest.js
+```
+
 <a id="flower"></a>
 ### Flower
 
@@ -37,6 +48,17 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/grass/latest.js
 
 ```
 https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/grass/latest.js
+```
+
+<a id="helloworld"></a>
+### HelloWorld
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/helloworld/latest.js
+```
+
+```
+https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/helloworld/latest.js
 ```
 
 <a id="huanyin"></a>
@@ -61,6 +83,17 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/huibq/latest.js
 https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/huibq/latest.js
 ```
 
+<a id="hyw"></a>
+### HYW
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/hyw/latest.js
+```
+
+```
+https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/hyw/latest.js
+```
+
 <a id="ikun"></a>
 ### ikun
 
@@ -70,6 +103,17 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/ikun/latest.js
 
 ```
 https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/ikun/latest.js
+```
+
+<a id="jiexiang"></a>
+### JieXiang
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/jiexiang/latest.js
+```
+
+```
+https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/jiexiang/latest.js
 ```
 
 <a id="juhe"></a>
@@ -127,6 +171,17 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/xinghai/latest.js
 https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai/latest.js
 ```
 
+<a id="yuningxi"></a>
+### YuNingXi
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/yuningxi/latest.js
+```
+
+```
+https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/yuningxi/latest.js
+```
+
 ### 其他加速站点
 
 当以上链接无法访问时，可将各音源第二个代码块中的链接开头的 `https://ghproxy.net/` 替换为下边任一地址，然后重试。
@@ -140,31 +195,22 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai
 
 ## 音源可用性
 
-<!-- HEALTH-CHECK:START -->
-| 音源 | 状态 |
-| --- | --- |
-| [changqing](#changqing) | 🟢 可用 |
-| [huanyin](#huanyin) | 🟢 可用 |
-| [lx](#lx) | 🟢 可用 |
-| [qdy](#qdy) | 🟢 可用 |
-| [xinghai](#xinghai) | 🟢 可用 |
-| [huibq](#huibq) | 🟡 异常 |
-| [juhe](#juhe) | 🟡 异常 |
-| [flower](#flower) | 🔴 失效 |
-| [grass](#grass) | 🔴 失效 |
-| [ikun](#ikun) | 🔴 失效 |
+<img alt="音源可用性检测结果" src="https://raw.githubusercontent.com/pdone/lx-music-source/health-status/status.svg" />
 
-检测时间：2026-10-29 01:10（北京时间）
-<!-- HEALTH-CHECK:END -->
+每日 01:00（北京时间）检测一次；仅在检测状态发生变化时更新图片，报告与探测状态存放于 `health-status` 分支。
 
 ## 数据来源
 - [SixYin](https://www.sixyin.com/)
 - [Huibq/keep-alive](https://github.com/Huibq/keep-alive/)
 - [LX](https://www.lxmusic.cc/)
-- [ikun](https://github.com/MeoProject/lx-music-api-server)
+- [HYWmusic 公益版](https://github.com/Macrohard0001/HYWmusic_source)
+- [JieXiang](https://github.com/haonanren118/jiexiang-Music-Source)
 - ChangQing（长青SVIP音源 by 元力菌）
 - HuanYin（幻音音源 by 竹佀）
 - XingHai（星海音乐源 by 万去了了 / 科学大魔王）
+- Fish（fish_music by 大鱼吃小鱼）
+- HelloWorld（by hello world）
+- YuNingXi（lx-玉宁熙-Pro by ynx）
 
 ## 项目地址
 - [lx-music-desktop](https://github.com/lyswhut/lx-music-desktop)
