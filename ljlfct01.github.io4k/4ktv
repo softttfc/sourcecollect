@@ -22,7 +22,16 @@
       "filterable": 1,
       "ext": ""
     },
-
+         {
+            "key": "星耀4K",
+            "name": "星影",
+            "type": 4,
+            "api": "http://8.134.205.252:39466/pz/sx4k.php/api.php/provide/vod/?ac=list",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1
+        },
+   
     {
       "key": "qq",
       "name": "腾讯🍋4K",
