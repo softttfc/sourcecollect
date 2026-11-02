@@ -15,7 +15,7 @@
             "quickSearch": 1,
             "filterable": 1,
             "changeable": 1,
-            "api": "https://raw.giteeusercontent.com/Ye-11X115490/xu-yicheng/raw/master/lib/yt.py"
+            "api": "./影探.py"
         },
         {
             "key": "金牌影视",
@@ -29,7 +29,7 @@
         {
             "name": "白嫖鸭",
             "type": 1,
-            "url": "https://niubi.69mini.com/api/?key=0a93b8f6303b79f7be0465c30d305c44&url="
+            "url": "https://niubi.69mini.com/api/?key=a4614b0adbcde48c8677cd2458670426&url="
         }
     ]
 }
