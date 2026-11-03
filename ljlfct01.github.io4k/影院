@@ -1,27 +1,21 @@
 {
-  "spider": "https://file.icve.com.cn/file_doc/997/227/F9538F89E13ADF0CFBCA7909AE555AB6.png;md5;f9538f89e13adf0cfbca7909ae555ab6",
+  "spider": "https://gitee.com/xhuban/getjar/raw/master/jar/custom_spider_cat.jar;md5;85c7c57a5a3bffc7888a0c8424780a6b",
   "logo": "https://file.icve.com.cn/file_doc/945/35/EC508FBD046D33EC4832BB76B63B6C94.gif",
   "wallpaper": "http://127.0.0.1:9978/proxy?do=AowuWapper&mode=2",
   "sites": [
+
     {
-      "name": "🔥豆瓣┃推荐",
-      "key": "Douban",
+      "key": "设置",
+      "name": "网弹|设置",
       "type": 3,
-      "api": "csp_DoubanAmns",
-      "indexs": 1,
+      "api": "csp_ConfigCAT",
       "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 1,
-      "ext": "Douban"
-    },
-    {
-      "name": "⚙️配置┃中心",
-      "key": "MyConfig",
-      "type": 3,
-      "api": "csp_AAConfigAmns",
-      "searchable": 0,
-      "quickSearch": 0,
-      "changeable": 0
+      "changeable": 0,
+      "indexs": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 1.618
+      }
     },
     {
       "key": "fgd",
@@ -95,14 +89,15 @@
       "api": "https://aaa.69mini.com/store/drpy_libs/drpy2.min.js",
       "ext": "https://app.69mini.com/js/mg.js"
     },
-
-
-
     {
-      "key": "bl",
-      "name": "❤小哩｜4K测试",
+      "key": "无意哔哩",
+      "name": "哔哩┃无意",
       "type": 3,
-      "api": "https://gh-proxy.com/raw.githubusercontent.com/IY-CPU/IY/main/lib/bl.py"
+      "api": "https://yc.wya6.cn/zhwj/js/drpy2.min.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://yp.wya6.cn/nbwj/哔哩视频.js"
     },
       {
       "key": "蜡笔",
@@ -110,15 +105,15 @@
       "type": 3,
       "api": "csp_ZC4K",
       "jar": "http://140.210.14.201:666/ZC4K.jar",
-      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFd4aFltaz0="
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFd4aFlta2pJeU5zWVdKcA=="
  },
       {
       "key": "玩偶",
       "name": "📢🌈玩偶4K",
       "type": 3,
       "api": "csp_ZC4K",
-      "jar": "http://140.210.14.201:666/ZC4K.jar",
-      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFhkdloyYz0="
+      "jar": "https://gitee.com/zhouyadong7033/box/raw/master/JS/ZC4KK.jar",
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFhkdloyY2pJeU4zYjJkbg=="
  },
       {
       "key": "木偶",
@@ -126,7 +121,7 @@
       "type": 3,
       "api": "csp_ZC4K",
       "jar": "http://140.210.14.201:666/ZC4K.jar",
-      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFcxdloyYz0="
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFcxdloyY2pJeU50YjJkbg=="
  },
       {
       "key": "至臻",
@@ -134,7 +129,23 @@
       "type": 3,
       "api": "csp_ZC4K",
       "jar": "http://140.210.14.201:666/ZC4K.jar",
-      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFhwb2FYcG9aVzQ9"
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFhwb2FYcG9aVzRqSXlONmFHbDZhR1Z1"
+ },
+      {
+      "key": "虎斑",
+      "name": "📢🌈虎斑4K",
+      "type": 3,
+      "api": "csp_ZC4K",
+      "jar": "http://140.210.14.201:666/ZC4K.jar",
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFdoMVltRnVJeU1qYUhWaVlXND0="
+ },
+      {
+      "key": "剧社",
+      "name": "📢🌈剧社4K",
+      "type": 3,
+      "api": "csp_ZC4K",
+      "jar": "http://140.210.14.201:666/ZC4K.jar",
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFhOMFlYSXlJeU1qYzNSaGNqST0="
  },
       {
       "key": "欧歌",
@@ -142,9 +153,8 @@
       "type": 3,
       "api": "csp_ZC4K",
       "jar": "http://140.210.14.201:666/ZC4K.jar",
-      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFc5MVoyVT0="
+      "ext": "YUhSMGNEb3ZMekUxTmk0eU16TXVNakk0TGpJek16b3hPREE0TWk5aGNHa3ZZWEJwTG5Cb2NEOXphWFJsUFc5MVoyVWpJeU52ZFdkbA=="
  },
-
     {
       "key": "4k-av",
       "name": "zhibo",
@@ -198,24 +208,9 @@
   ],
   "parses": [
     {
-      "name": "光速",
+      "name": "自定",
       "type": 1,
-      "url": "http://140.210.14.201:2026/api/index?parsesId=3&appid=10000&videoUrl=",
-      "ext": {
-        "flag": [
-          "qq",
-          "腾讯",
-          "qiyi",
-          "爱奇艺",
-          "奇艺",
-          "youku",
-          "优酷",
-          "mgtv",
-          "芒果",
-          "bilibili",
-          "YuMi-vip"
-        ]
-      }
+      "url": "http://127.0.0.1:9997/proxy?do=seachdanmu&go=getuserjx&url="
     }
  
 
