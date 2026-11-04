@@ -15,14 +15,7 @@
             "quickSearch": 1,
             "filterable": 1,
             "changeable": 1,
-            "api": "./影探.py"
-        },
-        {
-            "key": "金牌影视",
-            "name": "金牌影视",
-            "zddanmu": 1,
-            "type": 3,
-            "api": "https://fastlink.cokey.xyz/f/bbKmc3/金牌.js"
+            "api": "https://fastlink.cokey.xyz/f/PkWZt1/影探.py"
         }
     ],
     "parses": [
