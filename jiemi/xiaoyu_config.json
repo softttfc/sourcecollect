@@ -5,6 +5,8 @@
     "wallpaper": "http://2015888.xyz/666/",
 
     "warningText": "【风言锋语88·温馨提示您】:🔴线路利用网络爬虫技术获取，各线路的版本、清晰度、播放速度等存在差异请自行切换。建议避开晚上高峰时段。🔵软件和接口都是免费分享使用。💢请勿相信视频中的任何广告，以免您上当受骗……",
+    
+    "danmaku": "http://127.0.0.1:9978/proxy?do=danmaku&name={name}&episode={episode}",
 
     "logo": "./img/588.gif",
     
@@ -51,7 +53,7 @@
         }
     },
     {
-        "key": "Local",
+        "key": "LocalFile",
         "name": "本地🔹视频",
         "type": 3,
         "api": "csp_LocalFile",
@@ -221,17 +223,6 @@
             "site": "https://xpgandroid03-1372779881.cos.ap-beijing.myqcloud.com/app_xpg_android.txt",
             "version": "1.0.0.3",
             "decrypt": "0"
-        }
-    },
-    {
-        "key": "茉莉Get",
-        "name": "茉莉🔹APP",
-        "type": 3,
-        "api": "csp_AppGet",
-        "ext": {
-            "site": "https://allinadmin.oss-cn-hangzhou.aliyuncs.com/bk/9.txt",
-            "dataKey": "88689667dce61725",
-            "dataIv": "88689667dce61725"
         }
     },
     {
@@ -445,12 +436,6 @@
         "name": "🎸酷我🔹音乐",
         "type": 3,
         "api": "./py/music/酷我音乐.py"
-    },
-    {
-        "key": "QQ音乐",
-        "name": "🎸QQ🔹音乐",
-        "type": 3,
-        "api": "./py/music/QQ音乐.py"
     },
     {
         "key": "爱听音乐",

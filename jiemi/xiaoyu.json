@@ -1,7 +1,8 @@
 {
-  "spider": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4",
+  "spider": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f",
   "wallpaper": "http://2015888.xyz/666/",
   "warningText": "【风言锋语88·温馨提示您】:🔴线路利用网络爬虫技术获取，各线路的版本、清晰度、播放速度等存在差异请自行切换。建议避开晚上高峰时段。🔵软件和接口都是免费分享使用。💢请勿相信视频中的任何广告，以免您上当受骗……",
+  "danmaku": "http://127.0.0.1:9978/proxy?do=danmaku&name={name}&episode={episode}",
   "logo": "http://2015888.xyz/tv/img/588.gif",
   "lives": [
     {
@@ -27,7 +28,7 @@
       "searchable": 0,
       "changeable": 1,
       "filterable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "配置中心",
@@ -43,10 +44,10 @@
         "type": "rect",
         "ratio": 1.597
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
-      "key": "Local",
+      "key": "LocalFile",
       "name": "本地🔹视频",
       "type": 3,
       "api": "csp_LocalFile",
@@ -58,7 +59,7 @@
         "type": "rect",
         "ratio": 1.755
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "热播",
@@ -68,63 +69,63 @@
       "ext": {
         "url": "http://v.rbotv.cn"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "韩圈",
       "name": "韩圈🔹App",
       "type": 3,
       "api": "csp_Hxq",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "瓜子影视",
       "name": "瓜子🔹影视",
       "type": 3,
       "api": "csp_Gz360",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "咕噜",
       "name": "咕噜🔹App",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/咕噜咕噜4K.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "山楂4K",
       "name": "山楂🔹4K",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/山楂4K.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "看看剧",
       "name": "看看🔹影视",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/看看剧.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "多多影视",
       "name": "多多🔹影视",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/duoduo.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "极速",
       "name": "极速🔹影视",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/极速追剧.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "小鸡看看",
       "name": "小鸡🔹看看",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/小鸡看看.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "南瓜视频App",
@@ -150,7 +151,7 @@
         "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsfgFYt5LTHeDslGbyQb836pa/f9FaJa20ZvU3rq2TaT4QxbhzMz0QlXhxyJA78VEooiFzNsOKJDFZAvAYGHid1BvTkqEmwaUD38WN/gOXWPevX20X13kbKlKctbTzqB6CsKLdxYyjB4awtF6o66cVFwLAjPmeePSxiSIoMKaO8jZakhHlPMhIgztAgd09eX+bSM6pve35k9CV5X2GSey7Dtth4DQz/NZVc8HGb79uhyrwH1h6IV3BKgOoqcpsHUcggoV1bJ3IIT0+WUMM8S9Yo2dh9T2EXc+gmIH0UAIxwKxmO1jTNzTDR7BvOCMnJQs5DIUx409BPdLdg4zg0SbmQIDAQAB",
         "privateKey": "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCN9LrnN2+FFW9oTw5ySIQxClbNZyPQyXyueQmsJw9PELWamIvyrVDhsi2862Da83nXRwjzcBsuT3fSq4BETKfRpsOrI3xprN6HyB+aALoYJbdMt5p3liUeyaw9WNxGZ2VhJ+st6ThGNikKRinFgPkOKaocZgefK7MuKI/EJKrj/FFB1WUE1I1/TT5bkIFMmjc8dszKyqxNdDaRgNTNP1Xou0s/tRCgKpmc503wf2h46F94YK6tpbHvYKouCCKps5ieUu+eWsXZmLRfiM0iZQcD0K5wcbrMvWcS/KmElkWPsCOwErpd/EDgeIbVKtsoHPewG8fOta75iCcb8/J56VbZAgMBAAECggEBAI2+8WIvWIvq+3OMfUBgaJ8PU92GP50blAQjmCTuW7r3VF8qM5P+u+ShpkoePnhi5iawJ5/tMTbs4xjZZxrL8EbH3lnk9TYQB6RNkECWuTujbYSNURBYPHihp/sZ39ntJK3+zjbpyedR7Wj05oDwZ8BcmiABQVsOp7xPhD623m0G3wSYtv1bIeCc+vP8pc1kauCPXl5ZyNCUN6XZKH1mvRkGd+VP9hCYr5LOsPVvn3JM8yF5HUJbxltzZVU/m9WcN9D3lcJ9pqpKBd99G1l5zsN+U23+4VvwX8Qhj4ZkNlMCaNndj+6PvhPGMp4+cCpt94I3xh/OqjdrUAd6jnZpioECgYEA709jQ+yFCobRPKzT/PT6KsqVIJJn0FTMXVc1VP5Sn3t5NTQ+iLzOxQRcO1aTNFVgNKhIgsVnVlGh+1Oa2Zor3vXr1eQBjHCZ2zOH+2QdZbRk4GXoOsZ0d203H189SBCTVj20Zd8mL5csBvihIsMjKZ6R62k/mEyOLD+IVuh+axMCgYEAl9sxrVbU1bvGYgHkGWV7BkqYsezOXR65F3eRq8jbNV0YdYN7rnFCStllIJsMCzJBSs2rBD3lcY6/Tk2ThlFIVHVEhgjjRAUIrLHQBJrFKCSusDMGX39Ekk5DZa+5JNak5J7Ikon6klYtDa1G8PFQTJDKTDfQLm/NgryVFS4Np+MCgYEAljLAfcg8NEAroSZkIvbq8OKXOItLRxGB9u+eVIsO9nP7vi3dNdsy96rl7IRI/ea77DDW2eTmF+JChUiS/xJpiJXXADcL1cZyeobcSScr4EKZsdGkMQeP38kXeMRA5TMqFk3CJNIq2GHMS0/Pas8JCb0xnow/UupxrUnu24UumysCgYBKjYuLDVk6gZC45zLEISVQBmmG2LrLztySH9q9msO8JDNw5hdfoi0osChM5LH6ATc68VQnpfeyU6GqYL2vsNIw3M3CfDSPXWVP25BD4nQu7CtzR+m2ErZomdHO54GfC14y+51/DAyfsX02/L4aZm7E2ETpPHGRisQ7jjgnCNAdfwKBgQDSVzfLvsDi2UqbTjyEIeVYPfgm3Owo0fh79rKvinAainQHabVkAezx+RwiJdWeor/08WiyDjFZC86hJOH8gSMLZ2yJw6EVgHqLTvJ+nkYbk0LzvS2gS2h9lDnqOkkKGZBc5l8k/ScCytcDz3WUFEC2TV2CXDj89H14699s1SjpSw=="
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "懒懒视频APP",
@@ -176,14 +177,14 @@
         "bizHost": "http://llsp3.terribly.cn",
         "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqAp1r0KfdEbfAATZXqWMQdEHCfeMdsI7gegO2CtQgzJ5UcXHtdnRUnWd8uKHd5p1jB8ndpTmZEv6BpODgYVLOqAjpO44Z1j6WJVXZ0h19zdjyzzOqhBkEmmKPcQiF+LYqjE/0t0xdNoxgxDBQXyK1PPfmQzfmhhlacQnStL181oCRimZhwEjjha4sqnjmMJTg6JBf6zj5o2btutVT8NUMMZRSmLXqMoDj6oTJapkStlRynihNKn9AiCyozUa6VOmrlZZEnL4yjIgBqYCIS7UAyWE38HeBj7OAEAn7IBrnn1Qrw9u0J2L3Fd40zdHcmBYZa6OF05GNpR1SVlmQtL/QwIDAQAB"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "可可影视",
       "name": "可可🔹影视",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/kkys.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "橘汁",
@@ -201,7 +202,7 @@
         "version": "3.0.7.0",
         "decrypt": "1"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "天堂",
@@ -219,7 +220,7 @@
         "version": "3.0.0.7",
         "decrypt": "0"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "苹果",
@@ -237,19 +238,7 @@
         "version": "1.0.0.3",
         "decrypt": "0"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
-    },
-    {
-      "key": "茉莉Get",
-      "name": "茉莉🔹APP",
-      "type": 3,
-      "api": "csp_AppGet",
-      "ext": {
-        "site": "https://allinadmin.oss-cn-hangzhou.aliyuncs.com/bk/9.txt",
-        "dataKey": "88689667dce61725",
-        "dataIv": "88689667dce61725"
-      },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "金牌",
@@ -257,7 +246,7 @@
       "type": 3,
       "api": "csp_Jpys",
       "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.sizhengxt.com,https://m.jiabaide.cn",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "蓝鹰",
@@ -271,7 +260,7 @@
         "init": "initV122",
         "ua": "okhttp/3.10.0"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "旺旺影视",
@@ -279,7 +268,7 @@
       "type": 3,
       "api": "csp_Wwys",
       "ext": "https://vip.wwgz.cn:5200",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "厂长影视",
@@ -287,7 +276,7 @@
       "type": 3,
       "api": "csp_Czsapp",
       "ext": "https://cz01.vip",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "骚火影视",
@@ -295,14 +284,14 @@
       "type": 3,
       "api": "csp_SaoHuo",
       "ext": "https://shdy5.us",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "创享",
       "name": "创享🔹影视",
       "type": 1,
       "api": "https://ys.cxkjg.cn/api/provide/vod",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "电影天堂",
@@ -338,7 +327,7 @@
         "短剧",
         "动画片"
       ],
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "非凡资源",
@@ -374,7 +363,7 @@
         "海外动漫",
         "伦理片"
       ],
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "量子资源",
@@ -411,7 +400,7 @@
         "动画片",
         "AI漫剧"
       ],
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "csp_Wogg",
@@ -430,7 +419,7 @@
           "https://woggpan.xxooo.cf"
         ]
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "至臻",
@@ -449,7 +438,7 @@
           "https://www.mihdr.top"
         ]
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "蜡笔",
@@ -467,7 +456,7 @@
           "https://www.mmpanpan.site"
         ]
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "荐片",
@@ -479,21 +468,21 @@
       "changeable": 1,
       "filterable": 1,
       "timeout": 15,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "hgtv",
       "name": "📱HG🔹短剧",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/hgtv.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "红果",
       "name": "📱红果🔹短剧",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/红果短剧.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "星芽短剧",
@@ -501,7 +490,7 @@
       "type": 3,
       "api": "csp_ShortXingya",
       "genre": "shortdrama",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "好看短剧",
@@ -509,7 +498,7 @@
       "type": 3,
       "api": "csp_ShortHaokan",
       "genre": "shortdrama",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "七猫短剧",
@@ -517,7 +506,7 @@
       "type": 3,
       "api": "csp_ShortQimao",
       "genre": "shortdrama",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "河马短剧",
@@ -525,7 +514,7 @@
       "type": 3,
       "api": "csp_ShortHema",
       "genre": "shortdrama",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "围观短剧",
@@ -533,7 +522,7 @@
       "type": 3,
       "api": "csp_ShortWeiguan",
       "genre": "shortdrama",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "果果短剧",
@@ -546,7 +535,7 @@
         "分类": "重生$1#穿越$2#爽剧$3#言情$4#都市$5#古装$6#悬疑$7#剧情$8",
         "分类url": "https://www.mochadj.com/i/{cateId}-{catePg}.html"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "巴士动漫",
@@ -554,7 +543,7 @@
       "type": 3,
       "api": "csp_XYQHiker",
       "ext": "http://2015888.xyz/tv/json/bashidm.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "蜻蜓FM",
@@ -564,7 +553,7 @@
       "style": {
         "type": "list"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "米兔音乐",
@@ -572,28 +561,21 @@
       "type": 3,
       "api": "http://2015888.xyz/tv/douban/drpy3.min.js",
       "ext": "http://2015888.xyz/tv/js/music/mituyy.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "酷我音乐",
       "name": "🎸酷我🔹音乐",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/music/酷我音乐.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
-    },
-    {
-      "key": "QQ音乐",
-      "name": "🎸QQ🔹音乐",
-      "type": 3,
-      "api": "http://2015888.xyz/tv/py/music/QQ音乐.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "爱听音乐",
       "name": "🎸爱听🔹音乐",
       "type": 3,
       "api": "http://2015888.xyz/tv/py/music/aitingyinyue.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": " 音乐磁场",
@@ -601,7 +583,7 @@
       "type": 3,
       "api": "csp_XBPQ",
       "ext": "http://2015888.xyz/tv/json/music/yinyuecc.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "听友听书",
@@ -611,7 +593,7 @@
       "style": {
         "type": "list"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "BiliYS",
@@ -630,7 +612,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/json/Biliys.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "csp_Bili",
@@ -649,7 +631,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/json/Bili.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "dr_兔小贝",
@@ -665,7 +647,7 @@
         "ratio": 1.433
       },
       "ext": "http://2015888.xyz/tv/shaoer/tuxiaob.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "幼小衔接",
@@ -684,7 +666,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/shaoer/youxiaoxj.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "小学",
@@ -703,7 +685,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/shaoer/xiaoxuejy.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "初中",
@@ -722,7 +704,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/shaoer/chuzhongjy.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "高中",
@@ -741,7 +723,7 @@
         "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt",
         "json": "http://2015888.xyz/tv/shaoer/gaozhongjy.json"
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "熊猫直播",
@@ -756,7 +738,7 @@
         "type": "rect",
         "ratio": 1.755
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "哔哩直播",
@@ -770,7 +752,7 @@
         "type": "rect",
         "ratio": 1.755
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "抖音直播",
@@ -781,7 +763,7 @@
         "ratio": 1.755
       },
       "api": "http://2015888.xyz/tv/py/douyin.py",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "快手直播",
@@ -797,7 +779,7 @@
         "ratio": 1.755
       },
       "ext": "http://2015888.xyz/tv/js/kuaishouzb.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "虎牙直播",
@@ -813,7 +795,7 @@
         "ratio": 1.755
       },
       "ext": "http://2015888.xyz/tv/js/huyazb.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "斗鱼直播",
@@ -829,7 +811,7 @@
         "ratio": 1.755
       },
       "ext": "http://2015888.xyz/tv/js/douyuzb.js",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "咖啡体育直播",
@@ -844,7 +826,7 @@
         "type": "rect",
         "ratio": 1.755
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "阿里云盘",
@@ -858,7 +840,7 @@
         "type": "list",
         "ratio": 1.433
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "夸克网盘",
@@ -872,7 +854,7 @@
         "type": "list",
         "ratio": 1.433
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "UC网盘",
@@ -886,7 +868,7 @@
         "type": "list",
         "ratio": 1.433
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "百度网盘",
@@ -900,7 +882,7 @@
         "type": "list",
         "ratio": 1.433
       },
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "趣盘",
@@ -909,7 +891,7 @@
       "api": "csp_QuPanSo",
       "changeable": 0,
       "timeout": 30,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "觅盘",
@@ -918,7 +900,7 @@
       "api": "csp_MiPan",
       "changeable": 0,
       "timeout": 30,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "盘搜",
@@ -927,7 +909,7 @@
       "api": "csp_PanSou",
       "changeable": 0,
       "timeout": 30,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "push_agent",
@@ -938,7 +920,7 @@
       "searchable": 0,
       "changeable": 0,
       "filterable": 1,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "SMB",
@@ -946,7 +928,7 @@
       "type": 3,
       "api": "csp_Samba",
       "ext": "http://2015888.xyz/tv/json/samba.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "应用商店",
@@ -958,7 +940,7 @@
       "changeable": 0,
       "filterable": 1,
       "ext": "http://2015888.xyz/tv/json/market.json",
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },
     {
       "key": "通告",
@@ -967,7 +949,7 @@
       "api": "csp_Notice",
       "searchable": 0,
       "changeable": 0,
-      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;27665167f0f81543782fd8e5155536a4"
+      "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     }
   ],
   "parses": [
