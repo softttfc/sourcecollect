@@ -1315,10 +1315,12 @@
       "name": "🧲荐片🔹磁力",
       "type": 3,
       "api": "csp_JianPian",
-      "quickSearch": 1,
-      "searchable": 1,
-      "changeable": 1,
-      "filterable": 1,
+      "ext": {
+        "site": [
+          "https://www.whhyn.com",
+          "https://www.zxfmj.com"
+        ]
+      },
       "timeout": 15,
       "jar": "https://down.nigx.cn/raw.githubusercontent.com/woshishiq1/jiemi/main/xiaoyu.txt;md5;d74cd53cfb377326b69b66402a333f3f"
     },

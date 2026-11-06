@@ -347,7 +347,7 @@
         }
     },
 
-{"key": "荐片","name": "🧲荐片🔹磁力","type": 3,"api": "csp_JianPian","quickSearch": 1,"searchable": 1,"changeable": 1,"filterable": 1,"timeout": 15},
+{"key": "荐片","name": "🧲荐片🔹磁力","type": 3, "api": "csp_JianPian", "ext": {"site": ["https://www.whhyn.com","https://www.zxfmj.com"]}, "timeout": 15},
     
     {
         "key": "hgtv",
