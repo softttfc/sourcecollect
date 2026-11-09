@@ -14,7 +14,18 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/changqing/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/changqing/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/changqing/latest.js
+```
+
+<a id="feichangdao"></a>
+### FeiChangDao
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/feichangdao/latest.js
+```
+
+```
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/feichangdao/latest.js
 ```
 
 <a id="fish"></a>
@@ -25,7 +36,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/fish/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/fish/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/fish/latest.js
 ```
 
 <a id="flower"></a>
@@ -36,7 +47,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/flower/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/flower/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/flower/latest.js
 ```
 
 <a id="grass"></a>
@@ -47,7 +58,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/grass/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/grass/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/grass/latest.js
 ```
 
 <a id="helloworld"></a>
@@ -58,7 +69,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/helloworld/latest.j
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/helloworld/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/helloworld/latest.js
 ```
 
 <a id="huanyin"></a>
@@ -69,7 +80,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/huanyin/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/huanyin/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/huanyin/latest.js
 ```
 
 <a id="huibq"></a>
@@ -80,7 +91,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/huibq/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/huibq/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/huibq/latest.js
 ```
 
 <a id="hyw"></a>
@@ -91,7 +102,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/hyw/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/hyw/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/hyw/latest.js
 ```
 
 <a id="ikun"></a>
@@ -102,7 +113,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/ikun/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/ikun/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/ikun/latest.js
 ```
 
 <a id="jiexiang"></a>
@@ -113,7 +124,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/jiexiang/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/jiexiang/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/jiexiang/latest.js
 ```
 
 <a id="juhe"></a>
@@ -124,7 +135,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/juhe/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/juhe/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/juhe/latest.js
 ```
 
 <a id="lx"></a>
@@ -135,7 +146,7 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/lx/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/lx/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/lx/latest.js
 ```
 
 <a id="qdy"></a>
@@ -146,7 +157,18 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/qdy/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/qdy/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/qdy/latest.js
+```
+
+<a id="qingliang"></a>
+### QingLiang
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/qingliang/latest.js
+```
+
+```
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/qingliang/latest.js
 ```
 
 <a id="sixyin"></a>
@@ -157,7 +179,18 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/sixyin/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/sixyin/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/sixyin/latest.js
+```
+
+<a id="suyin"></a>
+### SuYin
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/suyin/latest.js
+```
+
+```
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/suyin/latest.js
 ```
 
 <a id="xinghai"></a>
@@ -168,7 +201,18 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/xinghai/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/xinghai/latest.js
+```
+
+<a id="xinglan"></a>
+### XingLan
+
+```
+https://raw.githubusercontent.com/pdone/lx-music-source/main/xinglan/latest.js
+```
+
+```
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/xinglan/latest.js
 ```
 
 <a id="yuningxi"></a>
@@ -179,19 +223,19 @@ https://raw.githubusercontent.com/pdone/lx-music-source/main/yuningxi/latest.js
 ```
 
 ```
-https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/yuningxi/latest.js
+https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/yuningxi/latest.js
 ```
 
 ### 其他加速站点
 
-当以上链接无法访问时，可将各音源第二个代码块中的链接开头的 `https://ghproxy.net/` 替换为下边任一地址，然后重试。
+当以上链接无法访问时，可将各音源第二个代码块中的链接开头的 `https://gh-proxy.org/` 替换为下边任一地址，然后重试。
 
 - https://gh.llkk.cc/
 - https://github.moeyy.xyz/
 - https://ghproxy.cn/
 - https://gh.api.99988866.xyz/
 - https://ghp.ci/
-- https://gh-proxy.org/
+- https://ghproxy.net/
 
 ## 音源可用性
 
@@ -200,7 +244,6 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/yuningx
 每日 01:00（北京时间）检测一次；仅在检测状态发生变化时更新图片，报告与探测状态存放于 `health-status` 分支。
 
 ## 数据来源
-- [SixYin](https://www.sixyin.com/)
 - [Huibq/keep-alive](https://github.com/Huibq/keep-alive/)
 - [LX](https://www.lxmusic.cc/)
 - [HYWmusic 公益版](https://github.com/Macrohard0001/HYWmusic_source)
@@ -211,12 +254,16 @@ https://ghproxy.net/raw.githubusercontent.com/pdone/lx-music-source/main/yuningx
 - Fish（fish_music by 大鱼吃小鱼）
 - HelloWorld（by hello world）
 - YuNingXi（lx-玉宁熙-Pro by ynx）
+- FeiChangDao（非常刀 by 群主要进去）
+- QingLiang（轻量音源（四平台多源并行）by 本地定制）
+- SuYin（溯音音源 by 竹佀）
+- XingLan（星澜聚合音源 by 星澜团队）
 
 ## 项目地址
-- [lx-music-desktop](https://github.com/lyswhut/lx-music-desktop)
-- [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile)
-- [lx-music-sync-server](https://github.com/lyswhut/lx-music-sync-server)
-- [any-listen](https://github.com/any-listen/any-listen)
+- [lx-music-desktop](https://github.com/lyswhut/lx-music-desktop) - 洛雪音乐桌面版（Windows / macOS / Linux）
+- [lx-music-mobile](https://github.com/lyswhut/lx-music-mobile) - 洛雪音乐移动版（Android / iOS）
+- [lx-music-sync-server](https://github.com/lyswhut/lx-music-sync-server) - 洛雪音乐同步服务端，用于多设备间同步播放列表等数据
+- [any-listen](https://github.com/any-listen/any-listen) - 基于 Web 的在线音乐播放器，支持自建服务与多端访问
 
 ## Stargazers Over Time
 

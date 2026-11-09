@@ -47,7 +47,7 @@ python probe.py --svg status.svg # 额外把报告写成 SVG 图片
 
 ### 添加新版本
 
-1. 将新版本 JS 文件放入对应源目录（如 `sixyin/1.2.2.js`）
+1. 将新版本 JS 文件放入对应源目录（如 `sixyin/1.2.2.js`）；文件名取自该文件头部 `@version` 去掉前导 `v`，上游随包文件名不作依据（如上游 `星海音乐源 v2.3.17.js` 的 `@version` 为 `v3.2.17`，入库名为 `3.2.17.js`）
 2. 编辑 `CreateLatest.py`，更新 `VERSIONS` 字典中的版本号
 3. 运行 `python CreateLatest.py`
 
@@ -100,9 +100,16 @@ python probe.py --svg status.svg # 额外把报告写成 SVG 图片
 
 ### Git 提交
 
-- 使用中文提交信息
-- 格式：`[源名] 更新到 v版本号`
-- 示例：`[sixyin] 更新到 v1.2.1`
+- 标题格式为 `<type>: <中文描述>`，类型与描述之间用半角冒号加一个空格，描述使用中文
+- 允许的类型：`feat`、`fix`、`docs`、`chore`、`refactor`、`perf`、`ci`、`build`、`test`、`style`
+- 场景映射：新增音源用 `feat`；音源版本更新用 `chore`；修复缺陷用 `fix`；README、规格等文档改动用 `docs`；GitHub Actions 工作流改动用 `ci`
+- 标题保持单行，不以句号等句末标点结尾；不使用 `[源名]` 前缀，也不要只写描述而省略类型
+- 需要说明原因或影响范围时，在标题下方补正文；正文非必填
+- 完整判定条件以本地 OpenSpec 工作区的 `commit-conventions` 规格为准（`openspec/` 未纳入版本跟踪，规则要点以本节为准）
+
+示例：`feat: 新增星澜音源`、`fix: 修复 flower/grass 探测失真`、`docs: 更新 README 数据来源`、`chore: 更新 xinghai 到 v3.2.18`、`ci: 调整健康检查工作流`
+
+反例：`Add xinglan source`、`[sixyin] 更新到 v1.2.1`、`feat 新增音源`、`feat：新增音源`
 
 ## 注意事项
 

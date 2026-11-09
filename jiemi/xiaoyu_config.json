@@ -112,16 +112,22 @@
         "api": "./py/duoduo.py"
     },
     {
-        "key": "极速",
-        "name": "极速🔹影视",
+        "key": "文才影视",
+        "name": "文才🔹影视",
         "type": 3,
-        "api": "./py/极速追剧.py"
+        "api": "./py/文才.py"
     },
     {
-        "key": "小鸡看看",
-        "name": "小鸡🔹看看",
+        "key": "腾讯4K",
+        "name": "腾腾🔹4K",
         "type": 3,
-        "api": "./py/小鸡看看.py"
+        "api": "./py/腾讯4K.py"
+    },
+    {
+        "key": "酷客影院",
+        "name": "酷客🔹影视",
+        "type": 3,
+        "api": "./py/酷客影院.py"
     },
     {
         "key": "南瓜视频App",
@@ -167,12 +173,6 @@
             "bizHost": "http://llsp3.terribly.cn",
             "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqAp1r0KfdEbfAATZXqWMQdEHCfeMdsI7gegO2CtQgzJ5UcXHtdnRUnWd8uKHd5p1jB8ndpTmZEv6BpODgYVLOqAjpO44Z1j6WJVXZ0h19zdjyzzOqhBkEmmKPcQiF+LYqjE/0t0xdNoxgxDBQXyK1PPfmQzfmhhlacQnStL181oCRimZhwEjjha4sqnjmMJTg6JBf6zj5o2btutVT8NUMMZRSmLXqMoDj6oTJapkStlRynihNKn9AiCyozUa6VOmrlZZEnL4yjIgBqYCIS7UAyWE38HeBj7OAEAn7IBrnn1Qrw9u0J2L3Fd40zdHcmBYZa6OF05GNpR1SVlmQtL/QwIDAQAB"
         }
-    },
-    {
-        "key": "可可影视",
-        "name": "可可🔹影视",
-        "type": 3,
-        "api": "./py/kkys.py"
     },
     {
         "key": "橘汁",
@@ -246,13 +246,6 @@
         }
     },
     {
-        "key": "旺旺影视",
-        "name": "旺旺🔹影视",
-        "type": 3,
-        "api": "csp_Wwys",
-        "ext": "https://vip.wwgz.cn:5200"
-    },
-    {
         "key": "厂长影视",
         "name": "厂长🔹影视",
         "type": 3,
@@ -260,91 +253,10 @@
         "ext": "https://cz01.vip"
     },
     {
-        "key": "骚火影视",
-        "name": "骚火🔹影视",
-        "type": 3,
-        "api": "csp_SaoHuo",
-        "ext": "https://shdy5.us"
-    },
-    {
         "key": "创享",
         "name": "创享🔹影视",
         "type": 1,
         "api": "https://ys.cxkjg.cn/api/provide/vod"
-    },
-    {
-        "key": "电影天堂",
-        "name": "🐝天堂🔹采集",
-        "type": 1,
-        "api": "https://caiji.dyttzyapi.com/api.php/provide/vod",
-        "categories": ["动作片","喜剧片","爱情片","科幻片","恐怖片","剧情片","战争片","国产剧","香港剧","韩国剧","欧美剧","记录片","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","港台综艺","日韩综艺","欧美综艺","国产动漫","日韩动漫","欧美动漫","港台动漫","伦理片","短剧","动画片"]
-    },
-    {
-        "key": "非凡资源",
-        "name": "🐝非凡🔹采集",
-        "type": 1,
-        "api": "http://cj.ffzyapi.com/api.php/provide/vod",
-        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","动漫片","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片"]
-    },
-    {
-        "key": "量子资源",
-        "name": "🐝量子🔹采集",
-        "type": 1,
-        "api": "https://cj.lziapi.com/api.php/provide/vod",
-        "categories": ["国产剧","欧美剧","短剧","国产动漫","欧美动漫","港台动漫","剧情片","动作片","喜剧片","恐怖片","爱情片","科幻片","战争片","港台综艺","欧美综艺","香港剧","韩国剧","台湾剧","日本剧","海外剧","泰国剧","大陆综艺","日韩综艺","日韩动漫","海外动漫","伦理片","动画片","AI漫剧"]
-    },
-    {
-        "key": "csp_Wogg",
-        "name": "📀玩偶🔹4K",
-        "type": 3,
-        "api": "csp_Wogg",
-        "searchable": 1,
-        "quickSearch": 1,
-        "changeable": 0,
-        "filterable": 1,
-        "ext": {
-            "site": [
-                "https://www.wogg.live",
-                "https://woggpan.888484.xyz",
-                "https://wogg.xxooo.cf",
-                "https://woggpan.xxooo.cf"
-            ]
-        }
-    },
-    {
-        "key": "至臻",
-        "name": "📀至臻🔹4K",
-        "type": 3,
-        "api": "csp_PanWebShare",
-        "searchable": 1,
-        "quickSearch": 1,
-        "changeable": 0,
-        "filterable": 1,
-        "ext": {
-            "site": [
-                "https://sp.zzzy.shop",
-                "https://www.zhizhen8.click",
-                "https://www.zhizhen1.top",
-                "https://www.mihdr.top"
-            ]
-        }
-    },
-    {
-        "key": "蜡笔",
-        "name": "📀蜡笔🔹4K",
-        "type": 3,
-        "api": "csp_PanWebShare",
-        "searchable": 1,
-        "quickSearch": 1,
-        "changeable": 0,
-        "filterable": 1,
-        "ext": {
-            "site": [
-                "http://tvpanpan.site",
-                "http://feimo.fun",
-                "https://www.mmpanpan.site"
-            ]
-        }
     },
 
 {"key": "荐片","name": "🧲荐片🔹磁力","type": 3, "api": "csp_JianPian", "ext": {"site": ["https://www.whhyn.com","https://www.zxfmj.com"]}, "timeout": 15},
@@ -462,11 +374,6 @@
 
 {"key": "BiliYS","name": "🅱️哔哩🔹影视","type": 3,"api": "csp_BiliYS","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./json/Biliys.json"}},
 {"key": "csp_Bili","name": "🅱️哔哩🔹合集","type": 3,"api": "csp_Bili","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.597},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./json/Bili.json"}},
-{"key": "dr_兔小贝","name": "📚儿童🔹启蒙","type": 3,"api": "./douban/drpy3.min.js","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": "./shaoer/tuxiaob.js"},
-{"key": "幼小衔接","name": "📚幼小🔹衔接","type": 3,"api": "csp_Bili","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./shaoer/youxiaoxj.json"}},
-{"key": "小学","name": "📚小学🔹教育","type": 3,"api": "csp_Bili","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./shaoer/xiaoxuejy.json"}},
-{"key": "初中","name": "📚初中🔹教育","type": 3,"api": "csp_Bili","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./shaoer/chuzhongjy.json"}},
-{"key": "高中","name": "📚高中🔹教育","type": 3,"api": "csp_Bili","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"style": {"type": "rect","ratio": 1.433},"ext": {"cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt","json": "./shaoer/gaozhongjy.json"}},
 
 {"key":"熊猫直播","name":"🐼熊猫🔹直播","type":3,"api":"./py/panda.py","quickSearch":0,"searchable":0,"changeable":0,"filterable":1,"style": {"type": "rect","ratio": 1.755}},
 {"key":"哔哩直播","name":"🅱️哔哩🔹直播","type":3,"api":"./py/哔哩直播.py","quickSearch":0,"searchable":0,"changeable":0,"style": {"type": "rect","ratio": 1.755}},
@@ -484,14 +391,10 @@
 
 {"key":"百度网盘","name":"💾百度🔹网盘","type":3,"api":"csp_PanBaidu","searchable":0,"filterable":0,"changeable":0,"style":{"type":"list","ratio":1.433}},
 
-{"key": "趣盘","name": "🔍趣盘🔹搜索","type": 3,"api": "csp_QuPanSo","changeable": 0,"timeout": 30},
-{"key": "觅盘","name": "🔍觅盘🔹搜索","type": 3,"api": "csp_MiPan","changeable": 0,"timeout": 30},
-{"key": "盘搜","name": "🔍盘搜🔹搜索","type": 3,"api": "csp_PanSou","changeable": 0,"timeout": 30},
-
 {"key": "push_agent","name": "📲手机🔹推送","type": 3,"api": "csp_Push","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1},
 {"key": "SMB","name": "💾家庭🔹Nas","type": 3,"api": "csp_Samba","ext": "./json/samba.json"},
 {"key": "应用商店","name": "🏪应用🔹商店","type": 3,"api": "csp_Market","quickSearch": 0,"searchable": 0,"changeable": 0,"filterable": 1,"ext": "./json/market.json"},
-{"key": "通告","name": "🚦请勿相信任何广告","type": 3,"api":"csp_Notice","searchable":0,"changeable":0}
+{"key": "通告","name": "🚦通知🔶资讯📃","type": 3,"api":"csp_Notice","searchable":0,"changeable":0}
 ],
 
 
