@@ -99,6 +99,7 @@ jobs:
                [ycc1195835265-18]="https://github.com/ycc1195835265/18.git"
                 [666tv_69-18]="https://github.com/666tv/69.git"     
                 [wliqi495-create-jaychou123-18]="https://github.com/wliqi495-create/jaychou123.git"     
+                [ge6bu6-1-18]="https://github.com/ge6bu6/1.git"  
             # 可以继续添加其他仓库
           ) 
  
