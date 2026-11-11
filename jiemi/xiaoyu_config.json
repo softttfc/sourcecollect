@@ -94,6 +94,12 @@
         "api": "./py/咕噜咕噜4K.py"
     },
     {
+        "key": "米诺",
+        "name": "米诺🔹App",
+        "type": 3,
+        "api": "csp_AppMN"
+    },
+    {
         "key": "山楂4K",
         "name": "山楂🔹4K",
         "type": 3,
@@ -186,7 +192,7 @@
             "dataIv": "OC1A06E197EF10CF3F6058CA7A803B5E",
             "pkg": "com.asjdhjhd.mgd.p3",
             "host": "",
-            "site": "https://123-1349250429.cos.ap-shanghai.myqcloud.com/app.txt",
+            "site": "https://1848463092.cdn.123clouddisk.com/1848463092/cct/az.txt",
             "version": "3.0.7.0",
             "decrypt": "1"
         }
