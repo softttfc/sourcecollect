@@ -35,6 +35,7 @@
       "filterable": 1,
       "ext": ""
     },
+{"key": "影探聚合","name": "聚影","type": 3,"api": "https://gitee.com/BL_wh/bl_wh/raw/master/py/yt多in1.py", "searchable": 1,"changeable": 0,"quickSearch": 1,"filterable": 1,"playerType" :2 },
       {
             "key": "聚盘影视",
             "name": "聚盘",
@@ -209,6 +210,11 @@
   "parses": [
     {
       "name": "自定",
+      "type": 1,
+      "url": "https://niubi.69mini.com/api/?key=a0a626df433e41f4b1e433226f11b434&url="
+    },
+    {
+      "name": "自定2",
       "type": 1,
       "url": "http://127.0.0.1:9997/proxy?do=seachdanmu&go=getuserjx&url="
     }
