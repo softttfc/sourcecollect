@@ -86,7 +86,8 @@ jobs:
                 [Mao_Yuna洛雪源]="https://gitee.com/Myn_1/Mao_Yuna.git"  
                 [lx-music-xinghai-source洛雪源]="https://github.com/cdyUuu/lx-music-xinghai-source.git"  
                 [lubin776-tvbox-api-backup接口工具]="https://github.com/lubin776/tvbox-api-backup.git"  
-                
+                 [tao060702-tvbox]="https://gitee.com/tao060702/tvbox.git"  
+                 [hebijunge-tvbox-config探活汇集工具]="https://github.com/hebijunge/tvbox-config.git" 
 
                 
                [TB18]="https://github.com/LIUJEI/TB.git" 
