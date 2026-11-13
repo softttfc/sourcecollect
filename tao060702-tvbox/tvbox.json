@@ -1,0 +1,50 @@
+{
+  "spider": "",
+  "sites": [
+    {
+      "key": "Kishuto",
+      "name": "Kishuto 聚合",
+      "type": 3,
+      "api": "https://gitee.com/tao060702/tvbox/raw/master/tv/20261111.231907/Kishuto.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    },
+    {
+      "key": "xifan",
+      "name": "稀饭聚合",
+      "type": 3,
+      "api": "https://gitee.com/tao060702/tvbox/raw/master/tv/20261111.231907/xifan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    }
+  ],
+  "parses": [],
+  "flags": [
+    "youku",
+    "qq",
+    "iqiyi",
+    "qiyi",
+    "letv",
+    "sohu",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "wasu",
+    "bilibili"
+  ],
+  "lives": [
+    {
+      "name": "默认直播",
+      "type": 0,
+      "url": "https://gitee.com/tao060702/tvbox/raw/master/live.m3u",
+      "playerType": 0,
+      "ua": "",
+      "epg": "",
+      "logo": ""
+    }
+  ]
+}
