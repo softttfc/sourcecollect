@@ -1,0 +1,14 @@
+{
+ "entries": [
+  {
+   "name": "聚合·分类直播",
+   "url_raw": "https://gh.halonice.com/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/lives/live.txt",
+   "url": "https://gh.halonice.com/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/lives/live.txt",
+   "epg": "https://epg.pw/api/v1/getEpgInfo?token=tvbox",
+   "ua": "TVBox",
+   "status": "dead",
+   "reason": "head_probe_failed",
+   "channels": 0
+  }
+ ]
+}

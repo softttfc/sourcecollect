@@ -1,0 +1,19 @@
+{
+ "generated_at": "2026-10-14T22:40:10+00:00",
+ "dry_run": true,
+ "min_age_days": 30,
+ "candidate_count": 0,
+ "reclaimable_bytes": 0,
+ "refs_total": 5772,
+ "tracked_total": 16157,
+ "casefold_protected": [
+  "deps/feishu-sync/JS/3c16.js",
+  "deps/jar/GM.jar",
+  "deps/js/anfuns.js",
+  "deps/wex/newwex/iptv.m3u"
+ ],
+ "runtime_protected": [],
+ "by_dir": {},
+ "paths": [],
+ "note": "从 HEAD 移除不等于物理删除；下一轮 fetch_merge 只重下manifest 里仍在登记的。--execute 才真 git rm。"
+}

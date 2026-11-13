@@ -1,0 +1,425 @@
+name: daily-fetch
+# 每日一次：北京时间 03:00（UTC 19:00），支持手动触发
+# P2：refresh（本工作流，拉取+合并+发布）与 validate（validate.yml，独立验活）拆分——azhansy/ds-tvbox 模式
+
+on:
+  schedule:
+    - cron: "0 19 * * *"
+  workflow_dispatch:
+  # push触发：核心代码/测试/工作流变更时自动验证CI（验证manifest清理+live修复）
+  push:
+    branches: [main]
+    paths: [.github/workflows/daily.yml, scripts/fetch_merge.py, scripts/config_validate.py, scripts/adult_leak_check.py, scripts/windows_path_check.py, tests/**, deps/json/manifest.json]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: daily-fetch
+  cancel-in-progress: false
+
+jobs:
+  windows-path-check:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Windows 兼容性检查
+        run: python scripts/windows_path_check.py
+
+  fetch-merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150  # 2026-09-25: 90min 曾被 fetch_merge 实测超时掐死（改为实测预算内收敛，此值仅兜底）
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 完整历史：下游 `git pull --rebase` 需要真实 merge-base；
+          # 浅克隆(depth=1)下 rebase 会把同名文件误判为 add/add 冲突
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # P0-1 CI 构建加速：缓存 deps/ lib/ js/（jar/js 下载是 CI 主要网络耗时）。
+      # key 锁定 manifest 哈希——上游依赖清单变了才 cache-miss 重下；未变直接命中。
+      # restore-keys 允许部分命中（同 runner 前缀），命中率优先。
+      - name: 缓存 deps/lib/js（P0-1：manifest 变了才重下）
+        uses: actions/cache@v4
+        with:
+          path: |
+            deps/
+            lib/
+            js/
+          key: ${{ runner.os }}-deps-${{ hashFiles('deps/json/manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+
+      # 缓存把 deps/manifest.json 一起盖回了缓存里那份远古版本。key 由
+      # hashFiles('deps/json/manifest.json') 派生，而那个文件只有 2 字节（"{}"；活账本
+      # 其实是 deps/manifest.json 的 1.2MB），key 恒定 ⇒ 这份 384MB 缓存自 2026-09-28
+      # 起从未更新（2026-10-12 run#177 实证：restore 后条目从 2562 涨回 2998，
+      # local 回退成 IPTV.m3u/iptv.m3u 原名，updated_at 全部钉在 09-28 10:11:58）。
+      # 账本是"该落库什么"的唯一事实源，每轮被回滚意味着派生逻辑怎么修都白修——
+      # 10-04/10-06/10-09 三次大小写迁移就是这样消失的。这里让账本以 git 检出为准，
+      # 缓存只保留 deps 内容文件；两者不匹配时由下游「依赖完整性闸门」按 manifest
+      # 里的 URL 补下，属一次性代价。
+      #
+      # key 本身不改：改成 hashFiles('deps/manifest.json') 会让每轮都 cache-miss 并
+      # 重新 save 384MB，几轮就把缓存配额吃光。
+      - name: 账本以 git 检出为准（缓存只该提供 deps 内容文件）
+        run: git checkout HEAD -- deps/manifest.json
+
+      - name: 安装 pypinyin（频道拼音排序依赖，缺失时退回字典序）
+        run: pip install pypinyin
+
+      - name: 单元测试（config_decode / 吸收点 P1-P2 行为回归）
+        run: python -m unittest discover -s tests -v
+
+      - name: 镜像复测+三路发现新镜像（上游实证 / GitHub 搜索 / 搜索引擎清单），动态重排 GH_MIRRORS
+        # P1-1 网络错误自动重试 1 次（max_attempts=2）；语法错误已被上方单元测试挡住，此处只兜网络抖动
+        continue-on-error: true
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 2
+          command: python scripts/mirror_probe.py
+
+      - name: 全网上游发现（五路：代码搜索 / 仓库搜索 / 种子递归 / 血统反查 / 搜索引擎文章页）
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          # Gitee 路 2026-09-29 起默认关闭（净产出 0.54%，性价比为负）；
+          # 要重开就在上面 run 加 --gitee，此 token 届时才生效
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: python scripts/discover_upstreams.py --pages 2 || true   # 全展开＋增量索引：不再抽样，未变动的仓/文件免列免探
+
+      - name: 候选独有度评估，并按 unique 收编 canary
+        # 必须在 discover 之后：canary 收编标准看「独有站点数」，不是 discover 的 score。
+        # 实测证明 score 与新内容价值无关（score30 的候选带来 17 个新站，score90 只有 3 个），
+        # 按 score 收编会漏掉最有价值的候选。此步会用 unique 版覆盖 discover 写的 score 版。
+        continue-on-error: true
+        run: python scripts/evaluate_candidates.py --min-unique 3 --write-canary || true
+
+      - name: 拉取上游并合并生成配置（含快照/黑白名单/分类测速/checks/空产物守卫）
+        id: fetch_merge
+        env:
+          # P0-1 CI 加速：上游拉取并发 24→40（同域名信号量已在 fetch_merge 内兜底，不被 WAF 封）
+          CONCURRENCY: "40"
+          # canary 上游已按「独有站点数 unique>=3」自动收编（不是按 score），
+          # 且失效由自动黑名单兜底，故开启并入。要停用改回 "0" 即可。
+          EXTRA_UPSTREAMS: "1"
+          # deps 落库路径已修复（dep_local_path 剥离镜像前缀），全量迁移已完成，恢复增量模式
+          FORCE_FULL_RUN: "0"
+        # P1-1 网络错误自动重试 1 次（max_attempts=2）；守卫 rc=2 时 exit 0 不重试，语法错误已被单元测试挡住
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 140
+          max_attempts: 2
+          command: |
+            python scripts/fetch_merge.py
+            rc=$?
+            echo "rc=$rc" >> "$GITHUB_OUTPUT"
+            if [ "$rc" -eq 2 ]; then
+              echo "guard=true" >> "$GITHUB_OUTPUT"
+              echo "::warning::空产物守卫触发：本轮聚合产物异常，跳过提交与 Release，保留上次缓存"
+              exit 0
+            fi
+            exit $rc
+
+      - name: 探针判定来自国内（所有者 2026-09-30 拍板：口径=国内经镜像真实可达）
+        # CI runner 在国外：国外直连 raw 全通、国内被掐的站判不出、国内 CDN 对外国 IP 的
+        # 拒绝/高延迟会误杀——"可用性"结论必须由国内出口生产（本机 run_all --from 5 跑
+        # 5a/5b/5c/5e/5f/5g/5h 后提交 probe/*.json），与 csp_probe（真机生产、CI 只消费）同模式。
+        # CI 这里不再重跑 7 路探针；store --ingest-probes 吃仓内已提交的国内判定，
+        # 超 7 天由 PROBE_STALE_DAYS 时效降权自动兜底（诚实降级，不拿国外乐观数据冒充）。
+        # 5f（py 静态）与 5g（端点应答）虽与出口环境关系小，仍保持单一生产方：若在 CI 执行，CI 的
+        # deps/ 树当轮拉取失败时会把已有好判定重写成全 P0（drpy 沙箱缺失覆写事故的同类），
+        # 5g 则会把有结论的端点刷成一片 E?——所以两条都只消费不执行。
+        run: echo "domestic probes only — CI skips region-sensitive verdicts"
+
+      - name: 同库镜像去重（内容比对，与出口环境无关，保留在 CI）
+        continue-on-error: true
+        run: |
+          python scripts/dedup_mirrors.py || true
+
+      - name: 依赖审计（只报告，不删除）
+        continue-on-error: true
+        run: python scripts/dep_audit.py || true
+
+      - name: 依赖完整性闸门（缺失重下 + 账本回写 + 修复报告）
+        # 环④ P0：fetch_merge 产出的 tvbox.json 引用的 deps/ 文件若磁盘缺失，
+        # 按 manifest 账本反推 URL 重下补齐（幂等：已落盘且 md5 匹配则跳过）；
+        # 补不下的写入 state/dep_repair_report.json 供下游降级参考。
+        # 下轮合并会重新本地化无账本的缺失，故这里只补有账本的部分，不阻断主链。
+        continue-on-error: true
+        run: python scripts/dep_repair.py --workers 8 || true
+
+      - name: 依赖账本瘦身（manifest 孤儿记录剪除）
+        # 环④ P1：dep_repair 之后，ref_count=0 且本地文件缺失的记录已无任何消费方
+        # （死域退避另有 state/dep_fail_backoff.json），不清会无界膨胀。
+        # 2026-10-03 修：`--min-idle-days 0` — 原来默认 3 天的门槛拦住了所有剪除，
+        # 因为 fetch_merge 每次都会重写 rec 的 `updated_at`（`manifest[key] = {...,
+        # "updated_at": now, ...}`），idle_days 恒 <3；账本累积到 9000+ 剪不动。
+        # 剪的判据 = ref_count=0 ∧ 磁盘文件已不存在 ∧ updated_at[:10] 能解析；
+        # `--min-idle-days 0` 只撤掉时间门槛，"文件不存在"这条硬 AND 才是真判据。
+        # 时序安全：dep_repair 完整性闸门（step 141）已经跑完，manifest 是当前
+        # 状态；此时"文件不在磁盘上"就是真死、不是 fetch_merge 中间的瞬态。
+        continue-on-error: true
+        run: python scripts/dep_gc.py --prune-manifest --apply --min-idle-days 0 || true
+
+      - name: 入库（接口 / 检测历史 / 依赖关系 / 直播源级验活）
+        # DB 不入库（二进制会让仓库膨胀），健康快照以 exports/health_index.json 文本留档：
+        # 每天 diff 能直接看出哪些源从 healthy 掉成 dead，比二进制友好。
+        # --probe-lives：源级连通实测（P1-4 修正判级：连接失败/超时 → unknown 不判死，
+        #   仅 404/410 确定性路径失效 → dead；CI 海外网络对国内线路天然超时，
+        #   unknown 化后由 live_dead_prune 只剔「明确 404」的源，不误杀环境性失败）。
+        continue-on-error: true
+        run: |
+          python scripts/store.py --ingest-sites tvbox.json --ingest-lives tvbox.json \
+            --ingest-probes probe/sites_probe.json probe/spider_probe.json probe/js_probe.json \
+                            probe/csp_probe.json probe/drpy_probe.json probe/py_probe.json \
+                            probe/endpoint_probe.json \
+            --ingest-upstreams status.json --prune --probe-lives --stats || true
+
+      - name: 导出接口清单
+        run: python scripts/export_healthy.py || true
+
+      # 2026-10-05：精简推荐订阅（healthy+degraded，-61% 体积）
+      # 背景：tvbox.json 4331 站里 2132 个从未被验证（unknown）+ 491 实测已死，
+      # 订阅者体感是"大半点不动"；仓库早就有 exports/usable.json 但没进发布链。
+      # 不改 tvbox.json 本体（避免已导入用户下次同步源凭空消失 = 破坏性变更），
+      # 改为并列新增一份，由 README 引导用户自选。
+      - name: 生成精简推荐订阅
+        run: python scripts/gen_recommended.py
+
+      # 2026-10-05：deps 重复副本回收（未引用 + 内容有替身 → 移入 deps/.trash）
+      # dep_audit 连续 8 天报出 ~700MB 未引用却无人处理：dep_gc 的 gc_candidate
+      # 按 mtime 算 age，daily 每日重写 deps 让 age 永远停在 6.0 天，低于阈值。
+      # dry-run 是 CI 的安全姿态——真正 execute 由人工在本地确认后跑。
+      - name: 依赖去重回收候选（dry-run）
+        run: python scripts/dedup_prune.py || true
+
+      # 2026-10-12：state/head_slim_candidates.json 此前唯一的写入者是单元测试——
+      # test_head_slim_deps 有个用例没传 --out，把夹具清单（deps/old_orphan.js、
+      # refs_total=2）写进仓库，再被步骤 27 的 git add -A 提交进 main（该仓库
+      # .gitignore 里那句「daily 一次 git add -A 就会把几百 MB 输出卷进历史」说的
+      # 就是这条通道）。污染已在 #69 修掉，但 CI 并没有正式生产这份清单的步骤，
+      # 于是那份假数据会永远留在 main 上误导读它的人。补这一步把真实清单产出来：
+      # 只写 json、不 git rm，--execute 仍由人工在本地确认后跑。
+      - name: HEAD 瘦身候选（dry-run）
+        continue-on-error: true
+        run: python scripts/head_slim_deps.py || true
+
+      - name: 直播死源剔除（P1-4：只剔 404 确定性死源，回写 tvbox/exports）
+        # 读 DB lives 判级（store --probe-lives 产出），仅 HTTP 404/410 确定性证据才剔；
+        # 连接失败/超时（unknown）一律保留。gh 镜像源剥前缀走镜像链复测，复活回写 healthy。
+        continue-on-error: true
+        run: python scripts/live_dead_prune.py --workers 8 || true
+
+      - name: 导出上游健康状态
+        run: python scripts/export_upstream_health.py || true
+
+      - name: 健康趋势日报（新增 / 掉线 / 恢复）
+        # 快照需随仓库保留，否则每次都是「首次运行」、永远对比不出变化
+        continue-on-error: true
+        run: python scripts/health_report.py || true
+
+      - name: 生成变更日志（P1-7/P0升：diff sites/lives，写 exports/changelog.json+.md）
+        # 脚本现成未接 CI；首次运行只建 state/last_tvbox.json 基线、不出 diff，故 || true 容忍
+        continue-on-error: true
+        run: python scripts/gen_changelog.py || true
+
+      - name: 生成本地接口包（离线自洽 zip，点播/直播/短剧+全部依赖）
+        # 本地包随 Release 发布；成人配置不进本地包（fetch_merge 不再写 .workbuddy 留档，
+        # pack_local 默认找不到留档自动跳过 → Release 附件 zip 不含 adult，通路隔离）
+        continue-on-error: true
+        run: python scripts/pack_local.py || true
+
+      - name: 成人零泄漏门禁（P0-2 一票否决，exit 2 阻断提交）
+        # 规则库从 live_aggregate 常量导出（rules/*.json），实跑扫描 tvbox/vod/live/short/
+        # list/lives/stores/packs/state 等常规产物，命中成人关键词/域名黑名单/源模式即
+        # FAIL。历史已知漏点 173 处（鱼2018/lib / 纯数字台名 / FGBLH/HKL / 1024 / 厂牌词等），
+        # 见 state/adult_leak_report.json。
+        run: python scripts/adult_leak_check.py
+
+      - name: 配置质量代理质检（P0-4 分级阻断：硬错误 exit 1 阻断，软错误只告警）
+        # 去掉原 `|| true`：硬错误（JSON 解析失败 / 依赖硬缺失 ref_fail>5% / adult 泄漏）exit 1 阻断发布；
+        # 软错误（字段缺失 / 名称不规范 / 体积超标）config_validate 本身不 exit 1，仅打印 warning 继续。
+        # adult 泄漏由上方 adult_leak_check.py 独立硬闸（exit 2）兜底；体积分级 _check_file_sizes 由 Agent B 在脚本内实现。
+        run: python scripts/config_validate.py
+
+      - name: 提交并推送（有变更时；守卫触发则仅落守卫日报）
+        if: steps.fetch_merge.outputs.guard != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # adult.json 每日随聚合产出并提交更新（所有者 2026-09-22 指令）；它不进 Release
+          # 附件白名单 / Pages / 导航页，也不在 README 声明——公开通路隔离见 pages.yml 与下方白名单。
+          # snapshot 止血（2026-09-25 P1 收口）：git add 前先轮换——解除旧日跟踪 +
+          # 强制跟踪最新一日（主干树只保留最新快照；历史日归档 Release snapshot-archive）。
+          # raw 落库差异审计（原始输入 vs 发布产物），报告随 state/ 提交（2026-09-27 落库改造）
+          python scripts/raw_audit.py || true
+          python scripts/snapshot_rotate.py || true
+          # P2-3 方案B（取消 list.json）：从 git add / Release 附件 / Pages 白名单三处移除；
+          # fetch_merge.py L4470 注释由 Agent A 负责（本侧不动产出脚本）。公告过渡期 README 已标注。
+          git add tvbox.json tvbox_recommended.json vod.json live.json short.json adult.json status.json checks.json README.md \
+                  raw/ raw-vod/ \
+                  index.html lives/ state/ candidate_upstreams.json deps/ stores/ probe/ radar/ exports/
+          # pack_report.json / drpy-sandbox 仅在对应步骤成功时存在，防缺失阻断提交
+          [ -f packs/pack_report.json ] && git add packs/pack_report.json || true
+          [ -d drpy-sandbox/ ] && git add drpy-sandbox/ || true
+          if git diff --cached --quiet; then
+            echo "本轮无变更，跳过提交"
+          else
+            git commit -m "chore: daily update $(date -u +%Y-%m-%d)"
+            # 2026-09-26 长跑 job 与并行 prune 工作流高频提交 lives/ 同批文件，
+            # rebase 冲突导致发布连续失败（run 36246598641：could not apply ec6bb69）。
+            # 产物发布语义 = 本 job 重算结果为准，冲突取本侧（-X theirs 指正在重放的 daily 提交）。
+            # 2026-09-29 补刀（run#111）：-X theirs 对二进制（state/tvbox.db）无效，rebase 仍停。
+            # 兜底：rebase 失败则放弃重放，改为"最新 main + 本轮产物整树覆盖"（read-tree 含删除，语义完整）。
+            git checkout -- . && git clean -fd
+            OURS=$(git rev-parse HEAD)
+            if ! git pull --rebase -X theirs origin main; then
+              git rebase --abort || true
+              git reset --hard origin/main
+              git read-tree -mu "$OURS"
+              git commit -m "chore: daily update $(date -u +%Y-%m-%d) (binary-conflict fallback)"
+            fi
+            git push
+            # P1-4 版本 tag：每日打 vYYYY-MM-DD-b<run_number>，latest 仍作稳定入口每日覆盖。
+            # run_number 作 build 序号，全局递增唯一；回滚据此 tag（见 rollback.yml）。旧 tag 由 release_cleanup 30 天滚动清理。
+            PUSH_TAG="v$(date -u +%F)-b${GITHUB_RUN_NUMBER}"
+            git tag "$PUSH_TAG" || true
+            git push origin "$PUSH_TAG" || true
+          fi
+
+      - name: 守卫日报（空产物守卫触发时只提交守卫记录，产物保留上次缓存）
+        if: steps.fetch_merge.outputs.guard == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/guard_last.json state/validated.json state/blacklist_auto.txt || true
+          if git diff --cached --quiet; then
+            echo "守卫触发且无状态变更，跳过提交"
+          else
+            git commit -m "chore(guard): 空产物守卫触发，跳过本轮发布（保留上次缓存，下轮重试）"
+            git pull --rebase origin main || true
+            git push || true
+          fi
+
+      - name: 发布到 Releases（latest 标签，Guovin 双通道模式）
+        if: steps.fetch_merge.outputs.guard != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          FILES=""
+          for f in tvbox.json tvbox_recommended.json vod.json live.json short.json status.json checks.json \
+                   stores/duocang.json stores/cms.json stores/app.json stores/pan.json stores/csp.json stores/pan_ck.json \
+                   lives/live.txt lives/live_cctv.txt lives/live_weishi.txt \
+                   lives/live_gangtai.txt lives/live_other.txt \
+                   packs/tvbox-latest.zip; do
+            [ -f "$f" ] && FILES="$FILES $f"
+          done
+          NOTES="自动发布于 $(date -u '+%Y-%m-%d %H:%M UTC')。
+          产物：tvbox.json（完整合并配置）、tvbox_recommended.json（精简推荐版：仅实测可连通源，约 1708 站、体积 -61%，不知道能不能用的未验证源已剔除，订阅者首选）、vod.json（点播）、live.json（直播）、short.json（短剧独立配置）、lives/*（央视/卫视/地方/港台/轮播/直播/其他分类直播）、stores/duocang.json（多仓入口：CMS·代理 + 蜘蛛仓·代理 两条线路，子仓内部依赖引用一律本仓库路径）、stores/pan_ck.json（网盘 CK 获取指引）、checks.json（上游校验状态）。
+          packs/tvbox-latest.zip 为离线自洽本地包（配置+依赖+使用说明，解压后本地导入即用）。2026-09-22 起改固定名每日 --clobber 覆盖，不再按日期累积；历史日期名 zip 已由 release_cleanup 清理。
+          在线导航页（第三条通路，与 raw / Releases 并列）：https://hebijunge.github.io/tvbox-config/
+          固定引用本 Release：https://github.com/hebijunge/tvbox-config/releases/download/latest/tvbox.json"
+          if gh release view latest -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload latest $FILES -R "$GITHUB_REPOSITORY" --clobber
+            gh release edit latest -R "$GITHUB_REPOSITORY" --title "TVBox 配置 latest" --notes "$NOTES"
+          else
+            gh release create latest $FILES -R "$GITHUB_REPOSITORY" \
+              --title "TVBox 配置 latest" --notes "$NOTES"
+          fi
+          # P1-2 卫生修复：白名单外陈旧资产清理（_proxy.json / 历史日期名 zip 等）。
+          # adult.json 不在本白名单（「不声明」通路）；release_cleanup 永不清理名单仅作兜底。
+          python scripts/release_cleanup.py \
+            --keep tvbox.json,tvbox_recommended.json,vod.json,live.json,short.json,status.json,checks.json,tvbox-latest.zip \
+            --retention-days 30 --keep-releases 10 || true
+          # snapshot 止血（2026-09-25 P1 收口）：snapshot-archive 归档库 14 天滚动清理
+          # （历史日快照归档 Release；独立于 latest 白名单，不受 release_cleanup 影响）。
+          python scripts/snapshot_rotate.py --prune-release || true
+          # P2-1 Release 历史：按当日 tag 额外归档一份产物（latest 仍作稳定入口每日 --clobber 覆盖）。
+          # 旧 tag Release 由 release_cleanup --keep-releases 10 滚动保留最近 10 个。
+          ARCHIVE_TAG="v$(date -u +%F)-b${GITHUB_RUN_NUMBER}"
+          if [ -n "$FILES" ] && ! gh release view "$ARCHIVE_TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$ARCHIVE_TAG" $FILES -R "$GITHUB_REPOSITORY" \
+              --title "$ARCHIVE_TAG" --notes "自动归档快照 $ARCHIVE_TAG（latest 为稳定入口，本 tag 用于历史回滚）" || true
+          fi
+
+      - name: CDN 配置预热（P1-3：curl -sI 各 CDN/tvbox.json，消除冷启动）
+        if: steps.fetch_merge.outputs.guard != 'true'
+        run: |
+          RAW="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main"
+          echo "预热各 CDN 的 tvbox.json（HEAD 探活，不下载正文；失败仅告警不阻断）："
+          for url in \
+            "$RAW/tvbox.json" \
+            "https://ghproxy.net/$RAW/tvbox.json" \
+            "https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/tvbox.json" \
+            "https://${GITHUB_REPOSITORY_OWNER}.github.io/tvbox-config/tvbox.json"; do
+            printf '  %-90s -> ' "$url"
+            curl -sI --max-time 15 -o /dev/null -w 'HTTP %{http_code}  %{time_total}s\n' "$url" \
+              || echo "预热失败(忽略)"
+          done
+
+      - name: 失败聚合报告
+        if: always()
+        run: python scripts/ci_failure_aggregator.py || true
+
+      - name: 关键指标下降告警
+        if: steps.fetch_merge.outputs.guard != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python scripts/ci_metrics_alert.py || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/last_run.json state/ci_failures.json || true
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: 更新 CI 指标基线" || true
+            git pull --rebase origin main || true
+            git push || true
+          fi
+
+      - name: 配置可用性抽样监控（P1-5：抽 10% sites 测 L1，并发 64 超时 3 秒）
+        # 产出 state/avail_report.json（可用率/抽样数/失败明细）；ci_metrics_alert 接阈值 <90% 飞书告警。
+        # CI runner 出网可能被 WAF 误拦，故 continue-on-error，不阻断发布。
+        if: steps.fetch_merge.outputs.guard != 'true'
+        continue-on-error: true
+        run: python scripts/avail_monitor.py --sample-ratio 0.10 --concurrency 64 --timeout 3 || true
+
+      - name: 采集性能监控仪表盘（C8：读 checks.json + upstream_latency/failures，输出 HTML）
+        continue-on-error: true
+        run: python scripts/gen_collect_dashboard.py || true
+
+      - name: CI 失败飞书通知（P0-4：失败时推送 webhook，含失败步骤与日志链接）
+        # 现有 feishu_patrol_bridge.py 为巡检回写桥接（需 --inputs，无 webhook 发送能力），
+        # 故此处直接 curl 飞书自定义机器人 webhook；FEISHU_WEBHOOK 用 secret 占位，不写真实 token。
+        if: failure()
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ -z "$FEISHU_WEBHOOK" ]; then
+            echo "::warning::未配置 FEISHU_WEBHOOK secret，跳过飞书失败通知"
+            exit 0
+          fi
+          MSG="🚨 TVBox 配置 CI 失败通知
+          仓库: ${GITHUB_REPOSITORY}
+          分支: ${GITHUB_REF_NAME}   触发: ${GITHUB_ACTOR}
+          状态: ${JOB_STATUS}
+          日志: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          # 多行文本转成 JSON 安全串（去掉 json.dumps 外层引号）
+          MSG_JSON=$(printf '%s' "$MSG" | python3 -c 'import json,sys;print(json.dumps(sys.stdin.read())[1:-1])')
+          curl -s -X POST "$FEISHU_WEBHOOK" -H "Content-Type: application/json" \
+            -d "{\"msg_type\":\"text\",\"content\":{\"text\":\"${MSG_JSON}\"}}" \
+            || echo "::warning::飞书通知推送失败（忽略）"

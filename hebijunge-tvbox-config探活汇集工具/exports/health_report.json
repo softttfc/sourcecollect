@@ -1,0 +1,269 @@
+{
+ "generated_at": "2026-10-14T22:40:13",
+ "is_baseline": false,
+ "vod": {
+  "total": 6929,
+  "summary": {
+   "healthy": 182,
+   "degraded": 1630,
+   "unknown": 4593,
+   "dead": 524
+  },
+  "new": [
+   {
+    "key": "csp_xml_量子资源",
+    "name": "[367ms|直播] 🐝量子资源",
+    "health": "degraded"
+   },
+   {
+    "key": "lezi",
+    "name": "🍀乐子资源",
+    "health": "degraded"
+   },
+   {
+    "key": "Ikun资源",
+    "name": "Ikun资源(切片)",
+    "health": "unknown"
+   },
+   {
+    "key": "kjh998_吃瓜影院",
+    "name": "吃瓜影院",
+    "health": "unknown"
+   },
+   {
+    "key": "kjh998_影视森林",
+    "name": "影视森林",
+    "health": "unknown"
+   },
+   {
+    "key": "hidden",
+    "name": "Hidden",
+    "health": "unknown"
+   },
+   {
+    "key": "type4_site",
+    "name": "Type4",
+    "health": "unknown"
+   },
+   {
+    "key": "d3_儿童",
+    "name": "📚┃儿童┃启蒙",
+    "health": "unknown"
+   }
+  ],
+  "gone": [],
+  "down": [
+   {
+    "key": "即看影视",
+    "name": "🧿即看┃蓝光",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "影院蓝光",
+    "name": "🧿影院┃蓝光",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "иӮҘзҢ«",
+    "name": "рҹҗјв”ғиӮҘзҢ«в”ғAPP",
+    "from": "healthy",
+    "to": "dead"
+   },
+   {
+    "key": "焦炭影视",
+    "name": "💣焦炭影视",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "csp_xb_test ",
+    "name": " 💠测试(R)",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "csp_XBPQ_LIBVIO",
+    "name": "LIB",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "五一影视",
+    "name": "五一影视",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "91动漫",
+    "name": "✨九一┃追番",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "动漫之家",
+    "name": "✨动漫┃之家",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "csp_XBPQ_qiyou",
+    "name": "奇优",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "csp_XBPQ_饭团",
+    "name": "饭团",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "bkyy",
+    "name": "🌠布卡┃影视",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "石榴影院",
+    "name": "🌰石榴┃影院",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "速映影视",
+    "name": "🍋速映┃追剧",
+    "from": "degraded",
+    "to": "dead"
+   },
+   {
+    "key": "稀饭影视",
+    "name": "🍚稀饭┃影视",
+    "from": "degraded",
+    "to": "dead"
+   }
+  ],
+  "recovered": [
+   {
+    "key": "csp_XYQHikerAL_阿里苏苏",
+    "name": "苏苏🛰️臻享4K",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "来看影视",
+    "name": "[616ms|软件] 来看｜影视",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_xpath_zx",
+    "name": " 🌾在线电影(XP)",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_biubiu_voflix",
+    "name": "💢vo fl ix〔XB〕",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "小小影视i",
+    "name": "💥小小┃影视",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_短剧网香",
+    "name": "🔥短剧网[影视]_HK",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "drpy_js_AGE动漫",
+    "name": "DRPY┃AGE动漫",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_xp_jLgyy",
+    "name": "💎蓝光影院",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_xpath_yinfans",
+    "name": "💥音范丝4K",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_XYQHiker_冷曦影视",
+    "name": "❄冷曦影视",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_XYQHiker_氢视频",
+    "name": "🌑氢视频",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_XBiubiu_金眼影视",
+    "name": "🌟金眼影视",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_XBiubiu_TVB云播",
+    "name": "🌤TVB云播",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "云播看看",
+    "name": "🌨云播看看",
+    "from": "dead",
+    "to": "degraded"
+   },
+   {
+    "key": "csp_XBiubiu_Nike影视",
+    "name": "🌹Nike影视",
+    "from": "dead",
+    "to": "degraded"
+   }
+  ],
+  "counts": {
+   "new": 8,
+   "gone": 0,
+   "down": 128,
+   "recovered": 26
+  }
+ },
+ "live": {
+  "total": 1072,
+  "summary": {
+   "degraded": 497,
+   "healthy": 216,
+   "unknown": 331,
+   "dead": 28
+  },
+  "counts": {
+   "new": 1,
+   "gone": 0,
+   "down": 0,
+   "recovered": 0
+  },
+  "new": [
+   {
+    "key": "https://tv.tmxk.kdns.fr/yplrnuc7",
+    "name": "Gather「果」",
+    "health": "degraded"
+   }
+  ],
+  "down": []
+ }
+}

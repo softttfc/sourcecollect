@@ -22,6 +22,12 @@
       "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/全剧得.py"
     },
     {
+      "key": "影探聚合",
+      "name": "影探聚合.py",
+      "type": 3,
+      "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/影探聚合.py"
+    },
+    {
       "key": "剧OK",
       "name": "剧OK.py",
       "type": 3,
@@ -548,6 +554,12 @@
       "name": "黄果漫剧.py｜🔞",
       "type": 3,
       "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/黄果漫剧.py"
+    },
+    {
+      "key": "huangguo",
+      "name": "huangguo.py｜🔞",
+      "type": 3,
+      "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/huangguo.py"
     },
     {
       "key": "绿果鉴_瑟瑟",

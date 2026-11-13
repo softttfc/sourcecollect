@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TVBox 影视盒子 · 订阅地址一键获取</title>
+<meta name="description" content="每日自动更新的 TVBox 配置源：全量合并 / 每日实测能播的精选清单 / 直播分类 / 离线包，国内快线一键复制">
+<style>
+  :root{
+    --bg:#0f1420; --panel:#171e2e; --panel2:#1c2438; --line:#2a3450;
+    --txt:#e8ecf5; --dim:#93a0bb; --acc:#4f8cff; --acc2:#3a6fd8; --ok:#37c283;
+    --warn:#e8b03f; --bad:#e06565; --unk:#5a6684;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--txt);
+       font:16px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+       min-height:100vh;padding-bottom:56px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+  /* 顶部 hero */
+  .hero{padding:26px 0 6px}
+  .hero h1{font-size:22px;font-weight:700}
+  .hero .sub{color:var(--dim);font-size:13px;margin-top:4px;min-height:20px}
+  .seg{display:flex;gap:8px;margin:16px 0 10px}
+  .seg button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--dim);
+              padding:10px 8px;border-radius:12px;cursor:pointer;font-size:14px;text-align:left}
+  .seg button.on{background:var(--panel2);border-color:var(--acc);color:var(--txt)}
+  .seg b{display:block;font-size:15px;color:var(--txt);font-weight:600}
+  .seg s{display:block;text-decoration:none;color:var(--dim);font-size:12px;margin-top:2px}
+  .bigbtn{width:100%;background:linear-gradient(135deg,var(--acc),var(--acc2));border:0;color:#fff;
+          font-size:18px;font-weight:700;padding:16px;border-radius:14px;cursor:pointer;
+          box-shadow:0 6px 18px rgba(79,140,255,.25)}
+  .bigbtn:active{transform:translateY(1px);opacity:.9}
+  .where{color:var(--dim);font-size:12px;margin-top:8px;text-align:center}
+  .where b{color:var(--acc);font-weight:500}
+  .steps{color:var(--dim);font-size:13px;margin-top:12px;background:var(--panel);
+         border:1px dashed var(--line);border-radius:12px;padding:10px 14px}
+
+  /* 通用卡片 */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+        padding:14px 16px;margin:14px 0}
+  .card>h3{font-size:15px;margin-bottom:2px}
+  .card .desc{color:var(--dim);font-size:13px;margin-bottom:8px}
+  .badge{display:inline-block;font-size:11px;color:#fff;background:var(--ok);border-radius:4px;
+         padding:1px 7px;margin-left:6px;vertical-align:2px;font-weight:400}
+  .row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+  .row:first-of-type{border-top:0}
+  .row .nm{flex:1;min-width:0}
+  .row .nm b{font-size:14px;font-weight:600;display:block}
+  .row .nm s{display:block;text-decoration:none;color:var(--dim);font-size:12px}
+  .btn{background:var(--acc);border:0;color:#fff;border-radius:8px;padding:7px 14px;
+       font-size:13px;cursor:pointer;white-space:nowrap}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--dim)}
+  .btn:active{opacity:.75}
+  .alts{display:none;padding:4px 0 2px 0;margin-left:2px}
+  .alts.on{display:block}
+  .alt{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);padding:4px 0}
+  .alt .tag{width:74px;flex-shrink:0}
+  .alt .btn{padding:4px 10px;font-size:12px}
+  .caret{display:inline-block;transition:transform .15s;font-size:10px}
+  .caret.on{transform:rotate(90deg)}
+
+  /* 健康度 */
+  .hline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .hline .num{font-size:26px;font-weight:700;color:var(--ok)}
+  .hline .of{color:var(--dim);font-size:13px}
+  .bar{height:10px;border-radius:5px;overflow:hidden;display:flex;background:var(--panel2);margin:10px 0 6px}
+  .bar i{display:block;height:100%}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+  .legend s{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;text-decoration:none}
+  .k-ok{background:var(--ok)} .k-warn{background:var(--warn)}
+  .k-unk{background:var(--unk)} .k-bad{background:var(--bad)}
+  .err{color:var(--warn);font-size:13px}
+
+  details.more{margin:14px 0}
+  details.more summary{color:var(--dim);font-size:13px;cursor:pointer;padding:8px 0}
+  details.more .card{margin:8px 0 0}
+  footer.wrap{color:var(--dim);font-size:12px;margin-top:22px}
+  footer.wrap a{color:var(--acc);text-decoration:none}
+
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--ok);color:#062715;
+         padding:10px 20px;border-radius:22px;font-size:14px;font-weight:600;opacity:0;transition:.25s;
+         pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="wrap hero">
+  <h1>TVBox 影视盒子 · 订阅源</h1>
+  <p class="sub" id="genat">每日自动更新 · 国内实测口径（经镜像真实可达）</p>
+
+  <div class="seg" id="seg">
+    <button data-k="best" class="on"><b>推荐订阅</b><s>只留实测能连通的源，日常首选</s></button>
+    <button data-k="full"><b>全家桶</b><s>含全部未验证源，追求全量时用</s></button>
+    <button data-k="health"><b>能播精选</b><s>只留实测能播的，最严口径仅 167 站</s></button>
+  </div>
+  <button class="bigbtn" id="maincopy">一键复制订阅地址（国内快线）</button>
+  <p class="where">当前快线：<b id="mainmirror">gh.halonice.com</b>（每日全网测速自动择优）</p>
+  <p class="steps">怎么用：打开 TVBox 应用 → 设置 / 配置输入 → 粘贴地址 → 确定。其他线路在下方每个卡片里可展开手动选择。</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h3>订阅配置</h3>
+    <p class="desc">点「复制」拿到地址即可；「更多线路」内有国内镜像 / Pages / raw 等备选，一条不通换下一条。</p>
+    <div id="subrows"></div>
+  </div>
+
+  <div class="card">
+    <h3>直播频道分类<span class="badge">m3u/txt 可直接订阅</span></h3>
+    <p class="desc">聚合精选：单个接口、全部分类都在文件内分组。</p>
+    <div id="liverows"></div>
+  </div>
+
+  <div class="card">
+    <h3>今日健康度</h3>
+    <div class="hline"><span class="num" id="hn-ok">–</span><span class="of" id="hn-of">今天实测能播</span></div>
+    <div id="hbars"></div>
+    <p class="desc" style="margin:8px 0 0">口径：判定由国内出口每日实测产出（raw 类经镜像前缀可达；csp 真机五关；drpy 本地沙箱），国外直连结果不作为依据。</p>
+  </div>
+
+  <div class="card">
+    <h3>离线包<span class="badge">弱网 / 断网可用</span></h3>
+    <p class="desc">配置 + 全部依赖打成自洽 zip，解压后本地导入，不依赖任何在线域名。</p>
+    <div id="dlrows"></div>
+  </div>
+
+  <details class="more">
+    <summary>网盘 Cookie 获取指引 / 更多说明</summary>
+    <div class="card">
+      <p class="desc">部分网盘源需自行配置 Cookie，获取方法见
+        <a href="stores/pan_ck.json" target="_blank" rel="noopener">stores/pan_ck.json</a>。</p>
+    </div>
+  </details>
+</div>
+
+<footer class="wrap">
+  数据来源：仓库每日 CI 产物 · 页面纯静态无后端 · GitHub：<a href="https://github.com/hebijunge/tvbox-config" target="_blank" rel="noopener">hebijunge/tvbox-config</a>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var REPO="hebijunge/tvbox-config";
+  var RAWBASE="https://raw.githubusercontent.com/"+REPO+"/main/";
+  var JSD="https://cdn.jsdelivr.net/gh/"+REPO+"@main/";
+  var REL="https://github.com/"+REPO+"/releases/download/latest/";
+  var BASE=location.origin+location.pathname.replace(/[^/]*$/,"");
+  var MIRROR_FALLBACK="https://gh.halonice.com/";
+  var mirrorPrefix=MIRROR_FALLBACK;
+
+  var SUBS=[
+    {path:"tvbox_recommended.json", name:"推荐订阅（首选）",        desc:"只含实测能连通的源，1708 站、体积小 61%，日常用这个", release:true, hot:true},
+    {path:"tvbox.json",           name:"全家桶（完整合并配置）", desc:"含全部未验证源，4331 站，追求全量时用", release:true},
+    {path:"exports/healthy.json", name:"能播精选",               desc:"只含实测能播的源，仅 167 站，最严口径"},
+    {path:"vod.json",             name:"纯点播",                 desc:"只要点播（含短剧）", release:true},
+    {path:"live.json",            name:"纯直播接口",             desc:"只要直播订阅", release:true},
+    {path:"short.json",           name:"短剧",                   desc:"短剧独立订阅", release:true}
+  ];
+  var LIVES=[
+    {f:"live.txt",n:"分类合并（全量）"},{f:"live_cctv.txt",n:"央视"},{f:"live_weishi.txt",n:"卫视"},
+    {f:"live_gangtai.txt",n:"港台"},{f:"live_other.txt",n:"其他"}
+  ];
+  var MAIN={best:"tvbox_recommended.json", full:"tvbox.json", health:"exports/healthy.json"};
+  var mainKey="best";
+
+  function $(id){return document.getElementById(id)}
+  function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");
+    setTimeout(function(){t.classList.remove("show")},1800)}
+  function copy(text,label){
+    function ok(){toast("已复制"+(label?"（"+label+"）":"")+"，去 TVBox 粘贴即可")}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok,fallback)
+    }else{fallback()}
+    function fallback(){
+      var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy");ok()}catch(e){toast("复制失败，请长按手动复制")}
+      document.body.removeChild(ta);
+    }
+  }
+  function pagesUrl(p){return /^https?:/.test(location.protocol)?BASE+p:null}
+  function mirrorUrl(p){return mirrorPrefix+RAWBASE+p}
+
+  /* 国内快线前缀与 CI 测速同源：state/mirror_ranking.json 当日榜首，读不到用兜底 */
+  fetch("state/mirror_ranking.json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
+    var rounds=d&&d.rounds||[];
+    var top=rounds.length?rounds[rounds.length-1]:null;
+    var p=(top&&(top.first||(top.ranking&&top.ranking[0]&&top.ranking[0].prefix)))||"";
+    if(p){mirrorPrefix=p.replace(/\/+$/,"")+"/";
+      $("mainmirror").textContent=mirrorPrefix.replace(/^https:\/\//,"").replace(/\/$/,"")}
+  }).catch(function(){});
+
+  function row(name,desc,mainCopyPath,opts){
+    opts=opts||{};
+    var r=document.createElement("div");r.className="row";
+    var nm=document.createElement("div");nm.className="nm";
+    nm.innerHTML="<b></b><s></s>";
+    nm.querySelector("b").textContent=name;
+    if(opts.badge){var bd=document.createElement("span");bd.className="badge";bd.textContent=opts.badge;
+      nm.querySelector("b").appendChild(bd)}
+    nm.querySelector("s").textContent=desc||"";
+    r.appendChild(nm);
+
+    var alts=[];
+    if(mainCopyPath){
+      alts.push(["Pages 同域",pagesUrl(mainCopyPath)]);
+      alts.push(["jsDelivr",JSD+mainCopyPath]);
+      alts.push(["GitHub raw",RAWBASE+mainCopyPath]);
+      if(opts.release)alts.push(["Release",REL+mainCopyPath.split("/").pop()]);
+      var b=document.createElement("button");b.className="btn";b.textContent="复制地址";
+      b.onclick=function(){copy(mirrorUrl(mainCopyPath),"国内快线")};
+      r.appendChild(b);
+      if(alts.length){
+        var tg=document.createElement("button");tg.className="btn ghost";
+        tg.innerHTML='<span class="caret">▶</span> 线路';
+        var box=document.createElement("div");box.className="alts";box.style.flexBasis="100%";
+        alts.forEach(function(a){
+          if(!a[1])return;
+          var one=document.createElement("div");one.className="alt";
+          var t=document.createElement("span");t.className="tag";t.textContent=a[0];one.appendChild(t);
+          var cb=document.createElement("button");cb.className="btn ghost";cb.textContent="复制";
+          cb.onclick=function(){copy(a[1],a[0])};one.appendChild(cb);
+          var op=document.createElement("a");op.href=a[1];op.target="_blank";op.rel="noopener";
+          op.textContent="打开";op.style.color="var(--acc)";op.style.fontSize="12px";one.appendChild(op);
+          box.appendChild(one);
+        });
+        tg.onclick=function(){box.classList.toggle("on");tg.querySelector(".caret").classList.toggle("on")};
+        r.appendChild(tg);
+        var wrap=document.createElement("div");wrap.style.flexBasis="100%";wrap.appendChild(box);
+        var flex=document.createElement("div");
+        flex.appendChild(r);flex.appendChild(wrap);
+        return flex;
+      }
+    }
+    return r;
+  }
+
+  /* 订阅区 */
+  (function(){
+    var w=$("subrows");
+    SUBS.forEach(function(c){
+      w.appendChild(row(c.name,c.desc,c.path,{badge:c.hot?"推荐":"",release:c.release}));
+    });
+  })();
+
+  /* 直播区 */
+  (function(){
+    var w=$("liverows");
+    LIVES.forEach(function(lv){
+      w.appendChild(row(lv.n,"lives/"+lv.f,"lives/"+lv.f,{}));
+    });
+  })();
+
+  /* 离线包区 */
+  (function(){
+    var w=$("dlrows");
+    var zip="packs/tvbox-latest.zip";
+    var r=document.createElement("div");r.className="row";
+    var nm=document.createElement("div");nm.className="nm";
+    nm.innerHTML="<b>tvbox-latest.zip</b><s>每日覆盖更新；生成时间见包内「使用说明.txt」</s>";
+    r.appendChild(nm);
+    if(pagesUrl(zip)){var d=document.createElement("a");d.className="btn";d.href=pagesUrl(zip);
+      d.textContent="下载";d.style.textDecoration="none";r.appendChild(d)}
+    var d2=document.createElement("a");d2.className="btn ghost";d2.href=REL+"tvbox-latest.zip";
+    d2.textContent="Release 下载";d2.style.textDecoration="none";r.appendChild(d2);
+    w.appendChild(r);
+  })();
+
+  /* 健康度：中文标签，一屏看懂 */
+  function fmt(n){return (n>=1000)?(n/1000).toFixed(1).replace(/\.0$/,"")+"k":String(n)}
+  fetch("exports/health_report.json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){
+    var v=d.vod||{},s=v.summary||{},total=v.total||0;
+    $("genat").textContent="每日自动更新 · 国内实测口径 · 产物生成于 "+(d.generated_at||"");
+    $("hn-ok").textContent=fmt(s.healthy||0);
+    $("hn-of").textContent="/ "+fmt(total)+" 个点播接口源，今天实测能直接播";
+    var order=[["healthy","能播","k-ok"],["degraded","能用但慢/不全","k-warn"],["unknown","未来得及测","k-unk"],["dead","测过不能播","k-bad"]];
+    var barEl=document.createElement("div");barEl.className="bar";
+    order.forEach(function(o){var n=s[o[0]]||0;if(!n||!total)return;
+      var i=document.createElement("i");i.className=o[2];i.style.width=(n/total*100)+"%";barEl.appendChild(i)});
+    var lg=document.createElement("div");lg.className="legend";
+    order.forEach(function(o){var sp=document.createElement("span");
+      sp.innerHTML='<s class="'+o[2]+'"></s>'+o[1]+" "+fmt(s[o[0]]||0);lg.appendChild(sp)});
+    var holder=$("hbars");holder.appendChild(barEl);holder.appendChild(lg);
+    var cv=(v.counts||{}),ls=(d.live||{}).summary||{},lt=(d.live||{}).total||0;
+    var liveLine=document.createElement("p");liveLine.className="desc";liveLine.style.margin="8px 0 0";
+    liveLine.textContent="直播 "+fmt(lt)+" 条源：能播 "+fmt(ls.healthy||0)+" · 能用但慢 "+fmt(ls.degraded||0)+
+      " · 未测 "+fmt(ls.unknown||0)+" · 不能播 "+fmt(ls.dead||0)+
+      "　较昨日：新增 "+(cv.new||0)+"，掉线 "+(cv.down||0)+"，恢复 "+(cv.recovered||0);
+    holder.appendChild(liveLine);
+  }).catch(function(){
+    $("hbars").innerHTML='<p class="err">健康数据加载失败，不影响订阅——直接用上方复制即可。</p>';
+  });
+
+  /* 顶部大按钮：选型即复制 */
+  Array.prototype.forEach.call($("seg").children,function(b){
+    b.onclick=function(){
+      Array.prototype.forEach.call($("seg").children,function(x){x.classList.remove("on")});
+      b.classList.add("on");mainKey=b.dataset.k;
+    };
+  });
+  $("maincopy").onclick=function(){copy(mirrorUrl(MAIN[mainKey]),"国内快线")};
+})();
+</script>
+</body>
+</html>

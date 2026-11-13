@@ -1,0 +1,570 @@
+# tvbox-config
+
+TVBox 配置每日自动拉取合并仓库，由 GitHub Actions 定时运行。
+
+## 使用方式
+
+### 推荐订阅（首选）
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/tvbox_recommended.json
+```
+
+只收录**实测能连通**的源（1708 站，0.64 MB，比全量版小 61%）。
+全量版里近一半是「从未被验证过」的源（2132 个 unknown）+ 491 个实测已死，
+导入后体感是「大半点不动」；这份把它们全部剔除了。
+
+代理 / CDN 通道同构，把上面地址的 `tvbox_recommended.json` 换掉即可：
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/tvbox_recommended.json
+https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main/tvbox_recommended.json
+https://github.com/hebijunge/tvbox-config/releases/download/latest/tvbox_recommended.json
+```
+
+### 全量订阅（含未验证源）
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/tvbox.json
+```
+
+直连不畅可用代理前缀：
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/tvbox.json
+```
+
+jsDelivr CDN 通道：
+
+```
+https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main/tvbox.json
+```
+
+固定引用最新 Release（双通道发布，永远指向最近一次产物）：
+
+```
+https://github.com/hebijunge/tvbox-config/releases/download/latest/tvbox.json
+```
+
+## 在线导航页（2026-09-22 起，第三条通路）
+
+**https://hebijunge.github.io/tvbox-config/** —— 纯静态导航页（`index.html`），与配置产物同域托管：
+
+- 订阅入口：每份配置 raw / ghproxy / jsDelivr / Pages / Release 多线路并列，一键复制，一线不畅换下一条；
+- 健康度总览：读 `exports/health_report.json` 实时渲染（读数失败自动降级提示）；
+- 直播分类：央视 / 卫视 / 港台 / 其他 txt 直达；
+- 离线包下载：`tvbox-latest.zip` Pages 同域 + Release 双入口。
+
+> 前置（一次性）：仓库 Settings → Pages → Build and deployment → Source 选「GitHub Actions」，之后每日 CI 成功自动部署（`.github/workflows/pages.yml`）。
+
+## 健康清单订阅（2026-09-20 起，推荐）
+
+全量配置里约一半源是死的（站点关停/防盗链失效）。`exports/` 按实测健康度分层导出，**推荐默认订阅 `healthy.json`**（实测能搜能播的源）：
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/exports/healthy.json
+```
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/exports/healthy.json
+```
+
+| 文件 | 内容 |
+|---|---|
+| `exports/all.json` | 全部（带 `_health/_checked_at/_latency_ms/_source` 标注） |
+| `exports/healthy.json` | **仅实测能搜/能播**（体感最好） |
+| `exports/usable.json` | healthy + degraded（能连通即可） |
+| `exports/vod|spider|localjs|pan|short.json` | 按用途分类 |
+| `exports/health_index.json` | key→健康/检测时间/延迟/来源 索引（文本 diff 友好） |
+
+## 点播 / 直播拆分订阅（2026-09-18 起）
+
+除完整合并版 `tvbox.json` 外，仓库同时拆分产出两份独立订阅，按需取用：
+
+**点播配置 `vod.json`**（sites + parses + spider，不含直播）：
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/vod.json
+```
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/vod.json
+```
+
+```
+https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main/vod.json
+```
+
+**直播配置 `live.json`**（lives 数组，汇总 lives/ 目录央视 / 卫视 / 港台 / 其他分类与各上游直播源）：
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/live.json
+```
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/live.json
+```
+
+```
+https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main/live.json
+```
+
+Release 通道同样提供 `vod.json` / `live.json`（`.../releases/download/latest/vod.json`）。
+
+## 短剧独立订阅（2026-09-18 起）
+
+新增分类独立配置，`vod.json` 保持完整不剥离——独立收录是按关键词分类器从合并配置中筛出短剧站点，并新增 6 条 GitHub 试探性专项上游（qist/duanju/duoduo/wogg、gao/duanju、nxppru/duanju、cluntop/duanju，实测全部 404 已记入自动黑名单，分类器从既有 1028 个站点筛得 23 个短剧站点）。
+
+**短剧配置 `short.json`**（独立收录「短剧/微短剧/duanju/七猫/河马/围观/好看/星芽/果果/红果/黄果/黄豆/锦鲤/偷乐/上头」等关键词命中的站点 + 全集 parses）：
+
+```
+https://raw.githubusercontent.com/hebijunge/tvbox-config/main/short.json
+```
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main/short.json
+```
+
+```
+https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main/short.json
+```
+
+需要恢复合并行为时，本地跑：
+
+```bash
+python scripts/fetch_merge.py
+```
+
+**说明**：分类器扫站点 `name` / `key` / `api` / `ext` 字段命中关键词（短剧 21 词），冲突时短剧优先避免误吞。parses 复用全集——TVBox 站点不直接引用 parses（playUrl/jar 才是站点自有播放方式），parses 是全局播放器池，单独配置需自带全集才不至于某些解析器不可用。
+
+## 产物文件
+
+| 文件 | 说明 |
+|------|------|
+| `tvbox.json` | 合并去重后的统一配置（sites / lives / parses） |
+| `vod.json` | 点播拆分订阅：sites + parses + spider（jar/js 依赖路径同 tvbox.json，指向 ./deps/）；**不剥离短剧，保持完整** |
+| `live.json` | 直播拆分订阅：lives 数组，汇总 lives/ 目录央视 / 卫视 / 港台 / 其他分类直播与各上游直播源 |
+| `short.json` | 短剧独立订阅：23 个短剧类站点（按 name/key/api/ext 关键词筛出）+ 全集 parses |
+| `list.json` | ⚠️ 已废弃（P2-3 方案B，过渡期保留文件但不再发布/订阅；与 tvbox.json sites 重复，下游请改用 `status.json` 或 `exports/`） |
+| `status.json` | 状态可视化：总量统计（含 sites_short）、上游健康度、直播分类统计、产物指纹、验活剔除明细、Top 接口 |
+| `checks.json` | 上游校验状态：状态/字节数/sha256 指纹/连续失败计数/最近通过时间 |
+| `lives/live.txt` | 分类合并直播源（txt 格式） |
+| `lives/live_cctv.txt` 等 | 央视 / 卫视 / 港台 / 其他 分类直播（测速优选后输出） |
+| `snapshot/<日期>/` | 每日快照存档：每份上游原始文件原样留存（保留最近 14 天） |
+| `state/` | 上游健康状态 + 黑白名单（auto/manual 三层）+ 域名映射表 |
+| `radar/discovered.json` | 全网自动发现的候选上游（默认五路，含评分与证据） |
+| `radar/candidate_eval.json` | 候选独有度评估（unique = 相对现有库的新增站点数） |
+| `probe/*.json` | 四路实测产物（sites/spider/js/csp/drpy），CI 只读复用 |
+| `drpy-sandbox/` | drpy Node 沙箱（宿主 + 引擎），CI 每日实测本地 JS 源 |
+| `exports/` | 按健康度导出的订阅清单（见上方「健康清单订阅」） |
+| `candidate_upstreams.json` | issue 自动收录的候选池（issue → PR） |
+| `index.html` | 在线导航页（Pages 同域部署，见上方「在线导航页」） |
+
+## 运行机制
+
+1. **定时**：北京时间每日 03:00 单轮跑拉取合并（`.github/workflows/daily.yml`，cron `0 19 * * *` UTC；2026-09-22 与实现对齐——旧文档写的 06:00/18:00 双轮已过时），成功后自动部署 GitHub Pages（`pages.yml`）；00:30 独立验活（`validate.yml`），周一 11:00 源雷达扫描（`radar.yml`），均支持手动触发。
+2. **质量门槛（P0）**：每份上游除 HTTP 可达外，还须通过最小字节数（配置 ≥512B、m3u ≥1KB）/ 最小条目数门槛，并记录内容 sha256 指纹——HTTP 200 不等于有货。
+3. **自动停用（P0/P1）**：连续 3 次不达标的上游自动停用（写入 `state/blacklist_auto.txt`），可用后自动恢复；`state/whitelist_manual.txt` 可豁免，`state/blacklist_manual.txt` 可强制拉黑。
+4. **拉取与解析（P2 一上游一适配器）**：上游以 kind 分派解析器（`tvbox`=json 配置 / `m3u`=直播列表），新增源只加一条配置，互不影响。
+5. **合并去重**：sites 按 key、lives/parses 按 name 全局去重，上游清单顺序即优先级，同名先到先得、不覆盖已有源。
+6. **链接代理**：配置内的 GitHub 原链统一加 `ghproxy.net` 前缀；上游换域名时可在 `state/domain_map.json` 配置映射自动改写（P2 域名替换层）。
+7. **测速验活**：type 0/1 直连站点并发测活（6 秒超时，失败重试一次），连续失败自动剔除；直播源按央视/卫视/港台/其他分类，逐 URL 测速排序，每频道保留前 3 条。
+8. **快照存档（P1）**：每次运行把各上游原始文件存入 `snapshot/<日期>/`（带时间戳文件名），合并产物一并留存，可回滚与失效溯源。
+9. **三通道发布（P2）**：产物同时提交 main 分支、Releases（`latest` 标签固定指向最新）与 GitHub Pages 导航页（`https://hebijunge.github.io/tvbox-config/`，2026-09-22 起，白名单组目录）；README 由 `checks.json` 自动回写各上游可用性状态（🟢🟡🔴）。Release 白名单外陈旧资产每日由 `scripts/release_cleanup.py` 自动清理。
+10. **社区收录（P2）**：提 issue 按模板推荐上游 → 机器人自动验活 → 可用者自动开 PR 登记 `candidate_upstreams.json`，人工确认后收编。
+11. **原始源落库 + 变化检测（2026-09-27）**：上游原始文件先入库（直播/配置 → `raw/` 字节级镜像 + history 归档；点播依赖 → `raw-vod/` sha256 账本），每日哈希比对——有变化才重跑聚合，全部无变化跳过聚合沿用既有产物（`state/raw_run.json` 记台账）；**上游删除/404 绝不跟随删除本地最后可用版**，清单标 `deleted_upstream` 继续供聚合、也不会被自动停用打死。详见 `docs/RAW_STORE.md`，差异审计跑 `python3 scripts/raw_audit.py`。
+
+## 上游清单
+
+| 分组 | 来源 |
+|------|------|
+| 聚合 CMS | ccAzy/juhe-tvapi（107 个采集源） |
+| qist/tvbox | jsm / js / dianshi / fty / XYQ / 0821 / 0825 / 0826 / 0827 / 367 / 9918 / 99188 |
+| gaotianliuyun/gao | js / XYQ / 0821 / 0825 / 0826 / 0827 |
+| cluntop/tvbox | jsm / box / fun / aa / bb / wv / yt / test |
+| nxppru/tvbox | jsm / js / dianshi / fty / XYQ / 0821 / 0825 / 0826 / 0827 |
+| 独立接口 | 俊哥 top98（home.jundie.top:81/top98.json） |
+| 直播源（新增） | Guovin/iptv-api gd 分支 + Releases 双通道（分类测速后分组输出） |
+
+## 上游可用性（自动回写）
+
+<!-- availability:start -->
+| 上游 | 状态 | 字节数 | 指纹 | 连续失败 | 最近通过 |
+|------|------|--------|------|----------|----------|
+| feishu-sync | 🟢 可用 | 1294552 | `9171aa70e4c2` | 0 | 2026-11-13 06:25:05 |
+| juhe-tvapi | 🟢 可用 | 47345 | `0faa16e2daec` | 0 | 2026-11-13 06:25:05 |
+| qist/jsm | 🟢 可用 | 47732 | `e40412c2e6a4` | 0 | 2026-11-13 06:25:05 |
+| qist/js | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/dianshi | 🟢 可用 | 47130 | `d091d029a51f` | 0 | 2026-11-13 06:25:05 |
+| qist/fty | 🟢 可用 | 12489 | `684621e62c6d` | 0 | 2026-11-13 06:25:05 |
+| qist/XYQ | 🟢 可用 | 19198 | `701eabdf0716` | 0 | 2026-11-13 06:25:05 |
+| qist/0821 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/0825 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/0826 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/0827 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/367 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| qist/9918 | 🟢 可用 | 14844 | `0a99c448723d` | 0 | 2026-11-13 06:25:05 |
+| qist/99188 | 🟢 可用 | 17359 | `12943dc6aeeb` | 0 | 2026-11-13 06:25:05 |
+| gao/js | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| gao/XYQ | 🟢 可用 | 19203 | `82db008c0fa4` | 0 | 2026-11-13 06:25:05 |
+| gao/0821 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| gao/0825 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| gao/0826 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| gao/0827 | 🟢 可用 | 9973 | `1c2b6b2f9aa0` | 0 | 2026-11-13 06:25:05 |
+| cluntop/jsm | 🟢 可用 | 40359 | `c2fee7b2bbbe` | 0 | 2026-11-13 06:25:05 |
+| cluntop/box | 🟢 可用 | 31412 | `9943fc70eea0` | 0 | 2026-11-13 06:25:05 |
+| cluntop/fun | 🟢 可用 | 39756 | `e0287b65ebc0` | 0 | 2026-11-13 06:25:05 |
+| cluntop/aa | 🟢 可用 | 16215 | `7c28549d4358` | 0 | 2026-11-13 06:25:05 |
+| cluntop/bb | ⚫ 已停用 | - | `-` | 6 | 2026-10-29 05:16:14 |
+| cluntop/wv | 🟢 可用 | 3596 | `2af0b84d590f` | 0 | 2026-11-13 06:25:05 |
+| cluntop/test | 🟢 可用 | 1833 | `179dc2557035` | 0 | 2026-11-13 06:25:05 |
+| nxppru/jsm | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| nxppru/js | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| nxppru/dianshi | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| nxppru/fty | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| nxppru/XYQ | 🟢 可用 | 19198 | `701eabdf0716` | 0 | 2026-11-13 06:25:05 |
+| nxppru/0821 | 🟢 可用 | 23882 | `e6ad00dd38ff` | 0 | 2026-11-13 06:25:05 |
+| nxppru/0825 | 🟢 可用 | 27643 | `2dfa63eb159d` | 0 | 2026-11-13 06:25:05 |
+| nxppru/0826 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| nxppru/0827 | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| top98 | 🟢 可用 | 16543 | `9e3411a57300` | 0 | 2026-11-13 06:25:05 |
+| wex/newwex | 🟢 可用 | 34815 | `69de929d43d5` | 0 | 2026-11-13 06:25:05 |
+| pg/jsm | 🟢 可用 | 34366 | `aca21bfad0bf` | 0 | 2026-11-13 06:25:05 |
+| fatcat/tv | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| liu673cn/m | 🚫 黑名单 | - | `-` | 0 | 2026-09-20 06:58:54 |
+| deepseek/8815wmz | ⚫ 已停用 | - | `-` | 4 | 2026-10-29 05:15:49 |
+| deepseek/gaoops404 | 🟢 可用 | 17628 | `761624cbc30c` | 0 | 2026-11-13 06:25:06 |
+| deepseek/gao777520 | 🟢 可用 | 17628 | `761624cbc30c` | 0 | 2026-11-13 06:25:06 |
+| tushen6/tvbox | 🔴 失效 | 8115 | `224249b4b2d2` | 6 | 2026-11-04 05:55:32 |
+| victor/tvbox | 🟢 可用 | 49250 | `d85e82719cba` | 0 | 2026-11-13 06:25:06 |
+| franksun/cks2026 | 🟢 可用 | 25583 | `bb2127bab31b` | 0 | 2026-11-13 06:25:06 |
+| yingm/dm | 🟢 可用 | 8737 | `4cd6fd0b453b` | 0 | 2026-11-13 06:25:06 |
+| bocai/x4pro | 🟢 可用 | 89970 | `1751479ae8f8` | 0 | 2026-11-13 06:25:06 |
+| bocai/x4 | 🔴 失效 | 84602 | `e10b9c67f6ba` | 2 | 2026-11-12 06:56:11 |
+| bocai/update | 🔴 失效 | 84602 | `94d6b5e7b523` | 6 | 2026-11-04 05:55:32 |
+| xingfu/bbm | 🟢 可用 | 53722 | `8cd2c64de453` | 0 | 2026-11-13 06:25:06 |
+| fantaiying/tv | ⚫ 已停用 | - | `-` | 6 | 2026-10-15 06:11:03 |
+| aowu/kstore | 🟢 可用 | 15242 | `e4949334b07a` | 0 | 2026-11-13 06:25:06 |
+| shaoer/tv | 🔴 失效 | 84602 | `f097775bdd98` | 2 | 2026-11-12 06:56:11 |
+| laozhang/serv00 | 🟢 可用 | 12834 | `d4f3737adace` | 0 | 2026-11-13 06:25:06 |
+| zhouj/box | 🟢 可用 | 6741 | `b33a58fb288e` | 0 | 2026-11-13 06:25:04 |
+| cainisi/tv | 🟢 可用 | 16013 | `727600c8f311` | 0 | 2026-11-13 06:25:04 |
+| xiaxia/qk4k | 🟢 可用 | 21864 | `700913536306` | 0 | 2026-11-13 06:25:06 |
+| xiaokai/kai | 🟢 可用 | 20844 | `6507a05f0e5b` | 0 | 2026-11-13 06:25:06 |
+| dongli/chigua | ⚫ 已停用 | - | `-` | 6 | 2026-10-15 06:11:03 |
+| juwan/xhz | 🟢 可用 | 19728 | `7594130e1ba6` | 0 | 2026-11-13 06:25:04 |
+| hajimi/kstore | 🟢 可用 | 65108 | `74d13964f391` | 0 | 2026-11-13 06:25:04 |
+| zhenliu/cccimg | 🟢 可用 | 33298 | `a6f843784086` | 0 | 2026-11-13 06:25:04 |
+| xiaohuban/hb | ⚫ 已停用 | - | `-` | 6 | 2026-10-15 06:11:03 |
+| tianshen/iy | ⚫ 已停用 | - | `-` | 6 | 2026-10-15 06:11:03 |
+| xingwei/kstore | 🟢 可用 | 35898 | `5781fd38a0a9` | 0 | 2026-11-13 06:25:04 |
+| ysc/wangxiaoer-tvbox | 🟢 可用 | 19893 | `6aa59bf4a979` | 0 | 2026-11-13 06:25:04 |
+| sv/tiantian-qiaoji | 🟢 可用 | 41791 | `501fbca4734f` | 0 | 2026-11-13 06:25:06 |
+| sv/api | 🟢 可用 | 45138 | `818a27dce0e4` | 0 | 2026-11-13 06:25:06 |
+| sv/feimao | 🟢 可用 | 23283 | `f7c9b666cf68` | 0 | 2026-11-13 06:25:06 |
+| sv/wangxiaoer | 🟢 可用 | 27934 | `45c10db6b013` | 0 | 2026-11-13 06:25:06 |
+| sv/xiaobudian | 🟢 可用 | 35955 | `024c480be071` | 0 | 2026-11-13 06:25:06 |
+| sv/xiaomi | 🟢 可用 | 18269 | `d69559a1d7fe` | 0 | 2026-11-13 06:25:07 |
+| sv/xiaosa | 🟢 可用 | 62428 | `6b42af294f86` | 0 | 2026-11-13 06:25:07 |
+| sv/liucn-m | 🟢 可用 | 57874 | `784d1e374385` | 0 | 2026-11-13 06:25:07 |
+| sv/changqing | 🟢 可用 | 24728 | `3a3fbd37936e` | 0 | 2026-11-13 06:25:07 |
+| sv/iqinu | ⚫ 已停用 | - | `-` | 6 | 2026-10-15 06:11:03 |
+| sv/fenxiangzhe | 🟢 可用 | 83634 | `3d06706f4582` | 0 | 2026-11-13 06:25:07 |
+| sv/lege-dj | 🟢 可用 | 40179 | `2c3010461fcb` | 0 | 2026-11-13 06:25:07 |
+| sv/fongmi-z | 🟢 可用 | 18346 | `e2ce3bab3cbf` | 0 | 2026-11-13 06:25:07 |
+| sv/xiaogege | 🟢 可用 | 31504 | `9c9fed4cbcb7` | 0 | 2026-11-13 06:25:04 |
+| sv/tianwei | 🟢 可用 | 51249 | `ca637f0d2781` | 0 | 2026-11-13 06:25:08 |
+| sv/tiantiankaixin | 🟢 可用 | 65316 | `c7915f8f26c0` | 0 | 2026-11-13 06:25:08 |
+| sv/xiangyaqing | 🟢 可用 | 33882 | `df4c4da45d12` | 0 | 2026-11-13 06:25:08 |
+| sv/baipiao | 🟢 可用 | 4633 | `66216c15de73` | 0 | 2026-11-13 06:25:08 |
+| sv/xiquyinyue | 🟢 可用 | 13739 | `8ee9bb2639a4` | 0 | 2026-11-13 06:25:08 |
+| shiguang/svip | 🟢 可用 | 108349 | `8832da306e2e` | 0 | 2026-11-13 06:25:08 |
+| jinying/wdjyys | 🟢 可用 | 69634 | `b71483ed7603` | 0 | 2026-11-13 06:25:05 |
+| cluntop/yt | ⚫ 已停用 | - | `-` | 10 | - |
+| feimao2/catvod | ⚫ 已停用 | - | `-` | 9 | 2026-09-25 10:09:09 |
+| canary/moyu-direct | 🟢 可用 | 37183 | `6a4d17b3b518` | 0 | 2026-11-13 06:25:07 |
+| sv/quanying | 🟢 可用 | 26512 | `a9d87ead11fa` | 0 | 2026-11-13 06:25:08 |
+| guovin-gd-ipv4 | 🟢 可用 | 106329 | `7b6f299f36c3` | 0 | 2026-11-13 06:25:08 |
+| guovin-release | 🟢 可用 | 263085 | `30e78fb068be` | 0 | 2026-11-13 06:25:08 |
+| 3377-iptv | 🟢 可用 | 573470 | `eb2df6dcc59d` | 0 | 2026-11-13 06:25:08 |
+| kshao123-tv | 🟢 可用 | 683518 | `40c23588bdf1` | 0 | 2026-11-13 06:25:08 |
+| bestfan-status | 🟢 可用 | 79811 | `21fdb90c481d` | 0 | 2026-11-13 06:25:08 |
+| bruce0422-iptv | 🟢 可用 | 821431 | `fd35ee92de23` | 0 | 2026-11-13 06:25:08 |
+| juntv-main | 🟢 可用 | 338824 | `f5eb8cfef7f7` | 0 | 2026-11-13 06:25:08 |
+| zhi35-iptv | 🟢 可用 | 93540 | `834561d253db` | 0 | 2026-11-13 06:25:08 |
+| itcoffe-itv | 🟢 可用 | 143242 | `68b91f5e39ce` | 0 | 2026-11-13 06:25:08 |
+| xuy132-tv | 🟢 可用 | 259682 | `85746285a83d` | 0 | 2026-11-13 06:25:08 |
+| svefnz-iptvn | 🟢 可用 | 72105 | `bbccdf6e3352` | 0 | 2026-11-13 06:25:08 |
+| yoursmile66-tvbox | 🟢 可用 | 115633 | `b3a580074abb` | 0 | 2026-11-13 06:25:08 |
+| ibert-fmml | 🟢 可用 | 26772 | `ff2ecd34f25e` | 0 | 2026-11-13 06:25:08 |
+| ibert-ycl | 🟢 可用 | 35330 | `29b8274ab609` | 0 | 2026-11-13 06:25:08 |
+| vbskycn-iptv4 | 🟢 可用 | 95817 | `c8d939780a2c` | 0 | 2026-11-13 06:25:08 |
+| yuechan-iptv | 🟢 可用 | 33963 | `dfd5fc114051` | 0 | 2026-11-13 06:25:08 |
+| burningc4-iptv | 🟢 可用 | 8021 | `6a888a9258bd` | 0 | 2026-11-13 06:25:08 |
+| hujingguang-cntv | 🟢 可用 | 13582 | `1d88cd93276b` | 0 | 2026-11-13 06:25:08 |
+| ccsh-iptv | 🟢 可用 | 1818497 | `45b464c6c8c8` | 0 | 2026-11-13 06:25:08 |
+| kimwang-bbxx365lite | 🟢 可用 | 1100345 | `a43b64e5b1f0` | 0 | 2026-11-13 06:25:08 |
+| iptv0610-xp | ⚫ 已停用 | - | `-` | 5 | 2026-10-22 04:21:00 |
+| fanmingming-index | 🟢 可用 | 28517 | `76cf22fd7d77` | 0 | 2026-11-13 06:25:08 |
+| yang-gather | 🟢 可用 | 26227 | `f945658ede25` | 0 | 2026-11-13 06:25:08 |
+| xisohi-china-iptv | 🟢 可用 | 131955 | `ecf3ffb2d090` | 0 | 2026-11-13 06:25:08 |
+| kilvn-iptv | ⚫ 已停用 | - | `-` | 10 | - |
+| iill-gather | ⚫ 已停用 | - | `-` | 10 | - |
+| zbds-iptv4 | ⚫ 已停用 | - | `-` | 10 | - |
+| zwc456baby-iptv | ⚫ 已停用 | - | `-` | 10 | - |
+| yang-migu | ⚫ 已停用 | - | `-` | 10 | - |
+| romaxa55-cn | 🟢 可用 | 7055 | `d9e071839ac3` | 0 | 2026-11-13 06:25:08 |
+| qist/duanju | ⚫ 已停用 | - | `-` | 10 | - |
+| qist/duoduo | ⚫ 已停用 | - | `-` | 10 | - |
+| qist/wogg | ⚫ 已停用 | - | `-` | 10 | - |
+| gao/duanju | ⚫ 已停用 | - | `-` | 10 | - |
+| nxppru/duanju | ⚫ 已停用 | - | `-` | 10 | - |
+| cluntop/duanju | ⚫ 已停用 | - | `-` | 10 | - |
+<!-- availability:end -->
+
+## 接口实测与排序（2026-09-19 起）
+
+产物里的 `sites` 不再是「上游清单顺序 + 无分组」，而是按**分类 → 搜索可用性 → 实测速度**排列。
+
+**实测分三层**（`scripts/probe_sites.py`）：
+
+| 层级 | 判据 | 含义 |
+|------|------|------|
+| L1 | `?ac=list` 返回 JSON **或 XML** 且含真实 list | 接口有片库 |
+| L2 | 热词 `?wd=` 能命中 | 可搜索 |
+| L3 | `?ac=detail` 取到播放地址且 m3u8 首片可读 | 能出片 |
+| L? | 连接层失败（RST/超时） | 本机网络问题，**不判死** |
+| L0 | 200 但无有效数据 / 明确错误码 | 确认不可用 |
+
+其中 XML 是 TVBox `type 0` 接口格式，只认 JSON 会把它们全部误判为不可用。
+
+`type 3` 的源（占 82%，无法直接用 HTTP 验证）走 `scripts/probe_spiders.py`：从本地下好的 drpy 规则文件里提取 `host`、从 `ext` 配置里提取站点地址，再做连通性探测──这样给「访问速度」这个维度补了约 390 个源的数据。
+
+**排序规则**：`分类分组` → `实测可搜优先` → `实测速度升序` → 无速度数据时按结构完整度（规则文件缺失的死源沉底）。分组写入 `site.group`，取值：`采集站` `直连点播` `蜘蛛源` `本地JS` `网盘` `短剧` `其他`。
+
+**反向增强**：探针结论会回写 `searchable` ── 上游自报可搜但实测搜不出结果的源会被标 0，客户端搜索时跳过它们，直接减少无效请求。
+
+**同库镜像去重**（`scripts/dedup_mirrors.py`）：一级按 key、二级按 api+ext 指纹都抓不到「同一片库换域名」（如 `zuidapi.com` 与 `zuidazy.co`、`sdzyapi.com` 与 `xsd.sdzyapi.com`）。该脚本用 L1 抓到的片名集合算 Jaccard 相似度识别同源，证据不足一律不合并。实测 1222 个站点里剔除 61 个重复。
+
+**全网上游发现**（`scripts/discover_upstreams.py`）：**默认五路**发现（第 5 路 Gitee 已关，`--gitee` 才开） → L0 形态探测（以「能否解析出站点数组」为准，兼容裸数组/嵌套）→ 候选池落 `radar/discovered.json`：
+
+| 路 | 渠道 | 说明 |
+|---|---|---|
+| 1 | GitHub 代码搜索 | 特征串捞「没人 star 但内容对」的仓（需 token，可翻页） |
+| 2 | GitHub 仓库搜索 | topic / 关键词 |
+| 3 | 种子 README 递归 | 能捞到**非 GitHub 公开配置站**（szyyds.cn 等），依赖镜像兜底 |
+| 4 | 血统反查 | 从已收录仓 owner 反查同作者其他仓（产出最高） |
+| 5 | Gitee | **2026-09-29 起默认关闭**（`--gitee` 显式开启）。平台搜索 API 被禁（返回空）、网页被 WAF 405 → 只能曲线：GitHub 搜「引用 gitee.com 的配置」挖仓库全名，再用 Gitee 文件树 API 展开（需 `GITHUB_TOKEN`/`GITEE_TOKEN`）。实测一整轮 16 条候选里仅 4 条是配置、净新增 20 站（0.54%），其中两个候选还是同仓孪生文件，性价比不抵耗时 |
+| 6 | 搜索引擎 + 文章页 | Bing 搜 CSDN/博客园/知乎/**微信公众号公开文章**，从正文提取接口。微信不硬爬：只访问搜索引擎已收录的公开文章页（合规） |
+
+**取数通道与确定性（2026-09-29 修）**：发现阶段曾有两层随机抽样随机性——`set` 顺序随 `PYTHONHASHSEED` 每进程洗牌导致每轮漏掉约 40 条候选、各收集路 `return set(list(repos)[:max_repos])` 截断导致高分候选整仓消失，结论一度被误读为「真实来源在变」。已全部改为确定性抽样（`probe_window()` 字典序 + 按日轮转、`select_repos()` 展开环节单次确定性刀、血统反查 `owners` 改 `sorted()`）。取数改为复用 `fetch_merge` 解析好的镜像链（`GH_MIRRORS` env > 每日实测落盘 > 静态默认，取前 2 位），整轮从 10m40s 降到 4m27s。`--max-repos 15` 已摘掉，改为全展开 + 增量免检。
+
+> 完整的归因、证据与「试过被数据否掉」的排查过程见 [docs/POSTMORTEM.md](docs/POSTMORTEM.md)。
+
+**全量覆盖 + 增量免检**（`state/repo_index.json`，2026-09-29）：既然"都要搞"，就不能靠每天重烧 40 分钟去搞——
+关键数据是**配置内容其实变得很慢**（样本 60 仓里近 24h 有 push 的只有 27%）。于是全展开所有新仓，但用两层免检
+把成本降到只付增量：
+- `pushed_at` 没变的仓**不重新列树**（省掉一半 API 调用）；
+- 树里某文件的 **blob sha 没变**就**不重探**——内容没变，形态结论（kind/score/内容指纹）必然也没变；
+- 只有"没见过的文件"和"blob 变了的文件"才走 L0。探失败的结论不永久缓存，按 `FAIL_RETRY_DAYS`（7 天）退避重试，
+  否则 35% 的即时失败会天天重烧预算、缓存永远攒不起来。
+
+两轮实测（250 仓样本，同一天、同切片）：
+- **冷轮**（索引为空）23m37s：展开 250 仓 → 775 个新文件，987 条候选，871 可达，**真配置 112 / canary 106**。
+- **热轮**（复用冷轮写的索引）17m33s：**树未变 175/250 仓、536 个文件直接免探**，只剩 471 条实探，
+  真配置 114 / canary 106（与冷轮基本一致，说明复用结论是准的）。
+对比旧的 15-60 仓抽样：真配置 26-40。全展开把真配置从 ~40 拉到 **112+**，而热轮的日常成本反而比全量重探省得多。
+注意热轮 17 分钟里有一大块是**发现阶段**（GitHub 代码搜索 + 血统反查的 API 节流）的固定底，缓存只砍「列树 + 重探」，
+砍不掉这一底；真到次日（跨天、多数仓 pushed_at 不变）会更低。
+
+> L0 中文 URL 的 `UnicodeEncodeError` 自伤、以及「候选池重合被证伪」的归因修正，均见 [docs/POSTMORTEM.md](docs/POSTMORTEM.md)。
+
+**收编标准 = 独有站点数（unique），不是评分**：生态互相抄配置极普遍，实测 score 30 的候选带来 17 个新站点、score 90 的只带来 3 个。`scripts/evaluate_candidates.py` 算 unique（候选指纹 sha1(api+ext) 不在当前库的数量），`--min-unique 3 --write-canary` 写 canary 池。
+**候选池只留有效形态**（2026-09-29）：L0 判为 `other`/`json(非配置)`（score 0）的条目不再写进 `radar/discovered.json`——旧写法把「可达但非配置」的东西（GitHub 仓库主页 HTML、PWA `manifest.json`、`.github/labels.json`、star-history 的 SVG、`config.webp`）照样入池，实测**可达 133 条里 92 条（69%）是这类噪声**，既挤掉真候选又让阶段 3 白取一轮（`summary.pool_junk_dropped` 记录被剔数）。
+配套地，阶段 3 的 `eval_one` 先按形态分流再解析（与 discover 同口径）：`#EXTM3U`/`#genre#` → 记 `skipped=直播列表`（不算失败）、HTML/SVG → 记「候选池噪声」、BOM 与前导空白先 `lstrip` 再 `json.loads`。改前 80 条候选只有 **25 条评估成功**、55 条报 `Expecting value: line 1 column 1`（其实是形态不对，不是通道坏了）；改后 **41 条里 40 成功、0 失败**，可见新站点 2036 → **3183**。`summary` 也拆成 `evaluated / skipped_live / html_noise / no_sites / fetch_or_parse_failed`，不再用会误判的 `fetch_ok`（旧口径把跳过的也算成功）。
+**收录即按内容去重**（2026-09-29）：`dedup_by_content` 在 `rank_results` 定序之后跑，键是 L0 探测算出的内容
+sha256；同一份内容只留排名最前的代表，其余写进 `radar/discovered.json` 的 `content_dupes`（带 `same_as`
+指向代表）便于追溯。**只比完整读到的内容**：读满 `PROBE_MAX_BYTES`（300KB）的条目会打 `sha_partial=true` 并
+整条退出去重——截断条目的哈希只覆盖前缀，而「前 300KB 逐字节相同、尾部不同」是会发生的（同一仓库放一份
+`x.json` 只有 sites、再放一份 `x_full.json` 一字不动地多带 lives/parses），误杀一个真候选比少并一条严重得多；
+代价实测很小，最近两轮入池候选里被截断的只有 0-1 条。
+`summary.reachable` 取**去重前**的可达数（它是跨轮趋势指标，跟着去重一起变小会变成莫名下降）。
+实测连续两轮：去重前可达 138 / 140，分别并掉 **20 条（15 组）/ 19 条（11 组）**。形态分两类。**真的同一份配置**：`yoursmile66/TVBox/main/XC.json` 一份内容挂着 4 个入口
+（`gh-proxy.com` 两种路径写法、`ghproxy.net`、`github.moeyy.xyz`），`xyq254245` 的 `XYQTVBox.json` 3 个前缀，
+`gao/master/js.json` 的 `ghproxy.net`≡`gh-proxy.com`，`ztha.top` 的 https≡http。
+**「200 但不是配置」的同一张壳页**：5 个 `github.com/<仓>` 主页在那一轮返回同一个 58013 字节的中文页面
+（`lang="zh-CN"`，不是 GitHub 的仓库页；事后复测 `YueChan/Live` 又能拿到 235099 字节的真页面，说明是本地
+直连被间歇拦截），3 个 `agit.ai/*/raw/branch/*` 返回同一个 114 字节的 JS 跳转壳，`ghp.ci` 探到的路径返回
+2 字节的 `ok`（代理已废，只剩健康检查文本）。
+**为什么在发现侧就动手**：合并侧的 sha256 去重只保证产物不灌重复站点，而 canary 是「按顺序取前 N 个名额」，
+重复内容把名额占住等于把能带新内容的上游挤了出去——按 HEAD 那份旧产物对账：池里「字节数 + 站点数」都相同
+且完整读到的两组（`gao/master/js.json`、`ztha.top`）虚占 2 个位置、虚增 344 个站点，`state/extra_upstreams.json`
+那 25 条 canary 里 `gao/master/js.json` 也确实同时挂着 `ghproxy.net` 与 `gh-proxy.com` 两条（去重后只剩 1 条）；
+同处还有一组 9 条读满上限的大文件，那组按现在的规则**不并**（身份无法证明）。
+**canary 已默认开启**（`EXTRA_UPSTREAMS=1`，daily.yml），失效由自动黑名单兜底；要停用改回 `0`。
+注意 `total_unique_sites` 随候选集合逐轮变化（每轮挖到的池不同），别拿它跨轮直接相减当退化指标。
+
+**池子路由**（2026-09-29 定）：产物按池分四层——点播池按接口类型细分（`stores/cms.json` CMS 标准接口、
+`stores/csp.json` 蜘蛛仓、`stores/pan.json` 网盘仓（含 `pan_ck.json` 需 CK 的）、`stores/app.json` App 型）、
+直播池（`live.json` + `lives/`）、成人池含**点播与直播两个子池**（`adult.json` / `adult_live.json` +
+`adult_live_channels/`）。canary 里带成人特征的上游**不再整条剔除**（所有者指令），改为标 `"adult": true`
+成为「成人专供上游」：站点照常收但强制分类 adult → 落 `adult.json`；直播照常收但打上 `_adult_only`
+下放 `adult_live.json`；`parses` 与全局 `spider/wallpaper` 一律不收——它们是主配置的全局字段，名字带
+成人特征会直接漏进非成人产物。为什么不走既有的 `origin_votes`：投票只作用于「弱信号单命中」
+（`classify_site` 第 5 步），成人仓里大量站点名字干净、走投票仍会被判 `vod` 混进主配置，所以另开
+`ADULT_ONLY_ORIGINS` 强制通道。识别口径与门禁同源（`_candidate_adult_rule`：PORN_KW / 域名黑名单 /
+源模式），发现侧与装载侧各算一次，装载侧为准。
+
+**按来源上游保留 spider**（2026-09-19 起，开关 `ORIGIN_SPIDER=1` 默认开）：
+
+每个上游配置都声明自己的顶层 `spider`，而且各不相同（`./jar/pg.jar`、`./jar/pg_upgraded.jar`、
+`./jar/pro.jar`、`./jar/WvSpider.jar`、`./jar/fan.txt`、某个 oss 直链…），但合并只能保留**一份**全局 spider。
+凡是 `jar` 字段为空、走全局 spider 的源，就会被指向一个**不含它所需爬虫类**的包 ——
+客户端加载爬虫时抛 `ClassNotFoundException`，这些源直接变成「坏的」。
+实测受影响 **256 个爬虫类 / 359 个源**（`ProxySpider` 23 个、`WvSpider` 11 个…），
+而它们在真实 TVBox 里本来都是能用的。
+
+`assign_origin_spiders()` 在依赖收集前给这些源的 `jar` 补上「它来源上游的那份 spider」，
+后续 `collect_and_rewrite_deps` 按 origin 落库到 `deps/<上游>/...` 并改写成仓库内路径 + md5，
+与站点自带 jar 走同一条路。与全局 spider 指向同一份包的不写（省体积）。
+比较用的是**解析后的绝对 URL**，不是字符串 —— 全局值在上一轮产出里已被改写成本地路径
+（`./deps/jar/spider_8955438d.jar`），字面与上游的 `./jar/spider.jar` 不同却指向同一份包。
+
+关掉：`ORIGIN_SPIDER=0`。
+
+**依赖整仓兜底两路**（2026-09-29）：主路是「每文件 × 镜像轮换」，`raw` 被掐时同仓几十个文件会成片失败。
+落回顺序是 主路 → manifest 缓存 → **路 A 稀疏浅克隆** → **路 B codeload tarball**：
+
+- 路 A：`git clone --filter=blob:none --depth 1 --no-checkout` + `sparse-checkout set` + `checkout`，
+  一仓一次**只取需要的那些 blob**，走 SSH（`DEPS_GIT_TRANSPORT=ssh`，不经第三方）。
+  本机实测 `13998394872/TVBox`（248MB、269 个路径缺失）克隆 4.6s / 本地仅 98KB，
+  全量取回 10.8s 落地 256 个文件 9.5MB；接进管线后整轮兜底 **33.5s 补回 263 个依赖**，
+  manifest 里 github 依赖的本地缺失从 278 降到 15。
+- 路 B：`codeload.github.com/<o>/<r>/tar.gz/refs/heads/<ref>` 整仓包（实测本机可直连），
+  只抽白名单路径。CI 上没有用户的 SSH key，这路顶上。
+  三条护栏：仓库体积 ≤30MB（`DEPS_TARBALL_MAX_REPO_KB`，上面那个 248MB 的仓就是被它挡掉的）、
+  同仓至少 3 个文件才划算、整仓下载 ≤60MB / 60s / 整轮 300s 预算。
+- 关闭：`DEPS_GIT_BACKFILL=0` / `DEPS_TARBALL_BACKFILL=0`。
+- **安全**：两条路都拿「仓库内路径」去拼文件系统路径读字节，而上游 URL 是攻击者可控输入。
+  `_safe_rel_path` 在解析阶段就拒空段、绝对路径、NUL、以及**百分号解码后含 `..`** 的路径
+  （`%2e%2e` 也算），克隆侧与 tar 侧再各查一遍；写盘侧另有 `pathutil.safe_segment` 把 `..` 变 `_`。
+  不做这层，一条 `.../main/../../../../etc/passwd` 就能把本地任意文件读进内容再发布出去。
+
+**csp 爬虫源真机实测**：`type 3` 的 `csp_*` 源（约 700 个）必须在 Android 运行时里跑，纯 HTTP 测不了。
+做法是自建最小宿主 APK（`DexClassLoader` 加载爬虫 jar + 宿主实现 `crawler.Spider` 基类），
+在 root 真机上实跑 **首页 / 分类 / 搜索 / 详情 / 播放** 五关，评级：
+
+| 等级 | 含义 |
+|---|---|
+| C5 | 五关全通 |
+| C4 | 详情通过、播放不可用 |
+| C3 | 搜索通过 |
+| C2 | 分类通过 |
+| C1 | 仅首页通过 |
+| C0 | 加载或首页失败 |
+| C? | 超时/网络问题，不判死 |
+
+工程在本地 `.workbuddy/csp-test/`（宿主源码 + 构建脚本 + 任务生成 + 结果转换），**不进版本库**；
+产物 `probe/csp_probe.json` 提交后由 CI 只读复用（真机测试无法在 Actions 里跑）。
+
+> 注意：部分爬虫依赖的混淆库类在打包时被裁掉（`com.github.catvod.spider.merge.*` 缺失一百余个），
+> 这类源的详情/播放关必然失败且**在真实 TVBox 上同样失败**，属源自身缺陷。
+
+**csp 产物时效降权**（`rank_sites.py`）：真机测试无法进 CI，产物会随时间陈旧。实测产物超过 `PROBE_STALE_DAYS`（默认 7 天）不再参与排序——宁可不用，也不拿旧结论给今天的源排位。
+
+**drpy 本地 JS 源：Node 沙箱五关实测**（`scripts/drpy_probe.py` + `drpy-sandbox/`，**已接入 CI 每日跑**）：
+约 280 个 type=3 源的 api 指向 `drpy2.min.js`（规则在 `ext` 指向的 .js 文件），纯 HTTP 探针拿不到「能不能搜到片」。
+沙箱用与 TVBox 同款引擎（`drpy2 3.9.52beta3`）真跑五关，评级 D5（五关全通）/D4（详情）/D3（搜索）/D2（分类）/D1（首页）/D0（失败）。
+两个硬约束：① 宿主 `pdfa` 对纯选择器规则必须返回节点 outerHTML 数组（引擎后续链式解析要用）；② **引擎必须与 `drpy-core-lite.min.js` 同目录**（引擎内部相对自身路径 import 它）。
+实测 270 源：D5 8 / D4 3 / D3 9 / D2 77 / D1 42 / D0 131——官源（爱奇艺/腾讯/360）与直播（虎牙/斗鱼）类质量最高。
+
+**直播源实测**（`store.py --probe-lives`）：拉源地址看是否返回频道列表（≥10 频道 healthy、1~9 degraded、拉不到 dead）。实测 144 条：healthy 19 / degraded 15 / dead 110。
+
+**入库与健康体系**（`scripts/store.py`，SQLite `state/tvbox.db`，不入库）：
+
+| 表 | 内容 |
+|---|---|
+| `interfaces` | 接口当前态：地址/类型/来源/最后检测/健康状态/连续失败 |
+| `checks` | 检测历史（追加，滚动保留 30 天；以产物 generated_at 作检测时间保证重复导入幂等） |
+| `deps` | 依赖关系：jar / ext 文件 / 本地 js / 全局 spider |
+| `upstreams` / `lives` / `runs` | 上游健康 / 直播源 / 运行日志 |
+
+健康分级：`healthy`（实测能搜能播）> `degraded`（能连通但能力弱）> `unknown`（未测/超时，不妄判）> `dead`（实测失败）。
+**探针权威性**：五关实测（csp/drpy）> HTTP L级 > js S级 > 连通性——浅探针的结论不能覆盖深探针，否则会出现「五关全通被判 dead」。
+
+观测配套：`health_report.py`（与快照对比，报新增/掉线/恢复/移除，产物 `exports/health_report.json`）、`dep_audit.py`（deps/ 重复与未引用分析，**只报告不删**）。
+**一键编排**：`python3 scripts/run_all.py` 本地完整复现 CI 七阶段（镜像测速 → 五路发现 → 评估收编 → 合并 → 探针实测 → 依赖闸门 → 入库/导出/日报/审计），支持 `--from N` 从指定阶段续跑。
+探针后置到合并之后（2026-09-29 重排）是为了「当天拉当天测」：探针吃当日产物，当日结论入库后经
+`export_healthy.py` 进 `exports/`（`all.json` 带 `_health`）。**主产物不带健康标注**——CI 实测
+去掉 `_health/_checked_at/_latency_ms` 后 `tvbox.json` 从 1,009,234B 降到 815,475B（−19%，
+本地 3724 站口径为 −29%），而 TVBox 只是忽略未知字段、并不消费它，所以 `_strip_internal_fields`
+无白名单、一律剥净。重排前后对照：探针有效性从 176/311（43% 的探针打在了已不在产物里的站）
+升到 172/181（5%）。
+
+**镜像测速口径**（`scripts/mirror_probe.py`）：固定池 28 个 + **三路发现增量**，按证据强度排队——
+路 0 **上游实证**：本管线自己的账本（`exports/upstream_status.json` 的 `channel=mirror:<host>`
+与 `success_url`、`radar/discovered.json` 的 reachable 候选、canary 清单）里真把上游配置取回来过
+的前缀；路 1 GitHub API 搜 `gh-proxy` 相关仓库读 README（本机实测 `api.github.com` **可直连**，
+被掐的只是 `raw.githubusercontent.com` 的 HTTP 响应，所以这路本地也跑得出东西）；路 2 Bing 搜公开清单帖。
+提取只认「前缀 + github/raw」的确证形态（`h/https://raw...` 与 `h/raw.githubusercontent.com/...`
+两种写法都认，多级路径后嵌 github 链接的不算），裸域名不算。新面孔先过**内容一致性闸门**——必须把
+本项目那个 8MB jar 逐字节原样返回（sha256 相等），截断/HTML 冒充/改写内容一律拒入池；
+2026-09-29 首轮实跑：公网挖到 3 个，毙掉 2 个伪代理（Cloudflare worker 空壳），`api.gitproxy.dev`
+校验通过以 2377KB/s 入池；上游实证 4 个新面孔里 3 个入池（`g.3344550.xyz` 2206KB/s、
+`gh-proxy.org` 1670、`ghproxy.net` 409），而账本里记着 `channel=mirror:` 成功过的
+`new.<IDN>.top` **没能原样返回目标 jar、被闸门拒**——「能取回内容但转发不忠实」正是这条路的风险，
+也说明闸门不是摆设。测速每站最多读 4MB、**总时限 12 秒**、**采 2 次取较差值**、
+**并发 3 路**，速度只算首包之后的传输段；低于 100KB/s 判慢移出池（全数被判慢时保留结果，防清空）。
+淘汰/伪代理记入 `state/mirror_dead.json` 冷却 30 天，近 3 天测过的不重复骚扰，发现结果缓存
+`state/mirror_discovered.json`（2 天）。为什么这么绕：单样本 6 路并发时轮间排名不可复现
+（同一镜像实测 2822KB/s ↔ 375KB/s，名次第 2 ↔ 第 23），而池首位会被写进静态 JSON 当外链前缀。
+结果落盘 `state/mirror_ranking.json`（留 7 轮），`fetch_merge.py` 按
+`GH_MIRRORS 环境变量 > 落盘实测 > 静态默认` 取池；外链主镜像取「近 3 轮至少 2 轮上榜、
+中位吞吐最高」而非当日第一（`_stable_ghproxy`），显式钉选 `GH_MIRRORS` 时则跟随钉选首位。
+可选加自己的清单源：Actions Variable 或环境变量 `MIRROR_LIST_URLS`（逗号分隔的纯文本清单页）。
+
+## 本地运行
+
+```bash
+python3 scripts/fetch_merge.py
+# 可用环境变量调并发：CONCURRENCY=12 python3 scripts/fetch_merge.py
+# 独立验活（不产出配置）：python3 scripts/check_upstreams.py
+# 源雷达扫描：python3 scripts/radar_scan.py
+
+# 接口实测（先跑探针，再做去重与排序；daily.yml 已自动串联）
+python3 scripts/probe_sites.py --only http          # L1-L3 实测 HTTP 型接口
+python3 scripts/probe_spiders.py                    # type3 源连通性实测
+python3 scripts/dedup_mirrors.py                    # 同库镜像识别
+python3 scripts/rank_sites.py                       # 分类 + 排序（产出 tvbox.ranked.json）
+python3 scripts/discover_upstreams.py               # 全网上游发现
+# 国内直连被阻断时给探针加代理：--proxy http://127.0.0.1:7890
+```
+
+仅依赖 Python 3.8+ 标准库，无第三方包。
+
+## 本地预检查（P0-2，push 前自动跑）
+
+仓库自带 `.githooks/pre-push`：push 前自动 ① `py_compile` 全部 `scripts/*.py` ② Windows 路径兼容性检查 ③ 小样本冒烟。语法错误 / Windows 非法路径直接阻断 push，冒烟软告警不阻断。
+
+一次性启用（本仓库 hooks 在 `.githooks/`，非默认 `.git/hooks/`）：
+
+```bash
+git config core.hooksPath .githooks
+```
+
+紧急修复可跳过：`git push --no-verify`。Windows 用户如遇 hook 不执行，确认 git 走 Git Bash（`.githooks/pre-push` 为 LF 换行 shell 脚本）。
+
+## 订阅 CDN 线路汇总（P0-3，多线路并列一键切换）
+
+主配置 `tvbox.json` 五条通路并列，一线不畅换下一条（导航页 `index.html` 已做一键复制）：
+
+| 线路 | URL 前缀（拼 `/tvbox.json`） | 说明 |
+|---|---|---|
+| raw | `https://raw.githubusercontent.com/hebijunge/tvbox-config/main` | GitHub 原生，国内可能被墙 |
+| ghproxy | `https://ghproxy.net/https://raw.githubusercontent.com/hebijunge/tvbox-config/main` | 国内反代，公共服务不可控 |
+| jsDelivr | `https://cdn.jsdelivr.net/gh/hebijunge/tvbox-config@main` | CDN 缓存，有刷新延迟 |
+| Pages | `https://hebijunge.github.io/tvbox-config` | GitHub Pages 同域导航站 |
+| Release | `https://github.com/hebijunge/tvbox-config/releases/download/latest` | 固定 latest 标签，永不失效 |
+
+> 多 CDN 均为免费公共服务，随时可能被限流/墙；不押注单一线路，导航页并列展示供切换。
+

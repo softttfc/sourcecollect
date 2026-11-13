@@ -1,0 +1,565 @@
+{
+ "alerts": [
+  {
+   "name": "juhe-tvapi",
+   "field": "bytes",
+   "prev": 46193,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "pg/jsm",
+   "field": "sites",
+   "prev": 74,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "deepseek/gaoops404",
+   "field": "sites",
+   "prev": 52,
+   "cur": 10,
+   "ratio": 0.81
+  },
+  {
+   "name": "laozhang/serv00",
+   "field": "bytes",
+   "prev": 12834,
+   "cur": 57247,
+   "ratio": 3.46
+  },
+  {
+   "name": "laozhang/serv00",
+   "field": "sites",
+   "prev": 19,
+   "cur": 106,
+   "ratio": 4.58
+  },
+  {
+   "name": "sv/api",
+   "field": "sites",
+   "prev": 90,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "sv/liucn-m",
+   "field": "bytes",
+   "prev": 57874,
+   "cur": 26477,
+   "ratio": 0.54
+  },
+  {
+   "name": "sv/liucn-m",
+   "field": "sites",
+   "prev": 234,
+   "cur": 103,
+   "ratio": 0.56
+  },
+  {
+   "name": "sv/tianwei",
+   "field": "sites",
+   "prev": 97,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "sv/tiantiankaixin",
+   "field": "sites",
+   "prev": 126,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "sv/xiangyaqing",
+   "field": "bytes",
+   "prev": 33880,
+   "cur": 57247,
+   "ratio": 0.69
+  },
+  {
+   "name": "sv/xiangyaqing",
+   "field": "sites",
+   "prev": 55,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "sv/baipiao",
+   "field": "bytes",
+   "prev": 4631,
+   "cur": 57247,
+   "ratio": 11.36
+  },
+  {
+   "name": "sv/baipiao",
+   "field": "sites",
+   "prev": 9,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "sv/xiquyinyue",
+   "field": "bytes",
+   "prev": 13737,
+   "cur": 57247,
+   "ratio": 3.17
+  },
+  {
+   "name": "sv/xiquyinyue",
+   "field": "sites",
+   "prev": 10,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "juhe-tvapi",
+   "field": "bytes",
+   "prev": 46193,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "cluntop/yt",
+   "field": "bytes",
+   "prev": 233,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "guovin-gd-ipv4",
+   "field": "bytes",
+   "prev": 823298,
+   "cur": 361659,
+   "ratio": 0.56
+  },
+  {
+   "name": "zwc456baby-iptv",
+   "field": "bytes",
+   "prev": 6410,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/8-298s",
+   "field": "sites",
+   "prev": 298,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/12-298s",
+   "field": "bytes",
+   "prev": 73375,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/12-298s",
+   "field": "sites",
+   "prev": 298,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/13-298s",
+   "field": "bytes",
+   "prev": 95131,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/13-298s",
+   "field": "sites",
+   "prev": 298,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/14-298s",
+   "field": "bytes",
+   "prev": 94095,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/14-298s",
+   "field": "sites",
+   "prev": 298,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/15-298s",
+   "field": "bytes",
+   "prev": 75447,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/15-298s",
+   "field": "sites",
+   "prev": 298,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/39-154s",
+   "field": "bytes",
+   "prev": 59188,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/39-154s",
+   "field": "sites",
+   "prev": 154,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/43-151s",
+   "field": "sites",
+   "prev": 151,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/50-142s",
+   "field": "bytes",
+   "prev": 61454,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/50-142s",
+   "field": "sites",
+   "prev": 142,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/66-106s",
+   "field": "sites",
+   "prev": 106,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/67-106s",
+   "field": "bytes",
+   "prev": 57247,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/67-106s",
+   "field": "sites",
+   "prev": 106,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/69-103s",
+   "field": "sites",
+   "prev": 103,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/72-100s",
+   "field": "sites",
+   "prev": 100,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/78-91s",
+   "field": "sites",
+   "prev": 91,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/84-77s",
+   "field": "bytes",
+   "prev": 19662,
+   "cur": 48,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/84-77s",
+   "field": "sites",
+   "prev": 77,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/87-76s",
+   "field": "bytes",
+   "prev": 37946,
+   "cur": 57247,
+   "ratio": 0.51
+  },
+  {
+   "name": "auto/87-76s",
+   "field": "sites",
+   "prev": 76,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/88-76s",
+   "field": "sites",
+   "prev": 76,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/90-74s",
+   "field": "sites",
+   "prev": 74,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/94-66s",
+   "field": "sites",
+   "prev": 66,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/97-63s",
+   "field": "bytes",
+   "prev": 22462,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/97-63s",
+   "field": "sites",
+   "prev": 63,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/99-61s",
+   "field": "bytes",
+   "prev": 20815,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/99-61s",
+   "field": "sites",
+   "prev": 61,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/103-57s",
+   "field": "sites",
+   "prev": 57,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/104-57s",
+   "field": "bytes",
+   "prev": 19817,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/104-57s",
+   "field": "sites",
+   "prev": 57,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/112-52s",
+   "field": "bytes",
+   "prev": 23848,
+   "cur": 48222,
+   "ratio": 1.02
+  },
+  {
+   "name": "auto/112-52s",
+   "field": "sites",
+   "prev": 52,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/115-49s",
+   "field": "bytes",
+   "prev": 23444,
+   "cur": 48222,
+   "ratio": 1.06
+  },
+  {
+   "name": "auto/115-49s",
+   "field": "sites",
+   "prev": 49,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/119-48s",
+   "field": "bytes",
+   "prev": 23320,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/119-48s",
+   "field": "sites",
+   "prev": 48,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/123-48s",
+   "field": "sites",
+   "prev": 48,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/150-36s",
+   "field": "sites",
+   "prev": 36,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/151-36s",
+   "field": "bytes",
+   "prev": 17734,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/151-36s",
+   "field": "sites",
+   "prev": 36,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/168-18s",
+   "field": "bytes",
+   "prev": 4323,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/168-18s",
+   "field": "sites",
+   "prev": 18,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/169-18s",
+   "field": "bytes",
+   "prev": 4381,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/169-18s",
+   "field": "sites",
+   "prev": 18,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/170-18s",
+   "field": "bytes",
+   "prev": 11656,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/170-18s",
+   "field": "sites",
+   "prev": 18,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/209-15s",
+   "field": "sites",
+   "prev": 15,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/228-4s",
+   "field": "sites",
+   "prev": 4,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/230-3s",
+   "field": "bytes",
+   "prev": 1308,
+   "cur": 504,
+   "ratio": 0.61
+  },
+  {
+   "name": "auto/230-3s",
+   "field": "sites",
+   "prev": 3,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/233-3s",
+   "field": "bytes",
+   "prev": 2035,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/233-3s",
+   "field": "sites",
+   "prev": 3,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/235-3s",
+   "field": "bytes",
+   "prev": 663,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/235-3s",
+   "field": "sites",
+   "prev": 3,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/236-3s",
+   "field": "bytes",
+   "prev": 678,
+   "cur": 0,
+   "ratio": 1.0
+  },
+  {
+   "name": "auto/236-3s",
+   "field": "sites",
+   "prev": 3,
+   "cur": 0,
+   "ratio": 1.0
+  }
+ ],
+ "checked_at": "2026-10-15 06:11:08"
+}
