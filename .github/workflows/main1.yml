@@ -88,7 +88,7 @@ jobs:
                 [lubin776-tvbox-api-backup接口工具]="https://github.com/lubin776/tvbox-api-backup.git"  
                  [tao060702-tvbox]="https://gitee.com/tao060702/tvbox.git"  
                  [hebijunge-tvbox-config探活汇集工具]="https://github.com/hebijunge/tvbox-config.git" 
-
+                 [my-liuyun-TVbox]="https://cnb.cool/my-liuyun/TVbox" 
                 
                [TB18]="https://github.com/LIUJEI/TB.git" 
                [tvbox-FL18]="https://github.com/aa123jg/tvbox-FL.git"
