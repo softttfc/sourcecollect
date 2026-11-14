@@ -15,6 +15,28 @@ https://gitee.com/tao060702/tvbox/raw/master/tvbox.json
 
 影视仓的「多源仓库」入口也可以填同一个地址（对应 `repo.json`）。
 
+## 相关接口
+
+**jar 站点在线接口（可看网盘资源）**
+
+```
+https://gitee.com/tao060702/tvbox-Kishuto/raw/master/tvbox.json
+```
+
+以 jar 承载站点类的独立订阅，内含 19 个网盘站（玩偶 / 木偶 / 快映 / 闪电 / 蜡笔 / 多多 /
+八零 / 虎斑 / 花卷 / 种子 / 搬运 / 指南 / 小丑 / 茉莉 / 爱盼 / 移动 / 即刻 / 双星 / 卡卡），
+可直接浏览网盘资源。账号 Cookie 统一在其中的「Kishûtô｜☛配置中心☚」配置一次即可，
+网盘站全部走同一份账号。
+
+**猫源接口**
+
+```
+https://gitee.com/tao060702/hmtv-Kishuto/raw/master/index.js.md5
+```
+
+CatVodOpen 猫源（MD5 热更新式订阅）。引擎与站点清单放在同一个仓库，壳按 `.md5` 比对后自动更新，
+站点由本机 Node 引擎经 `127.0.0.1:8888` 的本地路由提供，不依赖 Python 运行时。
+
 ## 徽章包地址（建议用这个）
 
 在客户端的「徽章 / 标签 / 角标」设置里填：

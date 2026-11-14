@@ -44,7 +44,7 @@
   "key": "采集G(滴滴)",
   "name": "箐箐🍀滴滴",
   "type": 1,
-  "api": "https://api.ddapi.cc/api.php/provide/vod",
+  "api": "https://api.ddapi.cc/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "quickSearch": 1
 },
@@ -52,7 +52,7 @@
   "key": "bhziyuan",
   "name": "箐箐🍀百花",
   "type": 1,
-  "api": "https://bhziyuan.com/api.php/provide/vod/",
+  "api": "https://bhziyuan.com/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "quickSearch": 0
 },
@@ -60,7 +60,7 @@
   "key": "vnzyz",
   "name": "箐箐🍀越南",
   "type": 1,
-  "api": "https://vnzyz.com/api.php/provide/vod",
+  "api": "https://vnzyz.com/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "quickSearch": 0
 },
@@ -68,7 +68,7 @@
   "key": "*91麻豆2🔞",
   "name": "箐箐🍀麻豆",
   "type": 1,
-  "api": "http://www.9191md.me/api.php/provide/vod/",
+  "api": "http://www.9191md.me/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "quickSearch": 1
 },
@@ -100,7 +100,7 @@
   "key": "jkzyuan.cc",
   "name": "箐箐🍀爱坤",
   "type": 1,
-  "api": "https://jkunzyapi.com/api.php/provide/vod",
+  "api": "https://jkunzyapi.com/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "changeable": 1
 },
@@ -108,7 +108,7 @@
   "key": "xjzyapi.xyz",
   "name": "箐箐🍀小鸡",
   "type": 1,
-  "api": "https://api.xjzyapi.xyz/provide/vod",
+  "api": "https://api.xjzyapi.xyz/provide/vod/?ac=list",
   "searchable": 1,
   "changeable": 1
 },
@@ -124,7 +124,7 @@
   "key": "黄色仓库资源",
   "name": "箐箐🍀黄仓",
   "type": 1,
-  "api": "https://hsckzy888.com/api.php/provide/vod/",
+  "api": "https://hsckzy888.com/api.php/provide/vod/?ac=list",
   "searchable": 1,
   "quickSearch": 1,
   "filterable": 1
