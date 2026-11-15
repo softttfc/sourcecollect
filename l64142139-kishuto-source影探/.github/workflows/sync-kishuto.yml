@@ -1,0 +1,30 @@
+name: sync-kishuto
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch files from CDN
+        run: |
+          curl -fsSL "https://aka.doubaocdn.com/s/7gysW3MKYe" -o server.mjs
+          curl -fsSL "https://aka.doubaocdn.com/s/M6kfSMgmFH" -o config.json
+          curl -fsSL "https://aka.doubaocdn.com/s/RI0UqamFKL" -o kishuto.zip
+          curl -fsSL "https://aka.doubaocdn.com/s/Cn28ocMpVv" -o README.md
+          ls -l
+
+      - name: Commit
+        run: |
+          git config user.name  "kishuto-bot"
+          git config user.email "kishuto-bot@users.noreply.github.com"
+          git add server.mjs config.json kishuto.zip README.md
+          git commit -m "feat: tvbox config endpoint + local package [skip ci]" || echo "no change"
+          git push

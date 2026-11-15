@@ -20,6 +20,21 @@
       "quickSearch": 1,
       "filterable": 1,
       "ext": ""
+    },
+    {
+      "key": "xifan_dm",
+      "name": "稀饭动漫",
+      "type": 3,
+      "api": "https://gitee.com/tao060702/tvbox/raw/master/tv/20261111.231907/xifan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "lines": [
+          "xf"
+        ],
+        "detail_budget": 3
+      }
     }
   ],
   "parses": [],
