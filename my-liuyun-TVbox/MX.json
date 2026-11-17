@@ -263,50 +263,19 @@
 {
   "name": "🥩高清无码",
   "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/高清.txt",
+  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/高清.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
 },
 {
-  "name": "🌀天美传媒",
+  "name": "🌃综合传媒",
   "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/天美传媒.txt",
+  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/传媒.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
 },
 {
-  "name": "🌃果冻传媒",
+  "name": "🌃经典珍藏",
   "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/果冻传媒.txt",
+  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/珍藏.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-},
-{
-  "name": "🌃麻豆传媒",
-  "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/麻豆传媒.txt",
-  "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-},
-{
-  "name": "🌃星空传媒",
-  "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/星空传媒.txt",
-  "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-},
-{
-  "name": "🌃精东传媒",
-  "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/精东影业.txt",
-  "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-},
-{
-  "name": "🌃国产影视",
-  "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/国产传媒.m3u",
-  "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-},
-{
-  "name": "🥘韩国女团",
-  "type": 0,
-  "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/韩国女团直播.txt",
-  "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
-}
-]
+}]
 }
