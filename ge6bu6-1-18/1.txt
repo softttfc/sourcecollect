@@ -64,6 +64,12 @@
       "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/多聚短剧.py"
     },
     {
+      "key": "hongguo",
+      "name": "hongguo.py",
+      "type": 3,
+      "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/hongguo.py"
+    },
+    {
       "key": "喜马拉雅",
       "name": "喜马拉雅.py",
       "type": 3,

@@ -259,21 +259,168 @@
 }],
 "ads": ["wan.51img1.com","iqiyi.hbuioo.com","vip.ffzyad.com"],
 "lives": [
-
 {
-  "name": "🥩高清无码",
+  "name": "咪咕•多线",
+  "type": 0,
+  "url": "https://gitee.com/yuan301/tv/raw/master/A/z_v.png",
+  "epg": "http://epg.52sw.top:668/?ch={name}&date={date}",
+  "logo": "shturl.cc/3gFCMe8SiIwboe1gRrHxxu{name}.png",
+  "playerType": 2,
+  "timeout": 10
+},
+{
+  "type": 0,
+  "name": "咪咕•标清",
+  "playerType":2,
+  "ua": "okhttp/3.15",
+  "url": "http://www.52top.com.cn:678/downloads/migu.txt",
+  "epg": "https://diyp4.112114.xyz/?ch={name}&date={date}",
+  "logo": "https://gcore.jsdelivr.net/gh/taksssss/tv/icon/{name}.png"
+},
+{
+	"name": "高清•咪咕",
+	"type": 0,
+	"url": "http://www.52top.com.cn:678/list.php?fileid=migu",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+  "name": "咪咕•高清",
+  "type": 0,
+  "url": "http://122.227.204.50:1905/",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "吴江•直播",
+	"type": 0,
+	"url": "http://47.120.41.246:8025/vip/jar/zb.php",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+  "name": "博士•直播",
+  "type": 0,
+  "url": "https://gitee.com/main-stream/tv/raw/master/BOSS.json",
+  "epg": "http://epg.52sw.top:668/?ch={name}&date={date}",
+  "logo": "shturl.cc/3gFCMe8SiIwboe1gRrHxxu{name}.png",
+  "playerType": 2,
+  "timeout": 10
+},
+{
+  "type": 0,
+  "name": "易发•直播",
+  "playerType":2,
+  "ua": "okhttp/3.15",
+  "url": "https://gh-proxy.org/https://raw.githubusercontent.com/fafa002/yf2025/refs/heads/main/yiyifafa.txt",
+  "epg": "https://diyp4.112114.xyz/?ch={name}&date={date}",
+  "logo": "https://gcore.jsdelivr.net/gh/taksssss/tv/icon/{name}.png"
+},
+{
+	"name": "飞鱼•直播",
+	"type": 0,
+	"url": "https://g.blfrp.cn/https://raw.githubusercontent.com/suxuang/myIPTV/main/ipv4.m3u",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},	
+{
+  "name": "IPTV•直播",
+  "type": 0,
+  "url": "https://g.blfrp.cn/https://raw.githubusercontent.com/iTCoffe/Collect-iTV/main/Internet_iTV.m3u",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "综合•直播",
+	"type": 0,
+	"url": "http://47.120.41.246:8899/xinzb.txt",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "卡西•直播",
+	"type": 0,
+	"url": "https://kakaxi.indevs.in/iptv.txt",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "IPTV•live",
+	"type": 0,
+	"url": "https://g.blfrp.cn/https://raw.githubusercontent.com/Supprise0901/TVBox_live/refs/heads/main/live.txt",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "青鱼•直播",
+	"type": 0,
+	"url": "https://wget.la/https://github.com/two2025/tv/raw/main/itvlist.txt",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+  "name": "郭伟•直播",
+  "type": 0,
+  "url": "https://g.blfrp.cn/https://raw.githubusercontent.com/Guovin/TV/gd/output/result.txt",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "恒轩•直播",
+	"type": 0,
+	"url": "https://gitee.com/t-v/tt/raw/t/t/k.png",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},
+{
+	"name": "九儿•直播",
+	"type": 0,
+	"url": "https://live.zbds.top/tv/iptv4.txt",
+	"epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},	 
+{
+  "name": "拾光•直播",
+  "type": 0,
+  "url": "https://gitee.com/yuweirong6684/tv-live-streaming-source/raw/master/abc.txt",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},      
+{
+  "name": "B521•直播",
+  "type": 0,
+  "url": "https://g.blfrp.cn/https://raw.githubusercontent.com/wwb521/live/refs/heads/main/tv.txt",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},  
+{
+  "name": "河南•直播",
+  "type": 0,
+  "url": "https://gitee.com/lx861620371/tv/raw/master/hntvzb.txt",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+},   
+{
+  "name": "野火•直播",
+  "type": 0,
+  "url": "https://gitee.com/yuan301/tv/raw/master/A/z_v.png",
+  "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}",
+  "logo": "https://www.cttv.vip/ys/images/{name}.png"
+}, 
+{
+  "name": "🥩高清•无码",
   "type": 0,
   "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/高清.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
 },
 {
-  "name": "🌃综合传媒",
+  "name": "🏵综合•传媒",
   "type": 0,
   "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/传媒.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
 },
 {
-  "name": "🌃经典珍藏",
+  "name": "🎂经典•珍藏",
   "type": 0,
   "url": "https://gh-proxy.com/https://raw.githubusercontent.com/LIUJEI/TB/master/drpy/珍藏.php",
   "epg": "https://epg.112114.eu.org/?ch={name}&date={date}"
