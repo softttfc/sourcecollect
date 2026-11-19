@@ -796,6 +796,12 @@
       "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/Taiav.py"
     },
     {
+      "key": "One",
+      "name": "One.py｜🔞",
+      "type": 3,
+      "api": "https://gh-proxy.com/https://github.com/ge6bu6/1/blob/main/py/One.py"
+    },
+    {
       "key": "18av主站",
       "name": "18av主站.py｜🔞",
       "type": 3,
