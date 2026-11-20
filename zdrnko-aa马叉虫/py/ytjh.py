@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 """影探聚合 —— TVBox / 影视仓 多源聚合源
-"""
 
+  影探聚合(4源) · 稀饭动漫(4源) · 小鸡看看 · FoFo影院 · 小山影视 · 枫奇4K(至臻/蓝光) · 橘汁新网关4K · 四源4K专线(天堂/布布/华谊/苹果)
+  分类/搜索按 tag 前缀派发，详情页跨源按标题补线路，播放按 id 派发回原源。
+  本文件由 build_kishuto.py 自动生成。
+"""
 # ==================== 版本（必须放在最前：被聚合代码在模块级引用） ====
-CODE_VERSION = '20261110.211434'
+CODE_VERSION = '20261118.2'
 
 # 源显示名：所有 Spider 子类都返回这个名字，避免壳挑错类时显示成别的源
 SPIDER_NAME = '影探聚合'
 UPDATE_URL = 'https://gitee.com/tao060702/tvbox/raw/master/update_kishuto.json'
 
+# ======================================================================
+# 模块：yt
+# ======================================================================
+# -*- coding: utf-8 -*-
 
 import base64
 import gzip
@@ -41,6 +48,10 @@ UA_ANDROID = ('Mozilla/5.0 (Linux; Android 13; SM-S9080) AppleWebKit/537.36 '
 NL = '\n'
 _SEP = '\x1f'
 
+
+# ============================================================================
+# 基础工具
+# ============================================================================
 
 def text(value):
     return '' if value is None else str(value).strip()
@@ -128,7 +139,12 @@ _QUALITY_NOISE = re.compile(
 
 
 def strict_match(title, items):
+    """详情页跨源补线路：只认「同一部片」，禁止片名包含式扩展匹配。
 
+    旧 best_match 把「熊出没」⊂「熊出没之雪岭熊风」判成 0.82 分，
+    于是剧集《熊出没》详情里挂进了电影版线路。这里要求核心片名完全
+    一致，只允许剥掉画质/版本/年份后缀；季数标记不同一律不匹配。
+    """
     import difflib
 
     def core(s):
@@ -163,6 +179,10 @@ def strict_match(title, items):
             near.append(it)
     return (exact or near or [None])[0]
 
+
+# ============================================================================
+# 缓存
+# ============================================================================
 
 _CACHE = {}
 _CACHE_LOCK = threading.Lock()
@@ -209,7 +229,7 @@ def _unpack_lines(vod):
 
 
 def _memo_title(code, name):
-
+    """记下列表/搜索里看到的真实片名，供详情缺片名时兜底。"""
     t = str(name or '').strip()
     if not code or len(t) < 2 or t.isdigit():
         return
@@ -240,6 +260,17 @@ def cache_put(key, value, ttl):
                 _CACHE.clear()
         _CACHE[key] = (time.time() + ttl, value)
 
+
+def cache_delete(key):
+    """p1：解析成功后立即解除熔断标志用。"""
+    with _CACHE_LOCK:
+        _CACHE.pop(key, None)
+
+
+# ============================================================================
+# HTTP（统一层：gzip、连接复用靠 keep-alive 由 urllib 自行管理、瞬时错误重试）
+# ============================================================================
+
 _CTX = [None, False]
 
 
@@ -258,7 +289,7 @@ def ssl_ctx():
 
 def http(url, method='GET', headers=None, data=None, timeout=8.0,
          retries=2, backoff=0.35):
-
+    """返回 (status, body_bytes)。网络/瞬时错误自动重试，绝不抛异常。"""
     url = safe_url(url)
     hdr = {'User-Agent': UA_WEB, 'Accept': '*/*', 'Accept-Encoding': 'gzip'}
     if headers:
@@ -353,7 +384,7 @@ _URL_SAFE = ":/?#[]@!$&'()*+,;=%~"
 
 
 def safe_url(value):
-
+    """urllib 不接受 URL 里的非 ASCII（中文文件名很常见）→ 百分号编码掉。"""
     u = text(value).strip()
     try:
         u.encode('ascii')
@@ -382,7 +413,12 @@ def is_media_url(url):
 
 
 def probe_media(url, headers=None, timeout=2.0):
+    """拉头 4KB 判断这条线路能不能真的出流，并记录 Content-Type 是否可信。
 
+    返回 dict: ok=True/False/None（能出流 / 4xx·5xx·HTML / 判断不了）、
+               ctype 正确的类型字符串（不可信时为空）。
+    注意：有些 CDN 会把 m3u8 的 Content-Type 标成 image/png，只能看正文判断。
+    """
     res = {'ok': None, 'ctype': ''}
     if not is_url(url):
         res['ok'] = False
@@ -426,6 +462,10 @@ def probe_media(url, headers=None, timeout=2.0):
             res['ctype'] = ctype
     return res
 
+
+# ============================================================================
+# 纯 Python AES（128/256 CBC + 256 GCM）
+# ============================================================================
 
 def _xtime(a):
     a <<= 1
@@ -476,7 +516,7 @@ def _aes_tables():
 
 
 def _expand_key(key):
-
+    """支持 16(128)/24(192)/32(256) 字节密钥，返回轮密钥列表。"""
     _aes_tables()
     nk = len(key) // 4
     if nk not in (4, 6, 8):
@@ -652,7 +692,7 @@ def gcm_encrypt(key, nonce, data, aad=b''):
 
 
 def gcm_decrypt(key, nonce, data, tag=None, aad=b''):
-
+    """tag 为 None 时按 data[-16:] 切分（部分客户端不校验 tag）。"""
     rk = _expand_key(key)
     if tag is None:
         tag = data[-16:]
@@ -667,6 +707,10 @@ def gcm_decrypt(key, nonce, data, tag=None, aad=b''):
         out += bytes(b ^ k for b, k in zip(chunk, ks))
     return bytes(out)
 
+
+# ============================================================================
+# P-256（secp256r1）ECDH
+# ============================================================================
 
 _P256_P = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF
 _P256_A = _P256_P - 3
@@ -736,6 +780,9 @@ def ecdh_shared_x(priv, server_pub):
     return shared[0].to_bytes(32, 'big')
 
 
+# ============================================================================
+# protobuf 裸编解码（T3 协议用）
+# ============================================================================
 
 def pb_varint(value):
     if value < 0:
@@ -845,7 +892,25 @@ def b64url_decode(txt):
         return base64.urlsafe_b64decode(s.encode('ascii'))
     except Exception:
         return b''
-
+# ============================================================================
+# 云端自更新（可选，默认不启用）
+#
+#   原理：脚本 init 时后台拉一份「版本清单」，远端版本比本地新就下载整份
+#   .py 覆盖自身文件；下次壳加载这个文件即是新代码（无需改配置、无需手动拷）。
+#
+#   开启方式：把 UPDATE_URL 填成清单地址（或 extend 里传 update_url）。
+#   清单支持两种最省事的形态：
+#     ① 纯文本，内容只有一行版本号，例如  20261105.1930
+#        → 新脚本地址约定为「清单同目录 + 本文件名」，放同一个目录即可。
+#     ② JSON，可指定任意下载地址与校验值：
+#        {"version":"20261105.1930",
+#         "url":"https://xx.com/tvbox/影探聚合.py",
+#         "sha256":"…", "size":91234, "note":"修了找剧 503"}
+#
+#   安全阀：只接受 2xx、只接受体积 <= UPDATE_MAX_BYTES、只接受含
+#   "class Spider" 的 Python 文本、sha256 对不上就放弃；写盘走
+#   临时文件 + os.replace 原子替换，失败时旁挂 .new 不破坏旧文件。
+# ============================================================================
 
 UPDATE_MAX_BYTES = 4 * 1024 * 1024
 SELF_NAME = 'Kishuto.py'
@@ -911,7 +976,7 @@ def parse_manifest(body):
 
 
 def _write_self(path, blob):
-
+    """原子替换自身文件。返回 (是否替换成功, 说明)。"""
     folder = os.path.dirname(path) or '.'
     tmp = os.path.join(folder, '.upd_%s.tmp' % uuid.uuid4().hex[:8])
     try:
@@ -951,7 +1016,7 @@ def _write_self(path, blob):
 
 
 def _fetch_manifest(url):
-
+    """带时间戳采样两次取版本较大的，都失败再回退原始地址。→ (manifest, status)"""
     sep = '&' if '?' in url else '?'
     got, status = [], 0
     for i in range(2):
@@ -982,7 +1047,7 @@ def _blob_version(blob):
 
 
 def check_update(url=''):
-
+    """拉清单 → 需要就下载覆盖。返回结果 dict（绝不影响主流程）。"""
     url = text(url or UPDATE_URL)
     out = {'ok': False, 'updated': False, 'version': CODE_VERSION,
            'msg': '', 'note': '', 'at': time.time()}
@@ -995,6 +1060,8 @@ def check_update(url=''):
             out['msg'] = 'self path unknown'
             return out
 
+        # 每轮都重新拉清单：CDN 边缘节点之间可能不同步（清单落后一版、
+        # 脚本已是新版），死守一份旧清单会永远 sha 对不上。
         last = ''
         for attempt in range(3):
             if attempt:
@@ -1016,7 +1083,7 @@ def check_update(url=''):
             if target_url:
                 cands.append(target_url if is_url(target_url)
                              else urllib.parse.urljoin(url, target_url))
-
+            # 清单没写地址 / 拼出来 404 时的兜底：同目录 ASCII 名、再退本地同名
             for name in ('Kishuto.py', self_name()):
                 cands.append(urllib.parse.urljoin(url, name))
             digest = text(man.get('sha256')).lower()
@@ -1041,7 +1108,8 @@ def check_update(url=''):
                 return out
 
             if digest and hashlib.sha256(blob).hexdigest() != digest:
-
+                # 清单落后一版时的兜底：只要脚本自身的版本号确实比本地新、
+                # 且不比清单旧，就认可它（版本号是我们自己的单调时间戳）。
                 bver = _blob_version(blob)
                 if bver and version_newer(bver, CODE_VERSION) and \
                         not version_newer(far, bver):
@@ -1064,9 +1132,12 @@ def check_update(url=''):
         out['msg'] = 'error: %s' % exc
         return out
 
-
+# ============================================================================
+# 源 1：影探4K（cms.lyyytv.cn）—— 首页 / 分类 / 搜索 的数据来源
+# ============================================================================
 
 class YT4K(object):
+    """影探4K。原脚本依赖 requests + pycryptodome，这里改为纯标准库实现。"""
 
     NAME = '影探'
     HOST = 'http://cms.lyyytv.cn'
@@ -1098,7 +1169,7 @@ class YT4K(object):
     def __init__(self, timeout=9.0):
         self.timeout = timeout
 
-
+    # ---------- 基础 ----------
     def cms(self, path, params=None):
         query = urllib.parse.urlencode(params or {})
         url = '%s/api.php/app/%s?%s' % (self.HOST, path, query)
@@ -1120,7 +1191,7 @@ class YT4K(object):
         cache_put(key, data, 60)
         return data
 
-
+    # ---------- 解密 ----------
     def _unb64(self, value):
         clean = re.sub(r'\s+', '', text(value))
         if not clean or not self._B64_RE.fullmatch(clean):
@@ -1131,7 +1202,7 @@ class YT4K(object):
             return None
 
     def decrypt_lvdou(self, value):
-
+        """lvdou+ 前缀：前 16 字节 key、后 16 字节 iv 的 AES/CBC/PKCS7（AES-128）。"""
         original = text(value)
         if not original.startswith('lvdou+') or not self.CMS_KEY:
             return original
@@ -1150,7 +1221,7 @@ class YT4K(object):
         return original
 
     def decrypt_ldmax(self, value, depth=0):
-
+        """老加密：ldmax.cooom 前缀，key = 路径前 16 位反转。"""
         if depth > 5:
             return ''
         url = text(value)
@@ -1178,7 +1249,7 @@ class YT4K(object):
             return ''
 
     def resolve_parse(self, body):
-  
+        """解析响应：JSON 包裹取 url；baidu.con 前缀走 AES；否则视为明文。"""
         body = text(body)
         if not body:
             return ''
@@ -1220,34 +1291,51 @@ class YT4K(object):
             pass
         return ''
 
-    PARSE_DEAD_TTL = 600
+    # 2026-11-18 p1：熔断判定精准化。旧逻辑把「单片解析失败」也计入全局熔断，
+    # 结果几个下架片源就能误封 4kzj 整个接口（实测接口仍活着、能解析出 m3u8）。
+    # 现在：解析成功立即清零计数；只有接口本身 HTTP 错误/连续不可用才累加，
+    # 且一次成功就解除熔断；TTL 从 600s 缩到 120s，误封也能快速自愈。
+    PARSE_DEAD_TTL = 120
 
-    def parse_url(self, raw, parse_id):
+    @staticmethod
+    def _parse_fail_add():
+        try:
+            fails = int(cache_get('yt:parsefail') or 0) + 1
+        except (TypeError, ValueError):
+            fails = 1
+        cache_put('yt:parsefail', str(fails), 300)
+        return fails
+
+    def parse_url(self, raw, parse_id, force=False):
         if not raw:
             return ''
-
-        if cache_get('yt:parsedead'):
+        # 解析接口已经明确失效时别再一条条硬打（每条要 10s，详情页会被拖死）。
+        # force=True：4K 换链等独立场景，即便全局熔断也强试一次（接口成功会自愈）。
+        if not force and cache_get('yt:parsedead'):
             return ''
         target = '%s%s&parsesId=%d' % (
             self.PARSE_API, urllib.parse.quote(raw, safe="!'()*"), parse_id)
         st, txt = http_text(target, headers=self.PARSE_HEADERS, timeout=6, retries=1)
-        if st and st < 400 and txt:
-            resolved = self.resolve_parse(txt)
-            if resolved and resolved.startswith('http'):
-                return resolved
-            if '解析失败' in txt or '"code":0' in txt.replace(' ', ''):
-                try:
-                    fails = int(cache_get('yt:parsefail') or 0) + 1
-                except (TypeError, ValueError):
-                    fails = 1
-                cache_put('yt:parsefail', str(fails), 300)
-                if fails >= 3:      # 连续 3 次才认为接口挂了，免得一部片失败就全封
-                    cache_put('yt:parsedead', '1', self.PARSE_DEAD_TTL)
-            else:
-                cache_put('yt:parsefail', '0', 300)
+        # 接口级失败（HTTP 错误/空响应）：才可能是接口真挂了
+        if not st or st >= 400 or not txt:
+            if self._parse_fail_add() >= 4:
+                cache_put('yt:parsedead', '1', self.PARSE_DEAD_TTL)
+            return ''
+        resolved = self.resolve_parse(txt)
+        if resolved and resolved.startswith('http'):
+            # 解析成功：接口是活的，立即清零失败计数并解除熔断
+            cache_put('yt:parsefail', '0', 300)
+            cache_delete('yt:parsedead')
+            return resolved
+        # 接口 200 但这片解析不出：视为「单片失败」，仅在明确 code:0/解析失败
+        # 且连续累计时谨慎熔断；普通单片失败不再误伤全局。
+        flat = txt.replace(' ', '')
+        if '解析失败' in txt or '"code":0' in flat or '"code":500' in flat:
+            if self._parse_fail_add() >= 4:
+                cache_put('yt:parsedead', '1', self.PARSE_DEAD_TTL)
         return ''
 
-
+    # ---------- 类型判断 ----------
     def is_4k_source(self, url):
         if not is_url(url):
             return False
@@ -1256,7 +1344,7 @@ class YT4K(object):
             return True
         return is_media_url(url) and not is_stream_url(url)
 
-
+    # ---------- 列表 ----------
     @staticmethod
     def _paginate(data, page):
         lst = as_list(data.get('list'))
@@ -1345,7 +1433,7 @@ class YT4K(object):
         data['list'] = lst
         return self._paginate(data, page)
 
-
+    # ---------- 详情 ----------
     def playlist(self, value):
         parts = []
         for entry in text(value).split('#'):
@@ -1386,6 +1474,7 @@ class YT4K(object):
         vod['vod_play_url'] = '$$$'.join(urls)
         return vod
 
+    # ---------- 播放 ----------
     def play(self, play_id):
         original = self.decrypt_lvdou(play_id)
         if not original:
@@ -1401,7 +1490,28 @@ class YT4K(object):
             return {'parse': 0, 'url': cached, 'header': dict(self.PARSE_HEADERS)}
 
         if self.is_4k_source(original):
-            resolved = self.parse_url(original, self.PARSE_ID_4K) or original
+            # 4K 直链多为失效的 ym4kjx 404，必须换链。p1：即便全局熔断生效也强试
+            # 一次换链（parsesId=2 独立且实测有效），避免把 404 原链交给播放器。
+            resolved = (self.parse_url(original, self.PARSE_ID_4K)
+                        or self.parse_url(original, self.PARSE_ID_4K, force=True)
+                        or original)
+            # 2026-11-18 p2：换链出的地址在「盒子网络」未必连得上——
+            #   · 联通云 pan.wo.cn:30443 非标端口，很多盒子/运营商直接封；
+            #   · 移动云 cmecloud.cn 呼和浩特节点 + AWS 15min 预签名，对盒子网络/
+            #     系统时间敏感（盒子时间不准会签名 403）。
+            # 沙箱能播不代表盒子能播，所以在这里用盒子本地网络实测一次：
+            # 明确连不上(ok=False)就换链重试一次，仍不通则返回空，交给上层
+            # Spider 的 _play_other 自动换源到能播的线路。
+            # 注意：探活失败不写缓存、不动全局熔断标志，避免误伤别的线路。
+            if resolved and resolved.startswith('http'):
+                pr = probe_media(resolved, dict(self.PARSE_HEADERS), timeout=2.5)
+                if pr.get('ok') is False:
+                    alt = self.parse_url(original, self.PARSE_ID_4K, force=True)
+                    if alt and alt.startswith('http') and alt != resolved:
+                        pr2 = probe_media(alt, dict(self.PARSE_HEADERS), timeout=2.5)
+                        resolved = alt if pr2.get('ok') is not False else ''
+                    else:
+                        resolved = ''
         elif is_stream_url(original):
             resolved = original
         else:
@@ -1413,6 +1523,11 @@ class YT4K(object):
             cache_put(cache_key, resolved, self.PLAY_TTL)
         return {'parse': 0, 'url': resolved or '', 'header': dict(self.PARSE_HEADERS)}
 
+# ============================================================================
+# 源 2 / 3：咕噜咕噜 + 橘汁4K（同一 T3 后端的两套客户端 profile）
+#   传输：ECDH(secp256r1) 握手 → HKDF("v2-session") → AES-256-GCM + raw-deflate
+#   协议：protobuf 裸编码；m=61 搜索 / m=62 详情 / m=69 服务器代理解析
+# ============================================================================
 
 T3_HOST_HEADER = '103.45.132.22:19987'
 T3_BASE = 'http://103.45.132.22:19987/app/bn/v2'
@@ -1789,6 +1904,9 @@ class T3Source(object):
                     return got
         return ''
 
+# ============================================================================
+# 源 4：找剧AI（zhaoju4.com）—— HMAC 签名的 REST，官方线路需登录态
+# ============================================================================
 
 class ZJSource(object):
     NAME = '找剧'
@@ -1833,7 +1951,8 @@ class ZJSource(object):
         self._anon_at = 0
         self._anon_id = 'anon_' + uuid.uuid4().hex
         self._probe = {}
-
+        # 会话检测（/v1/users/me）实测要 0.5~3.5s，且站点会随机 503。
+        # 放到后台预热，详情里最多等 1.2s，不拖累其他三个源。
         self._sess_thread = threading.Thread(target=self._ensure_session, daemon=True)
         self._sess_thread.start()
 
@@ -2430,7 +2549,11 @@ class ZJSource(object):
         return {'url': url, 'parse': 1 if ext else 0,
                 'header': {'User-Agent': self.UA, 'Referer': self.HOST + '/'}}
 
-
+# ============================================================================
+# 门面：聚合 Spider
+#   首页 / 分类 / 筛选 / 搜索：影探4K
+#   详情线路：影探 → 咕噜 → 橘汁 → 找剧（TVBox 默认播第一条，即影探）
+# ============================================================================
 
 class YtAggSpider(_BaseSpider):
     NAME = '影探聚合'
@@ -2454,7 +2577,8 @@ class YtAggSpider(_BaseSpider):
         self._update_url = ''
         self._update = {}
         self._updating = False
-
+        # 线路可用性校验：详情页把确认打不开（404/解析失败）的线路剔掉，
+        # 否则默认选中第一条死线路 → ExoPlayer 报 IO_BAD_HTTP_STATUS
         self.verify = True
         self.verify_budget = 2.5
         self.line_order = 'source'
@@ -2504,7 +2628,7 @@ class YtAggSpider(_BaseSpider):
         return None
 
     def _auto_update(self):
-  
+        # 合并版统一由 Kishuto 门面负责自更新，子源不再各自拉清单
         return
         self._updating = True
 
@@ -2522,7 +2646,8 @@ class YtAggSpider(_BaseSpider):
             pass
 
     def _prewarm(self):
-
+        """首页阶段偷偷把咕噜/橘汁的握手+boot 做完（各约 0.9s），
+        详情页就不用再付这笔开销。失败无所谓，详情里会自己重试。"""
         if self._warmed:
             return
         self._warmed = True
@@ -2534,18 +2659,22 @@ class YtAggSpider(_BaseSpider):
                         self._src(tag).client.ensure()
                 except Exception:
                     pass
-
+            # 找剧AI 官方 4K/1080P 要游客会话；首页后台先建好，
+            # 详情页 _await_session(0.6) 才来得及把 4K 线路挂出来。
             try:
                 if 'zj' in self.order:
                     self._src('zj')._ensure_session()
             except Exception:
                 pass
-
+            # 影探的网页线路解析接口是否还活着：后台先探一次，详情页就不用一条条等。
+            # 2026-11-18 p1：这只是「探测样本」，探完无论成败都清零误伤计数——
+            # 单一探测链接下架不代表接口挂了，不能让它参与全局熔断判定。
             try:
                 if 'yt' in self.order and not cache_get('yt:parsedead'):
                     src = self._src('yt')
                     src.parse_url('https://v.qq.com/x/cover/mzc002009suxdpv/d4102bz0ln6.html',
                                   src.PARSE_ID_WEB)
+                    cache_put('yt:parsefail', '0', 300)
             except Exception:
                 pass
 
@@ -2828,13 +2957,22 @@ class YtAggSpider(_BaseSpider):
             try:
                 tag, real, name = self._decode(code)
                 if tag == 'yt':
- 
+                    # 影探：直链直接探；网页线路 2026-11-18 p1 起改为「实际解出地址再探」。
+                    # 旧逻辑仅凭 yt:parsedead 标志就把网页线路判死，而该标志会被下架片源
+                    # 误触发（4kzj 接口其实还活着），导致能播的网页线路被排到最后。
                     src = self._src('yt')
                     if src.is_4k_source(real) or is_stream_url(real) or is_media_url(real):
                         results[idx] = self._probe_cached(real, {'User-Agent': 'okhttp/4.12.0'})
                     else:
-
-                        results[idx] = {'ok': False} if cache_get('yt:parsedead') else {'ok': None, 'page': True}
+                        # 走 playerContent 解出真实地址（内部调 parse_url，成功返回 m3u8）
+                        got = self.playerContent('', code)
+                        url = text(got.get('url'))
+                        if url.startswith('http'):
+                            results[idx] = self._probe_cached(url, got.get('header'))
+                        else:
+                            # 解不出地址：不算「接口已死」，只标记为需解析、排中间，
+                            # 交给播放时的换源重试兜底（可能只是这片没解析结果）
+                            results[idx] = {'ok': None, 'page': True}
                     return
                 got = self.playerContent('', code)
                 url = text(got.get('url'))
@@ -2874,12 +3012,12 @@ class YtAggSpider(_BaseSpider):
             else:
                 rank = 2          # 没验出来：中间
             scored.append((rank, idx, it))
-
+        # 线路一条都不删：只把能播的排前面，TVBox 默认选第一条才不会一播就失败
         scored.sort(key=lambda x: (x[0], x[1]))
         return [x[2] for x in scored]
 
     def _fill_later(self, cache_key, vid, tag, vod, base_lines, title, found, missing):
- 
+        """后台慢补：不设预算地跑完剩下的源，成功后刷新缓存。"""
         try:
             for other in missing:
                 try:
@@ -2907,7 +3045,7 @@ class YtAggSpider(_BaseSpider):
         return 'yt', vid
 
     def _base(self, tag, vid):
-
+        """取基准源详情，返回 (标题, vod, [(tag, 线路名, [(集名, 原始id)])])。"""
         try:
             if tag == 'yt':
                 vod = self._src('yt').detail(vid)
@@ -2959,7 +3097,7 @@ class YtAggSpider(_BaseSpider):
         return None
 
     def _collect(self, tag, title, box):
- 
+        """其他源：按标题搜索 → 取最像的一条 → 复用 _base 取线路。"""
         try:
             items = self._items(self._src(tag), title)
             match = strict_match(title, items)
@@ -3026,6 +3164,46 @@ class YtAggSpider(_BaseSpider):
             self._last_err = 'play(%s):%s' % (tag, exc)
         return empty
 
+
+# ======================================================================
+# 模块：xf
+# ======================================================================
+# -*- coding: utf-8 -*-
+"""
+稀饭聚合 · TVBox / OK影视 四源聚合 Python 源
+================================================================
+首页数据 : 稀饭动漫 Next (xifanacg) —— 分类 / 推荐 / 筛选 / 搜索 / 条目元数据
+播放线路 : 四源同时挂出，默认优先级（用户 2026-11-04 指定）
+           1. 稀饭动漫   xifanacg        tag=xf
+           2. GiriGiri爱 girigirilove   tag=gg
+           3. 次元城动画 cycani.org     tag=cy
+           4. OmoFun     omofun.in      tag=om
+           TVBox 默认取第一条线路播放，故此顺序即默认选线顺序。
+
+线路名 : 「源·原线路名」；选集 id : "<tag>|<base64url(flag + US + 原始id)>"
+         playerContent 按 tag 解码后派发回对应源，不依赖壳回传的 flag。
+
+源配置 extend（JSON，全部可选）:
+{
+  "cyc_username": "次元城账号",
+  "cyc_password": "密码",
+  "cyc_token": "浏览器复制的 JWT",
+  "lines": ["xf", "gg", "cy", "om"],
+  "detail_budget": 7,
+  "host": "https://next.xifanacg.com",
+  "api": "https://api.xifanacg.com",
+  "key": "sb_publishable_xxx"
+}
+说明：次元城播放接口需登录，上面三个 cyc_* 字段至少要给一个；
+      否则该源仍能列出选集，但播放会返回空地址（接口 401）。
+
+2026-11-04 修复要点（xifanacg「已坏」）:
+  站点接口实测全部正常（RPC / 详情 / 取流均 200）。真正的故障是旧脚本
+  _rsc_sources() 去请求 Next.js 的 /anime/{id} 页面，单次要 10.6~11s，
+  而该页 RSC payload 里已经完全没有 sources 数据 —— 详情页被拖到超时，
+  且只能降级出 1 条假线路。本版改为调用 issue-web-playback 拿 candidates
+  （含 source_id / source_name），详情页由 ~11.5s 降到 ~1s，并恢复 3 条真实线路。
+"""
 
 import sys
 import re
@@ -3100,13 +3278,13 @@ except Exception:
     _POOL_LOCK = _CACHE_LOCK = _DummyLock()
 
 
-
+# ==================== 全局 HTTP 层（四源共享连接池 / 缓存） ====================
 def _ssl_ctx():
     global _SSL, _SSL_READY
     if not _SSL_READY:
         _SSL_READY = True
         try:
-
+            # TVBox 内置 Python 常缺系统根证书；这些是公开采集接口，统一不校验
             _SSL = ssl._create_unverified_context() if ssl else None
         except Exception:
             _SSL = None
@@ -3250,7 +3428,8 @@ def _urllib_req(url, method, data, h, timeout):
 
 
 def request_ex(url, method='GET', body=None, headers=None, timeout=8.0, ttl=0):
-
+    """返回 (status, text)。body 为 dict/list 时自动序列化并置 Content-Type。
+    连接池按 netloc 复用；仅 2xx 会回池；短 TTL 缓存只存原始文本。"""
     try:
         p = urllib.parse.urlsplit(str(url or ''))
     except Exception:
@@ -3326,7 +3505,7 @@ def request_ex(url, method='GET', body=None, headers=None, timeout=8.0, ttl=0):
                     pass
                 if reused:
                     continue
-
+                # 真超时不重试，只有 <1.2s 的快速失败才重来
                 if attempt == 0 and (time.time() - t0) < 1.2:
                     continue
                 break
@@ -3340,7 +3519,7 @@ def xf_http_text(url, **kw):
 
 
 def xf_loads(txt):
-
+    """兼容普通 JSON / NDJSON / 前后带噪声的接口响应"""
     if not txt:
         return {}
     s = txt.strip()
@@ -3382,7 +3561,7 @@ def is_video(u):
 
 
 def enc_url(u):
-
+    """路径含中文/空格时百分号编码，保留 query 里的 sign 参数"""
     try:
         s = str(u or '').strip()
         if not s or all(ord(c) < 128 for c in s):
@@ -3429,7 +3608,7 @@ def xf_norm_title(s):
 
 
 def xf_sim(a, b):
-
+    """标题相似度：完全相同 > 包含 > 序列相似"""
     try:
         x, y = xf_norm_title(a), xf_norm_title(b)
         if not x or not y:
@@ -3458,7 +3637,7 @@ def season_tag(s):
 
 
 def search_keywords(title):
-
+    """完整标题 → 去括号/季数的核心词 → 核心词前 6 / 4 字"""
     t = str(title or '').strip()
     out = []
 
@@ -3495,7 +3674,8 @@ def xf_best_match(title, items, threshold=0.70):
 
 
 def search_best(src, title):
-
+    """跨站译名有差异时逐级降级搜索；降级轮只接受近乎精确匹配，
+    防止把第一季的线路挂到第二季上。"""
     for i, kw in enumerate(search_keywords(title)):
         try:
             items = src.search(kw)
@@ -3573,7 +3753,9 @@ def _epnum(e):
         return 0.0
 
 
+# ==================== 源 1：稀饭动漫 Next（首页数据源 + 线路） ====================
 class XifanSpider(object):
+    """修复版：移除无效的 RSC 请求，改用 issue-web-playback 的 candidates 建线路。"""
     TAG = 'xf'
     HOST = 'https://next.xifanacg.com'
     API = 'https://api.xifanacg.com'
@@ -3615,7 +3797,7 @@ class XifanSpider(object):
             self.timeout = float(cfg.get('timeout') or 4)
         except Exception:
             self.timeout = 4.0
-
+        # 健康标记：连续网络层失败就临时下线，别再让首页/分类每次白等超时
         self._fails = 0
         self._cool = 0.0
         self.alive = True
@@ -3631,7 +3813,7 @@ class XifanSpider(object):
             self._cool = time.time() + 120
 
     def health(self):
-
+        """冷却期过后自动试探恢复。"""
         if not self.alive and time.time() > self._cool:
             self.alive = True
             self._fails = 0
@@ -3842,11 +4024,11 @@ class XifanSpider(object):
             return []
 
     def match_lines(self, title):
-
+        # 首页源本身就是元数据来源，详情直接由 detail() 产出线路
         return []
 
     def anime_eps(self, aid):
-
+        """详情 + 剧集一次取回；嵌套 select 失败时回退成两次单独请求"""
         try:
             arr = self.get('/rest/v1/animes', {
                 'id': 'eq.' + str(aid),
@@ -3879,7 +4061,8 @@ class XifanSpider(object):
         return xf_clean_name(('第%02d集 %s' % (num, t)) if t else ('第%02d集' % num))
 
     def source_lines(self, aid, eps):
-
+        """【核心修复】用第一集取流响应的 candidates 枚举真实线路。
+        旧版解析 Next.js RSC payload，实测该页已无 sources 数据且耗时 10.6s。"""
         out = []
         eids = [e.get('id') for e in eps if e.get('id')]
         if not eids:
@@ -3982,6 +4165,7 @@ class XifanSpider(object):
         return res
 
 
+# ==================== 源 2：GiriGiri爱（maccms 接口，直链） ====================
 class GirigiriSpider(object):
     TAG = 'gg'
     HOST = 'https://ani.girigirilove.com'
@@ -4069,7 +4253,9 @@ class GirigiriSpider(object):
             q.pop('type_id', None)   # 搜索时带 type_id（哪怕空串）会返回 total=0
         return q
 
-
+    # ---------- 备用主源（xifanacg 的 Supabase API 挂掉时顶上） ----------
+    # 实测该 API 的 /Vod/get_list 支持 type_id + offset 翻页 + orderby 排序，
+    # type_id=2 日漫 3147 条、type_id=3 欧美 38 条，orderby 可选 ''/hits/score。
     CATS = [
         {'type_id': 'gg_new', 'type_name': '日漫·最新'},
         {'type_id': 'gg_hot', 'type_name': '日漫·热门'},
@@ -4221,6 +4407,7 @@ class GirigiriSpider(object):
         return res
 
 
+# ==================== 源 3：次元城动画（REST API，播放需登录） ====================
 class CycaniSpider(object):
     TAG = 'cy'
     HOST = 'https://www.cycani.org'
@@ -4240,7 +4427,7 @@ class CycaniSpider(object):
             self.timeout = 8.0
         self.username = str(cfg.get('cyc_username') or '').strip()
         self.password = str(cfg.get('cyc_password') or '').strip()
-
+        # 旧脚本里硬编码的 Token 已于 2026-11-04 过期且无法 refresh，此处不再内置
         self.token = self._norm(str(cfg.get('cyc_token') or '').strip())
         if not self.token:
             self.token = self._load_auth()
@@ -4480,6 +4667,7 @@ class CycaniSpider(object):
         return res
 
 
+# ==================== 源 4：OmoFun（HTML + 聚合取流接口） ====================
 class OmoFunSpider(object):
     TAG = 'om'
     HOSTS = ['https://omofun.in', 'https://omofun2.com']
@@ -4660,8 +4848,13 @@ class OmoFunSpider(object):
         return res
 
 
-
+# ==================== 门面：TVBox 协议入口 ====================
 class XifanAggSpider(_SpiderBase):
+    """首页/分类/搜索 = 稀饭动漫；详情页 = 四源线路聚合。
+
+    线路顺序（用户 2026-11-04 指定）：xf > gg > cy > om。
+    TVBox 默认播放第一条线路，因此该顺序同时是默认选线顺序。
+    """
 
     LINE_ORDER = ('xf', 'gg', 'cy', 'om')      # 稀饭 → GiriGiri → 次元城 → OmoFun
     LABELS = {'xf': '稀饭', 'gg': 'GiriGiri', 'cy': '次元城', 'om': 'OmoFun'}
@@ -4726,7 +4919,11 @@ class XifanAggSpider(_SpiderBase):
         return None
 
     def _probe(self):
+        """后台探活 xifan：它的 API 会整站超时，不能在首页路径上白等。
 
+        探活完成前先按「不可用」处理（首页直接走 GiriGiri，约 0.8s 出内容），
+        探到通了再切回 xifan 的 17 个分类。
+        """
         xf = self._x()
         if xf is None:
             return
@@ -4767,18 +4964,20 @@ class XifanAggSpider(_SpiderBase):
     def manualVideoCheck(self):
         return False
 
+    # ---------- 首页数据：主源优先 xifan，其 API 挂了自动切 GiriGiri ----------
     def _main(self):
         xf = self._x()
         if xf is not None:
             if getattr(xf, 'alive', True):
                 return xf, 'xf'
-
+            # 冷却到期不再当场重试（那会把首页卡住 4s），改用后台探活，
+            # 这次仍走 gg，探通了下一轮请求自动切回来
             if time.time() > getattr(xf, '_cool', 0):
                 self._probe()
         return self.sources.get('gg') or xf, 'gg'
 
     def _alive(self, tag):
-
+        """该源当前是否值得发请求（主要是 xifan 会整站超时）。"""
         if tag == 'xf':
             try:
                 return bool(self._x() and getattr(self._x(), 'alive', True))
@@ -4787,7 +4986,7 @@ class XifanAggSpider(_SpiderBase):
         return tag in self.sources
 
     def _tagged(self, res, tag):
-
+        """主源为 gg 时给列表 id 打 'g:' 前缀，详情页才能知道该回哪个源取数据。"""
         if tag != 'gg' or not isinstance(res, dict):
             return res
         for it in (res.get('list') or []):
@@ -4815,11 +5014,13 @@ class XifanAggSpider(_SpiderBase):
         src, tag = self._main()
         return self._tagged(src.searchContent(key, quick, pg), tag)
 
+    # ---------- 详情：主源取基础信息 + 四源线路聚合 ----------
     def detailContent(self, ids):
         try:
             raw = str(ids[0] if isinstance(ids, (list, tuple)) and ids else (ids or ''))
             raw = raw.strip()
-
+            # 'g:' 前缀 = 来自 GiriGiri（备用主源）；纯数字 = 来自 xifan。
+            # 两个站点的 id 空间互不相通，必须靠前缀区分，否则会串片。
             by_gg = raw.startswith('g:')
             aid = re.sub(r'[^0-9]', '', raw)
             if not aid:
@@ -4838,16 +5039,19 @@ class XifanAggSpider(_SpiderBase):
                 vod, main_lines = self.sources['gg'].detail(aid)
             else:
                 if not self._alive('xf'):
-
+                    # xifan 的 API 整站超时中：历史收藏的纯数字 id 已无从解析，
+                    # 直接返回空，别让详情页卡几十秒
                     return {'list': []}
                 main_tag = 'xf'
                 vod, main_lines = self._x().detail(aid)
                 if not main_lines:
-
+                    # 瞬时抖动（CDN 换节点 / 秒断）时重试一次；失败响应不进缓存，
+                    # 因此第二次是真实重发，不会把等待翻倍到不可接受
                     time.sleep(0.2)
                     vod, main_lines = self._x().detail(aid)
             title = str(vod.get('vod_name') or '')
 
+            # 其余三源并发按标题匹配；慢源超时即跳过，不拖累整体
             boxes = {}
             ths = []
             for tag in self.order:
@@ -4906,7 +5110,7 @@ class XifanAggSpider(_SpiderBase):
                             segs.append('%s$%s' % (ep[0] or '正片', code))
                     if not segs:
                         continue
-
+                    # 需要壳嗅探的「网页解析」兜底线路统一排到最后
                     if '网页解析' in raw_name:
                         tail.append((name, '#'.join(segs)))
                     else:
@@ -4929,7 +5133,7 @@ class XifanAggSpider(_SpiderBase):
                     str(vod.get('vod_content') or '') + NL + NL + tip).strip()
 
             result = {'list': [vod]}
-
+            # 只缓存序列化文本：避免把同一个可变 dict 交给壳后被改写污染缓存
             try:
                 xf_cache_put(ck, json.dumps(result, ensure_ascii=False), self.CACHE_TTL)
             except Exception:
@@ -4943,7 +5147,7 @@ class XifanAggSpider(_SpiderBase):
                 pass
             return {'list': []}
 
-
+    # ---------- 播放：按线路 tag 派发回原源 ----------
     def playerContent(self, flag, id, vipFlags):
         res = {'parse': 0, 'jx': 0, 'url': '',
                'header': play_header(self._x().host)}
@@ -4968,7 +5172,7 @@ class XifanAggSpider(_SpiderBase):
         return res
 
     def localProxy(self, param):
-
+        """m3u8 相对分片改写（四源通用）"""
         try:
             url = ''
             if isinstance(param, dict):
@@ -5006,7 +5210,19 @@ class XifanAggSpider(_SpiderBase):
             return None
 
 
-
+# ======================================================================
+# 模块：xj
+# ======================================================================
+# coding=utf-8
+# ================== 影视·正经·小鸡看看 · TVBox ==================
+# 🏷️ 源头：软件 小鸡看看 App(com.xmoebr.bdx v1.0.5) / TV版(com.kankan.tv) 接口 https://xjggg.top/api.php/app
+# 👤 作者：无聊  |  📅 2026-10-28
+# 🏷️ 平台：TVBox / 影视仓  ·  csp_Spider
+# 🔍 站型：Expo/RN 壳 App + PHP API，全接口强制五头签名(x-aid/x-ave/x-time/x-nonc/x-sign)
+# 🎬 关键：签名 = SHA256(finger&id&nonce&sk&time&v)，sk 与证书指纹从 TV 版 APK 逆向得出
+#        http://... 播放令牌(加密) → /app/decode/url 换真直链
+# 📦 内容：视频（电影/剧集/动漫/综艺，多线路 7 条）
+# ==========================================================
 import sys
 import json
 import time
@@ -5021,11 +5237,19 @@ import urllib.parse
 
 sys.path.append('..')
 
+# ---------------- 签名材料（逆向 libsecurity-bridge.so / TV 版 dex 得出）----------------
 APP_ID = "com.kankan.tv"
 APP_VER = "105"
 SK = "SK-sk_13oXDZ7u9j2Tk1c0cawWVFfO"
 FINGER = "SF-F5F11CB15897115AE6BCFE063C288F730CA865588F572C780A3E8477D0DD3776"
-
+# ---------------- 设备号池（★无限解析的核心★）----------------
+# decode/url 是「每设备每日 N 次」的配额制（实测：单枚设备连解 60 次仍未到顶；
+# 但一枚设备被榨干后当日恒返回 code 429 "今日解析次数已用完，请明天00:00后再试"）。
+# 服务端只认 x-device-id 头，不校验设备唯一性 / 不与账号绑定 → 换一枚 UUID4 立刻恢复。
+# 几千人共用一份源 = 几千台「同一设备」，一枚设备几小时就被榨干 → 必须池化 + 轮转：
+#   · POOL_SIZE 枚设备轮转使用，压力摊开，单枚寿命 × POOL_SIZE
+#   · 429 立即拉黑该枚、换下一枚，永不中断
+#   · 设备号落盘到 hiker 数据目录，跨重启复用（避免重启把好设备全丢掉）
 import uuid as _uuid
 import threading as _th
 
@@ -5051,7 +5275,7 @@ def _dev_newday():
 
 
 def _dev_save():
-
+    """设备池落盘（壳环境可能无写权限，失败静默）。"""
     try:
         open(_DEV_CACHE, "w").write(json.dumps({
             "day": _DEV_DAY, "pool": _DEV_POOL, "bad": list(_DEV_BAD.keys())
@@ -5061,7 +5285,7 @@ def _dev_save():
 
 
 def _dev_load():
-
+    """跨重启复用设备号：昨日的好设备今天多半还有额度。"""
     global _DEV_POOL, _DEV_BAD
     try:
         obj = json.loads(open(_DEV_CACHE).read())
@@ -5075,7 +5299,7 @@ def _dev_load():
 
 
 def _dev_fill():
-
+    """补足池到一个足够大的规模。"""
     while len(_DEV_POOL) < POOL_SIZE:
         n = _new_device()
         if n in _DEV_BAD or n in _DEV_POOL:
@@ -5084,7 +5308,7 @@ def _dev_fill():
 
 
 def _dev_get():
-
+    """轮转取一枚设备号（分散压力，避免单枚被快速榨干）。"""
     global _DEV_IDX
     with _DEV_LOCK:
         _dev_newday()
@@ -5096,7 +5320,7 @@ def _dev_get():
 
 
 def _dev_fail(dev):
-
+    """该设备今日配额耗尽 → 拉黑并补新号，返回下一枚。"""
     with _DEV_LOCK:
         _dev_newday()
         if dev:
@@ -5109,7 +5333,7 @@ def _dev_fail(dev):
 
 
 def _dev_ok(dev):
-
+    """解码成功：只做记账，不打断轮转（保持压力分散）。"""
     with _DEV_LOCK:
         if dev and dev not in _DEV_POOL and dev not in _DEV_BAD:
             _DEV_POOL.append(dev)
@@ -5121,14 +5345,14 @@ DEVICE = _DEV_POOL[0]
 XJ_UA = "okhttp/4.12.0"
 PLAY_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 
-
+# 主域名 + 逆出的备用端点（App 内置 endpointConfig 加密块解出的两枚 API 域名）
 HOSTS = [
     ("xjggg.top", 443),
     ("50.118.186.185", 8090),
     ("179.255.99.4", 8090),
 ]
 
-
+# 端点自愈：主域名全挂时，从这几个公开配置页解出最新 API 端点（App 同款流程）
 ENDPOINT_SOURCES = [
     "https://res.cloudinary.com/wygbngdd/raw/upload/1.txt",
     "https://anotepad.com/notes/wcqhmtf9",
@@ -5183,16 +5407,17 @@ FILTER_DEF = {
 
 SORTS = [("", "默认"), ("hot", "最热"), ("score", "评分"), ("time", "最新")]
 
-
+# 显示名 → 真实 vodFrom（decode 接口只认真实 from，传显示名会返回"未知的vodFrom类型"）
 FRM_ALIAS = {
     "ZJ4K": "zijianm3u8", "BB蓝光": "BBA", "QS蓝光": "qsvip",
     "ZY蓝光": "zy1080_01", "JD4K": "JD4K", "TM蓝光": "tmdb", "NBY": "NBY",
 }
-
+# token 前缀 → 真实 vodFrom（从 token 自身反推，比线路名更可靠）
 TOK_FRM = {"zijian": "zijianm3u8", "qqqq": "BBA", "qsvip": "qsvip",
            "JD": "JD4K", "tmdb": "tmdb", "NBY": "NBY"}
 
 
+# ---------------- 纯标准库 AES-256（只为解 App 端点配置，GCM 数据段=CTR） ----------------
 def _xt(a):
     a <<= 1
     return (a ^ 0x1b) & 0xff if a & 0x100 else a
@@ -5297,12 +5522,12 @@ class XiaojiSpider(object):
         self.port = 443
         self.mem = {}
 
-
+    # ---------------- TVBox 契约 ----------------
     def getName(self):
         return "小鸡看看"
 
     def isVideoFormat(self, url):
-
+        # 站内只出 m3u8/mp4 直链，无 pics:// 图集线路
         if not url:
             return False
         return not url.startswith("pics://")
@@ -5383,7 +5608,7 @@ class XiaojiSpider(object):
         while tries < 2:
             tries += 1
             for host, port in order:
-
+                # 每次请求轮换取设备号：把配额压力摊到整个池上（几千人共用也不挤爆单枚）
                 dev = _dev_get()
                 for att in range(3):
                     try:
@@ -5402,7 +5627,7 @@ class XiaojiSpider(object):
                             if obj.get("code") == 401:
                                 break
                             if obj.get("code") == 429 or obj.get("error_code") == 42901:
-
+                                # 本设备今日配额耗尽 → 拉黑换号立刻重试（次数无上限）
                                 rots += 1
                                 dev = _dev_fail(dev)
                                 if rots > 20:
@@ -5414,14 +5639,14 @@ class XiaojiSpider(object):
                         _dev_ok(dev)
                         return obj.get("data")
                     except Exception as e:
-
+                        # 连接层抖动（ConnectionAborted/超时）→ 指数退避重试
                         last = str(e)[:60]
                         conn_fail += 1
                         if att < 2:
                             time.sleep(0.35 * (att + 1))
                 if last.startswith("http") or last == "bad body":
                     continue
-
+            # 全部端点失败 → 走一次端点自愈再试
             if tries == 1:
                 time.sleep(0.5)
                 new = self._refresh_hosts()
@@ -5446,7 +5671,7 @@ class XiaojiSpider(object):
 
     @staticmethod
     def _is_url(u):
-
+        # 真正的 URL 判据：协议 + 主机名，而不是松散的 startswith
         return bool(u) and len(u) > 10 and "://" in u and bool(urllib.parse.urlparse(u).hostname)
 
     def _pic(self, v):
@@ -5629,7 +5854,10 @@ class XiaojiSpider(object):
 
     # ---------------- 详情 ----------------
     def _playback_all(self, vid):
-
+        """一次拉全线路分集。
+        ★坑：接口带 from 参数会被忽略并只回 BBA 线路，导致其它线路拿到 BBA 的 token
+        → 播放时 vodFrom 与 token 不匹配，decode 返回"未知的vodFrom类型"★
+        """
         data = self._api("/api.php/app/vod/playback_v2", {"vod_id": vid})
         out = {}
         if not isinstance(data, dict):
@@ -5748,7 +5976,10 @@ class XiaojiSpider(object):
 
     # ---------------- 播放 ----------------
     def _decode(self, tok, frm, _retry=0):
-
+        """解析播放令牌 → 真直链。
+        _api 内部已做「轮转取设备号 + 429 换号 + 连接退避」，
+        这里再包一层整调用重试，扛住服务端瞬时抖动（几千人共用时的常态）。
+        """
         data = self._api("/api.php/app/decode/url/",
                          {"url": tok, "vodFrom": frm, "_t": int(time.time() * 1000)},
                          ok_codes=(1, 200))
@@ -5802,7 +6033,9 @@ class XiaojiSpider(object):
         return {"parse": 0, "playUrl": "", "url": url, "header": header}
 
     def _alt_episode(self, tok):
-
+        """同一集在其它线路取真直链：detail 里已把每集 token 按线路存下来，
+        用「集名」跨线路配对的成本太高，这里直接按 token 反查所属影片不可行，
+        改为：本进程最近一次 detailContent 的分集表里找同一集序号的其它线路。"""
         try:
             cache = getattr(self, "_eps_cache", None) or {}
             for vid, rec in cache.items():
@@ -5870,7 +6103,19 @@ class XiaojiSpider(object):
             return [404, "text/plain", {}, b"err"]
 
 
-
+# ======================================================================
+# 模块：ff
+# ======================================================================
+# -*- coding: utf-8 -*-
+# FoFo影院 (www.fofo33.com) TVBox / OK影视 Python 爬虫
+# ------------------------------------------------------------
+# 站点结构（实测 2026-11）：
+#   - 站点无开放 JSON API（/api.php 全部回退 HTML），故走 HTML 解析
+#   - 分类页:  /{dianying|dianshiju|zongyi|dongman}/{类型}-{地区}-{年代}-{排序}?page=N
+#   - 搜索页:  /search?q=关键词&page=N（无结果时回吐推荐，必须本地关键词二次过滤）
+#   - 详情页:  /{cat}/{vid}，内嵌 var urlList = decryptDict({...}) 恺撒位移(-1)加密的线路数据
+#   - 取播放:  POST /source/  body: id={sid}  → 纯文本 m3u8/mp4 直链
+#   - web-sign: 站点未启用（预留注入槽位）
 
 import sys
 import json
@@ -5931,7 +6176,9 @@ class FofoSpider(_BaseSpider):
         self._line_cache = {}   # detail path -> 解析后的线路数据
         self._detail_cache = {} # detail path -> vod 基础信息
 
-
+    # ------------------------------------------------------------------
+    # 生命周期
+    # ------------------------------------------------------------------
     def init(self, extend=""):
         try:
             self.extend = extend or ''
@@ -5967,7 +6214,9 @@ class FofoSpider(_BaseSpider):
     def localProxy(self, param):
         return []
 
-
+    # ------------------------------------------------------------------
+    # 基础网络封装
+    # ------------------------------------------------------------------
     def _headers(self, referer='', web_sign=''):
         h = {
             'User-Agent': self.UA,
@@ -6013,7 +6262,9 @@ class FofoSpider(_BaseSpider):
         except Exception:
             return ''
 
-
+    # ------------------------------------------------------------------
+    # 恺撒解密（站点 decryptDict 逻辑：字符 charCode -1）
+    # ------------------------------------------------------------------
     def _shift(self, s):
         try:
             return ''.join(chr(ord(c) - 1) for c in s)
@@ -6028,7 +6279,8 @@ class FofoSpider(_BaseSpider):
                 return {self._shift(k): self._decrypt_dict(v) for k, v in val.items()}
             if isinstance(val, str):
                 s = self._shift(val)
-
+                # 与站点 JS 一致：对解密结果尝试 JSON.parse
+                # （字符串值多为 "\uXXXX" 形式的 JSON 字符串字面量，需解码为中文）
                 if s[:1] in ('"', '[', '{'):
                     try:
                         return json.loads(s)
@@ -6040,7 +6292,7 @@ class FofoSpider(_BaseSpider):
             return val
 
     def _extract_urllist(self, html):
-
+        """从详情页提取并解密内嵌线路数据"""
         try:
             m = re.search(r'var\s+urlList\s*=\s*decryptDict\((\{.*?\})\)', html, re.S)
             if not m:
@@ -6058,9 +6310,11 @@ class FofoSpider(_BaseSpider):
         except Exception:
             return {'source': [], 'url_list': []}
 
-
+    # ------------------------------------------------------------------
+    # HTML 列表解析
+    # ------------------------------------------------------------------
     def _parse_items(self, html):
-
+        """解析列表页/搜索页 <li> 条目，返回 vod 列表"""
         result = []
         try:
             for block in re.findall(r'<li>(.*?)</li>', html, re.S):
@@ -6118,6 +6372,9 @@ class FofoSpider(_BaseSpider):
         except Exception:
             return (s or '').strip()
 
+    # ------------------------------------------------------------------
+    # 内容方法
+    # ------------------------------------------------------------------
     def homeContent(self, filter):
         classes = [{'type_id': c['type_id'], 'type_name': c['type_name']} for c in self.CATS]
         filters = {}
@@ -6315,7 +6572,13 @@ class FofoSpider(_BaseSpider):
             return {'list': []}
 
     def _build_sources(self, data, path):
-
+        """
+        组装播放线路：
+        1) 优先取内嵌线路数据（每集 sid 经 POST /source/ 兑换 m3u8/mp4 直链），
+           线路按名称排序，最多 4 条；
+        2) 无任何直链线路时兜底详情页；
+        3) 最后追加一条解析线路（交由壳内 webview 播放详情页）。
+        """
         try:
             sources = data.get('source') or []
             url_list = data.get('url_list') or []
@@ -6411,7 +6674,42 @@ class FofoSpider(_BaseSpider):
         return result
 
 
+# ======================================================================
+# 模块：sz
+# ======================================================================
+# -*- coding: utf-8 -*-
+"""
+================================================================================
+ 小山影视源 · CatVod / Box  Python Spider
+================================================================================
+ 后端   : http://43.248.128.122:578
+ 账号   : sukeke / sukeke.1   (已内置,可在 init 参数中覆盖)
+ 依赖   : requests (无则退回 urllib)
 
+ 已完整验证的链路
+ ----------------------------------------------------------------------------
+  1. 登录       POST /api/v1/user/login      {"Username","Password","device_id"}
+  2. 密钥交换   GET  /api/v1/security/challenge  →  POST /api/v1/security/init
+                → session_id + sign_key
+  3. 列表/搜索  GET  /api/v1/search?wd=*&type=<分类>&page=<页>
+                → data.hits[]   (wd=* 为通配,配合 type 即分类全量)
+  4. 详情       GET  /api/v1/video/detail?id=<vod_id>
+                → data.vod_info.vod_url_with_player[]  每条线路带 tk 票根
+  5. 换票       POST /api/v1/vod/ticket       body {"token": "<tk完整值>"}
+                → data.ticket  (play_ticket, 内含 parse_api / data.url / 有效期)
+  6. 取流       按 parse_api 分三种形态解析:
+                 · 相对路径  /api/v1/vod/parse?code=..&t=..&url=
+                        → 拼 BASE 后 GET,服务端直接吐播放地址
+                 · 外部解析  https://.../json_api.php?key=..&vid={md5}
+                        → {md5} 用 data.url 替换,返回 JSON 取 url
+                 · 外部解析  https://.../api/?key=..&url=
+                        → url= 后拼 data.url,返回 JSON 取 url
+  7. 推荐       GET  /api/v1/video/recommend?id=<vod_id>
+
+ 注意:device_id 必须与账号已绑定的设备一致(每个新 device_id 占一个设备配额,
+      超了会报"设备数量已达上限")。下方已预置可用设备号。
+================================================================================
+"""
 import json
 import time
 import uuid
@@ -6455,13 +6753,14 @@ except Exception:
             return None
 
 
-
+# 已实测的分类表(type_id -> 名称)。search 接口有严格限流,
+# 分类探测会连发数十次请求必然触发风控,因此默认直接使用本表,不做在线探测。
 KNOWN_TYPES = [
     (1, "电影"), (2, "连续剧"), (3, "综艺"), (4, "动漫"),
     (20, "短剧"), (21, "少儿"), (22, "漫剧"), (23, "纪录片"),
 ]
 
-
+# init 接口的服务端要求字段(只校验存在性,不校验取值)
 _INIT_FILLER = {
     "sign": "s", "signature": "s", "app_id": "1", "app_key": "1",
     "app_version": "1.0", "version": "1", "platform": "android",
@@ -6670,7 +6969,7 @@ class ShanZhaSpider(BaseSpider):
         return True
 
     def _sign_headers(self, path, body=""):
-
+        """基于 sign_key 的设备签名(服务端 sign_policy=observe,属扩展用途)"""
         if not self.sign_key:
             return {}
         try:
@@ -6981,6 +7280,14 @@ if __name__ == "__main__":
                 print("  [%s] → %s" % (nm, (u[:96] + "...") if len(u) > 96 else (u or p.get("msg", ""))))
 
 
+# ======================================================================
+# 模块：gg —— 咕噜咕噜（首页 / 分类主源，T3 私有协议）
+# ======================================================================
+# -*- coding: utf-8 -*-
+"""
+咕噜咕噜 —— TVBox 蜘蛛框架Python 爬虫）。
+
+"""
 
 
 import base64
@@ -8013,7 +8320,8 @@ class GuluSpider:
         return 4000
 
     def _play_header(self, url: str) -> dict:
-
+        # 多数第三方 CDN 带不带 Referer 都能播；但 picovr / ppvod / quark
+        # 带 Referer 反而 403（实测）。动态：这些域名去 Referer。
         _no_ref = ("picovr.com", "ppvod", "drive.quark.cn")
         h = {"User-Agent": USER_AGENT}
         if not (url and any(d in url for d in _no_ref)):
@@ -8293,7 +8601,14 @@ def _kish_update_async():
         pass
 
 
-
+# ==================== Kishuto 总门面 ====================
+# ============================================================================
+# 模块：诊断中心（Kishuto Diag）
+#
+# 用标准 py 协议模拟「设置中心」：分类 → 卡片 → 点开执行并显示报告。
+# 不依赖壳的 action 回调，任何支持 py 源的壳都能用。
+# 用法：配置里加第二个站点，api 同一个 py，ext 写 {"mode":"settings"}。
+# ============================================================================
 
 DIAG_BASE = 'https://gitee.com/tao060702/tvbox/raw/master'
 
@@ -8302,7 +8617,10 @@ QR_UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
          '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36')
 
 
-
+# ---------------------------------------------------------------------------
+# 诊断中心卡片磁贴的本地图片服务：纯标准库 PNG 编码 + 127.0.0.1 HTTP。
+# 不联网、不依赖 PIL / 字体；磁贴由 _diag_card_png() 生成。
+# ---------------------------------------------------------------------------
 
 _QR_SRV = {'port': 0, 'cards': {}}
 
@@ -8324,7 +8642,11 @@ def _qr_png_write(w, h, rows):
 
 
 def _qr_server():
+    """起一次本地图片服务（端口 39789 起顺延），返回端口号。
 
+    绑定成功后会自发一个探针请求，确认应答确实来自本服务；否则顺延端口。
+    避免 Windows 端口复用时「绑上了、请求却被别的进程接走」导致磁贴 404。
+    """
     import threading
     import urllib.request
     if _QR_SRV['port']:
@@ -8391,7 +8713,10 @@ def _qr_server():
     return 0
 
 
-
+# ---------------------------------------------------------------------------
+# 诊断中心卡片磁贴：纯标准库生成 PNG，走 _qr_server() 的本地图片服务。
+# 不联网、不依赖字体；按分区配色 + 大号编号，避免所有卡片都是灰色占位图。
+# ---------------------------------------------------------------------------
 
 _DIAG_FONT = {
     '0': ('01110', '10001', '10001', '10001', '10001', '10001', '01110'),
@@ -8658,7 +8983,23 @@ class KishDiag(object):
         except Exception as exc:
             return '%-4s 异常 %s: %s' % (name, type(exc).__name__, str(exc)[:50])
 
+    # ---------------- 兜底：软件内网页登录（纯增量） ----------------
 
+
+# ==================== 枫奇4K 线路源 fq BEGIN ====================
+# -*- coding: utf-8 -*-
+"""枫奇4K —— 只保留「至臻4K」「蓝光2K」两条线路（纯标准库，自包含）
+
+原源（枫叶4K影院 / maihaolian.com）详情页共 4 条线路：
+    至臻4k / 蓝光2k / 自营y / 自营r
+本源只取前两条，播放解析也只保留对应的 JD / co 两个接口。
+
+设计约束（与 Kishuto 聚合一致）：
+  * 纯标准库，不用 requests / bs4，可直接并进 Kishuto.py 的同一命名空间；
+    所有全局名字一律 fq_ / FQ_ 前缀，避免覆盖其它模块。
+  * init() 绝不联网；只有实际请求撞上「系统安全验证」时才惰性过验证码。
+  * 验证码识别为纯 Python PNG 解码 + 模板匹配（模板来自原源）。
+"""
 import datetime
 import html
 import json
@@ -8753,7 +9094,14 @@ def fq_cap_norm(vals):
 
 
 def fq_recognize_captcha(data):
-
+    """识别 4 位数字验证码：
+    - 纯 Python PNG 解码（fq_decode_png）
+    - 自适应阈值二值化 → 列投影切 4 段
+    - 每字符灰度块双线性缩放 8x10 → 零均值单位方差归一化
+    - 与 FQ_CAP_TPL（按真实验证码样本训练的归一化模板）做余弦相关取 argmax
+    - 任一字符置信度 < 0.85 判为失败（返回 None，由调用方换图重试）
+    模板于 2026-10 针对 maihaolian.com/zzztool.com 现行验证码字体重新拟合。
+    """
     try:
         W, H, gray = fq_decode_png(data)
     except Exception:
@@ -9150,6 +9498,37 @@ class FengqiSpider(_FQBase):
     def playerContent(self, flag, id, vipFlags=None):
         return fq_player_data(str(id))
 
+# ==================== 枫奇4K 线路源 fq END ====================
+
+# ==================== 橘汁新网关线路源 jn BEGIN ====================
+# -*- coding: utf-8 -*-
+# 橘汁视频 · 新网关版 TVBox / AVBox spider（Python / drpy）
+# ============================================================================
+# 【这是全新写的一份，不是对旧文件的修补】
+#
+# 旧版「橘汁视频（新）.py」走的是 https://gdsaj.hzhcbkj.cn（旧网关）。
+# 旧网关的 JD4K 解析通道已经失效，videoUsableUrl 会返回
+#   「解析视频地址失败 / 你触发了防盗」，导致 JD4K 线路播不了。
+# 本文件改走 sun.json 里「橘汁 • APP」(csp_AppDrama) 配置指向的新网关
+#   http://juziapp.hzhcbkj.cn
+# 并按该插件的协议重新实现：publicParams 走 AES-CBC 加密成 paramsData、
+# 参数走 dataKey 的 AES-ECB、签名用 zone 下发的二级公钥。
+#
+# 实测（2026-11-08）：新网关下 4 条 4K 线路全部可兑换出播放直链，包括
+#   JD4K-可下载 / VIP4K / 自建4K-3 / 自建4K-4
+#
+# 用法：直接当普通 py 源导入 TVBox / AVBox 即可，无需其它文件。
+#   - init(extend) 可传 JSON 覆盖配置，例如：
+#       {"host":"http://juziapp.hzhcbkj.cn", "only4k":true}
+#   - 类常量 ONLY_4K = True 时，详情页只保留线路名含 4K 的线路。
+#   - 默认 host 会先尝试从 site 拉取最新 domain，失败则用内置值。
+#
+# 依赖：零第三方库。有 pycryptodome 时自动使用，没有则用内置纯 Python
+#       AES / RSA 实现（首页推荐需要 AES 解密，已一并实现）。
+#
+# 说明：仅做协议兼容性实现，用于让已有本地配置正常工作；不涉及
+#       学习进度、鉴权绕过或任何平台检测逻辑。请遵守平台规则合规使用。
+# ============================================================================
 
 import json
 import re
@@ -9171,7 +9550,10 @@ except Exception:
     class jzn__Base:
         pass
 
-
+# ---------------------------------------------------------------- 加密层
+# AVBox 1.3.0 的 pip 只带 lxml/requests/pyquery，没有 pycryptodome。
+# 原文件在模块顶层 `from Crypto...` 直接把整个源卡在导入阶段。
+# 现在：能用 Crypto 就用（行为与原来完全一致），没有就用内置纯 Python 实现。
 try:
     from Crypto.PublicKey import RSA as jzn__CryptoRSA
     from Crypto.Cipher import jzn_PKCS1_v1_5 as jzn__CryptoPKCS1
@@ -9395,7 +9777,9 @@ else:
     def jzn__rsa_public(der_b64):
         return jzn__PurePKCS1(jzn__rsa_pub_from_der(base64.b64decode(der_b64)))
 
-
+# ---------------------------------------------------------------- AES 解密补充
+# 内置的纯 Python AES 只有 encrypt；首页推荐数据(tag/list)是双层 AES-ECB
+# 加密，这里补上逆变换，保证无 pycryptodome 的环境也能出首页。
 jzn__INV_SBOX = [0] * 256
 for _i, _v in enumerate(jzn__SBOX):
     jzn__INV_SBOX[_v] = _i
@@ -9525,7 +9909,8 @@ def jzn__f(num, wire, payload):
 
 
 def jzn__pb(buf):
-
+    # 正确的 protobuf 解析：字段号 > 15 时 tag 是多字节 varint，
+    # 只读一个字节会造成整体错位（老版本源文件就是因此只能按原始字节扫描）
     out = []
     i = 0
     n = len(buf)
@@ -9569,7 +9954,9 @@ def jzn__rnd(k):
     CH = string.ascii_letters + string.digits
     return ''.join(random.sample(list(CH), k - 1)) + '='
 
-
+# ---------------------------------------------------------------- 内置分类兜底
+# 新网关不提供 /api/v3/drama/getCategory（返回 400 No static resource），
+# 与官方插件一致：接口拿不到时使用内置分类表。
 jzn_CATEGORIES = [{'id': 20, 'name': '电影', 'converUrl': '{"class":"喜剧,爱情,恐怖,动作,科幻,剧情,战争,警匪,犯罪,动画,奇幻,武侠,冒险,枪战,恐怖,悬疑,惊悚,经典,青春,文艺,微电影,古装,历史,运动,农村,儿童,网络电影","area":"大陆,香港,台湾,美国,法国,英国,日本,韩国,德国,泰国,印度,意大利,西班牙,加拿大,其他","lang":"国语,英语,粤语,闽南语,韩语,日语,法语,德语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 2, 'typePid': 0}, {'id': 21, 'name': '剧集', 'converUrl': '{"class":"古装,战争,青春,偶像,喜剧,家庭,犯罪,动作,奇幻,剧情,历史,经典,乡村,情景,商战,网剧,其他","area":"内地,韩国,香港,台湾,日本,美国,泰国,英国,新加坡,其他","lang":"国语,英语,粤语,闽南语,韩语,日语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006,2005,2004,2003,2002,2001,2000","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 1, 'typePid': 0}, {'id': 22, 'name': '综艺', 'converUrl': '{"class":"选秀,情感,访谈,播报,旅游,音乐,美食,纪实,曲艺,生活,游戏互动,财经,求职","area":"内地,港台,日韩,欧美","lang":"国语,英语,粤语,闽南语,韩语,日语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 3, 'typePid': 0}, {'id': 23, 'name': '动漫', 'converUrl': '{"year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 6, 'typePid': 0}, {'id': 24, 'name': '短剧', 'converUrl': '{"class":"重生民国,穿越年代,现代言情,反转爽文,女恋总裁,闪婚离婚,都市脑洞,古装仙侠,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 4, 'typePid': 0}, {'id': 26, 'name': '漫剧', 'converUrl': '{}', 'typeMid': 1, 'typeSort': 5, 'typePid': 0}]
 
 
@@ -9687,7 +10074,8 @@ class JZNewRaw(jzn__Base):
         ts = int(time.time() * 1000)
         r = jzn__rnd(16)
         sign = jzn__rsa_sign(str(ts) + r, self.cfg['publicKey'])
-
+        # 关键：field 3 与 field 4 必须是同一个随机串，服务端拿 field 4
+        # 参与 RSA 校验；field 2 是 sign，field 5 是干扰串。
         body = (jzn__f(1, 0, jzn__varint(ts)) + jzn__f(2, 2, sign.encode()) +
                 jzn__f(3, 2, r.encode()) + jzn__f(4, 2, r.encode()) +
                 jzn__f(5, 2, jzn__rnd(16).encode()))
@@ -10057,7 +10445,49 @@ class JZNewSpider(_BaseSpider):
                           8.0, {'parse': 0, 'url': '', 'header': {}})
         return got if isinstance(got, dict) else {
             'parse': 0, 'url': '', 'header': {}}
+# ==================== 橘汁新网关线路源 jn END ====================
 
+# ==================== 四源4K专线线路源 sk BEGIN ====================
+# -*- coding: utf-8 -*-
+# ============================================================================
+# 四源 4K 专线 · 天堂 / 布布 / 华谊 / 苹果  (TVBox / AVBox / drpy 通用)
+# ============================================================================
+# 数据来源：https://9877.kstore.space/sun.json 解密后的 sites 配置
+#   - 天堂 • APP  (csp_AppDrama)  pkg com.dytiantang.one
+#   - 布布 • APP  (csp_YunDuo)    host 323433ssdfd.top
+#   - 华谊 • APP  (csp_AppDrama)  pkg com.lxf.sncgtzxyx
+#   - 苹果 • APP  (csp_AppDrama)  pkg com.juechufsh.android.xpg1
+#
+# 本文件做的事：把四个 APP 源各自实现一遍，并且**详情页只保留 4K 线路**
+# （线路名含 4K 的才显示；若该片一条 4K 都没有，则原样保留全部线路）。
+#
+# 实测（2026-11-08）：
+#   天堂：超级无敌4K / 高清4K / 高清蓝光4K / 4k专线2️⃣   → 全部可解直链
+#   华谊：蓝光4K                                        → 可解直链
+#   苹果：超级无敌4K / 高清4K / 高清蓝光4K / 4k专线2️⃣   → 全部可解直链
+#   布布：CO4K                                          → 服务端返回
+#         PLATFORM_NOT_ALLOWED（该线路只对 APP 客户端开放，Web 通道锁死），
+#         代码里保留该线路并做了「自动回退到同片 1080P 线路」的兜底。
+#
+# 补充（用 ffprobe 逐条探过分辨率）：
+#   天堂「超级无敌4K」1280x538、「高清4K」1716x720、「独家4K」1920x806
+#   也就是说这些“4K”只是线路名，没有一条是真 4K（3840x2160）。
+#   布布聚合源里「站外-极速」反而是 1920x1080，是全站画质最高的一条。
+#
+# 用法：一个 py 文件，配 4 个 site，ext 里用 src 指定源。
+#   api 填 py 文件本身（本地文件名或 http 地址都行），ext 是传给 init() 的
+#   参数，两者互不影响：
+#   {"key":"天堂4K","name":"天堂 • 4K","type":3,
+#    "api":"http://你的地址/四源4K专线.py","ext":"{\"src\":\"天堂\"}"}
+#   同理 {"src":"布布"} / {"src":"华谊"} / {"src":"苹果"}
+#   不传 ext 时默认“天堂”。
+#
+# 可选 ext 字段（覆盖内置配置）：
+#   {"src":"华谊","host":"http://x.x.x.x:18004","only4k":false}
+#
+# 依赖：零第三方库。有 pycryptodome 时用 C 实现，没有则走内置纯 Python
+#       AES / RSA（首页推荐需要 AES 解密，已一并实现）。
+# ============================================================================
 
 import json
 import re
@@ -10079,7 +10509,10 @@ except Exception:
     class _Base:
         pass
 
-
+# ---------------------------------------------------------------- 加密层
+# AVBox 1.3.0 的 pip 只带 lxml/requests/pyquery，没有 pycryptodome。
+# 原文件在模块顶层 `from Crypto...` 直接把整个源卡在导入阶段。
+# 现在：能用 Crypto 就用（行为与原来完全一致），没有就用内置纯 Python 实现。
 try:
     from Crypto.PublicKey import RSA as _CryptoRSA
     from Crypto.Cipher import PKCS1_v1_5 as _CryptoPKCS1
@@ -10303,7 +10736,9 @@ else:
     def sk4__rsa_public(der_b64):
         return sk4__PurePKCS1(sk4__rsa_pub_from_der(base64.b64decode(der_b64)))
 
-
+# ---------------------------------------------------------------- AES 解密补充
+# 内置的纯 Python AES 只有 encrypt；首页推荐数据(tag/list)是双层 AES-ECB
+# 加密，这里补上逆变换，保证无 pycryptodome 的环境也能出首页。
 sk4__INV_SBOX = [0] * 256
 for _i, _v in enumerate(sk4__SBOX):
     sk4__INV_SBOX[_v] = _i
@@ -10478,12 +10913,18 @@ def sk4__rnd(k):
     CH = string.ascii_letters + string.digits
     return ''.join(random.sample(list(CH), k - 1)) + '='
 
-
+# ---------------------------------------------------------------- 内置分类兜底
+# 新网关不提供 /api/v3/drama/getCategory（返回 400 No static resource），
+# 与官方插件一致：接口拿不到时使用内置分类表。
 sk4_CATEGORIES = [{'id': 20, 'name': '电影', 'converUrl': '{"class":"喜剧,爱情,恐怖,动作,科幻,剧情,战争,警匪,犯罪,动画,奇幻,武侠,冒险,枪战,恐怖,悬疑,惊悚,经典,青春,文艺,微电影,古装,历史,运动,农村,儿童,网络电影","area":"大陆,香港,台湾,美国,法国,英国,日本,韩国,德国,泰国,印度,意大利,西班牙,加拿大,其他","lang":"国语,英语,粤语,闽南语,韩语,日语,法语,德语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 2, 'typePid': 0}, {'id': 21, 'name': '剧集', 'converUrl': '{"class":"古装,战争,青春,偶像,喜剧,家庭,犯罪,动作,奇幻,剧情,历史,经典,乡村,情景,商战,网剧,其他","area":"内地,韩国,香港,台湾,日本,美国,泰国,英国,新加坡,其他","lang":"国语,英语,粤语,闽南语,韩语,日语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006,2005,2004,2003,2002,2001,2000","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 1, 'typePid': 0}, {'id': 22, 'name': '综艺', 'converUrl': '{"class":"选秀,情感,访谈,播报,旅游,音乐,美食,纪实,曲艺,生活,游戏互动,财经,求职","area":"内地,港台,日韩,欧美","lang":"国语,英语,粤语,闽南语,韩语,日语,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 3, 'typePid': 0}, {'id': 23, 'name': '动漫', 'converUrl': '{"year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 6, 'typePid': 0}, {'id': 24, 'name': '短剧', 'converUrl': '{"class":"重生民国,穿越年代,现代言情,反转爽文,女恋总裁,闪婚离婚,都市脑洞,古装仙侠,其它","year":"2026,2025,2024,2023,2022,2021,2020,2019,2018,2017,2016","extend_sort":"最新,最热,好评"}', 'typeMid': 1, 'typeSort': 4, 'typePid': 0}, {'id': 26, 'name': '漫剧', 'converUrl': '{}', 'typeMid': 1, 'typeSort': 5, 'typePid': 0}]
 
 import hashlib
 
 
+# ============================================================ 源定义
+# 公钥说明：sun.json 里「天堂 / 苹果」的 publicKey 字段已过期（用它调
+# zone 会返回 100002 RSA 校验失败），实测两家现在都改用与华谊相同的那把
+# 公钥，这里统一填可用值。
 sk4_PUB_KEY = ('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr8SzZhjYy+rsya1K09t8d2K50pWFoBkgUqMpKOiW'
            '+3IEVKd4eTdvg9RSOjQ82kypL6R9BnsmrS1V8s4PVDwjQbUtYhTPPC9Hz16qY7rpD6m0d2vr09/UpW'
            'Q5uOy9PR0QTrsioveZ+DIe9jc3C+zBCu/kZSY/R8stwJoiitki3gwIDAQAB')
@@ -11349,7 +11790,8 @@ class SK4KSpider(_BaseSpider):
                 self.obs[n] = ob
             except Exception:
                 pass
-
+        # 四源搜索偶发有子源超过门面 2.8s 预算。晚到的结果仍由后台线程
+        # 累加进这里，详情时按 (子源, vid) 回填，保证四源线路不缺。
         self._key_ids = {}
         self._vid_key = {}
         self._lock = threading.Lock()
@@ -11417,7 +11859,8 @@ class SK4KSpider(_BaseSpider):
 
     @staticmethod
     def _key(nm):
-
+        # 布布习惯把片名写成「庆余年 第一季」。只归并「第一季/第1季」这类
+        # 默认季后缀；第二季及衍生片一律不合并，防止把错片的线路挂进来。
         k = re.sub(r'\s+', '', str(nm or '')).lower()
         return re.sub(r'(第一季|第1季|season1|s01)$', '', k)
 
@@ -11732,7 +12175,8 @@ def jxf_pick_sources(sources):
     kept.sort(key=_rank)
     return kept
 
-
+# ======================= 片帝 4K 线路 (dongpian17.com) =======================
+# 片帝接口下发的 4K 官方线路: 专享4K-Y / 4K海外-官方C (显示为 4K官方C)
 jxf_PD_HOST = "https://dongpian17.com"
 jxf_PD_SIGN_KEY = "8b9a908a05eac640e1ee06f52acaa741bfe4ba9e004eeffdbeb635e532e06666"
 jxf_PD_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
@@ -12261,7 +12705,8 @@ def jxf_home(host):
         data = []
     cls = [{"type_id": str(c.get("id")), "type_name": c.get("name") or ""}
            for c in data if c.get("id") and c.get("name")]
-
+    # 按 type_id 升序: 电视剧(22016) 电影(22017) 动漫(22018) 综艺(22019)
+    # 短剧(22020) 少儿(22021) 纪录片(22022) AI漫剧(22024), 与 App 首页顺序一致
     cls.sort(key=lambda x: int(x["type_id"]) if str(x["type_id"]).isdigit() else 10 ** 9)
     # 服务端不下发隐藏直播分类(22023), 手动追加到分类栏末尾
     if str(jxf_LIVE_TYPE_ID) not in [str(c.get("type_id")) for c in cls]:
@@ -12335,10 +12780,12 @@ def jxf_category(host, tid, pg):
         except Exception:
             pass
         return {"page": 1, "pagecount": 1, "limit": len(lst), "total": len(lst), "list": lst}
-
+    # 默认走 /video/index(与前面版本一致, 保留服务端原始顺序)。
+    # 注意: 服务端忽略 page 参数, 必须用 pageNum 才能真正翻页(否则滑到底内容不变/跳动)。
     resp = jxf_post_json(host, "/api/v1/video/index", {"pageNum": page, "typeId": type_id})
     res = jxf_build_list(resp, page, False)
-
+    # 服务端把部分分类(如电视剧22016)降级为只返回2条(limit=2),
+    # 此时自动改用 /video/search 空关键词+typeId 兜底, 拿完整列表(40条/页, 最新在前)。
     if len(res.get("list") or []) < 10:
         resp2 = jxf_post_json(host, "/api/v1/video/search", {"keyword": "", "typeId": type_id, "pageNum": page})
         res = jxf_build_list(resp2, page, True)
@@ -12348,7 +12795,8 @@ def jxf_search(host, key, pg="1"):
     key = (key or "").strip().strip('"').strip("'")
     if not key:
         return {"page": 1, "pagecount": 0, "limit": 20, "total": 0, "list": []}
-
+    # 兼容播放器传入 URL 编码关键词 (如 %E6%96%97%E7%BD%97...)
+    # 服务端 % 会当作通配符, 编码形态会搜出大量无关结果, 必须先解码回原文
     if "%" in key:
         try:
             dec = unquote(key)
@@ -12356,7 +12804,7 @@ def jxf_search(host, key, pg="1"):
                 key = dec.strip()
         except Exception:
             pass
-
+    # 兼容 \uXXXX 转义形态的关键词 (如备份 \u6597\u7f57...)
     if key and "\\u" in key and all(ord(ch) < 128 for ch in key):
         try:
             dec = key.encode("ascii").decode("unicode_escape")
@@ -12374,7 +12822,7 @@ def jxf_search(host, key, pg="1"):
     return jxf_build_list(resp, page, True)
 
 def jxf_reco(host):
-
+    """首页推荐: 电视剧分类第一页, 失败返回空"""
     try:
         c = jxf_category(host, "22016", "1")
         return (c or {}).get("list") or []
@@ -12442,7 +12890,9 @@ def jxf_detail(host, vid):
     }]}
 
 def jxf_analysis_url(host, source_code, pc):
-
+    """调用服务端 /api/v1/player/analysisUrl 把加密 playerCode 解析成真实播放地址。
+    直播(sourceCode=zhibo/difang/huya)与点播加密码(co_xxx)均由此返回秒播地址。
+    返回解析成功后的 URL 字符串, 失败返回空串。"""
     if not source_code or not pc:
         return ""
     try:
@@ -12584,7 +13034,11 @@ class JuxiafanSpider(object):
         return {"list": []}
 
 def kish_play_ok(r):
+    """播放结果是否可用：http / magnet 直链，或明确交给播放器处理（jx=1）。
 
+    Kishuto 原来的判定只认 http，剧下饭的 4KK·磁力 线返回 magnet: 会被当成
+    「取流失败」，进而换源成片帝的地址——线路名字对不上内容。这里放行。
+    """
     if not isinstance(r, dict):
         return False
     u = str(r.get('url') or '')
@@ -12595,14 +13049,19 @@ def kish_play_ok(r):
     except Exception:
         return False
 
+# ==================== 剧下饭4K 一级源 jx END ====================
 
 
 class Spider(_BaseSpider):
+    """五源合一：影探 / 稀饭 / 小鸡看看 / FoFo / 小山。
 
+    分类与搜索按 '<tag>|' 前缀派发；详情页拿到主源数据后，再并发去其余源按
+    标题模糊匹配，把匹配到的线路追加在后面。播放时按线路 id 里编码的 tag 派发回原源。
+    """
 
     NAME = SPIDER_NAME
     ORDER = ('yt', 'sz', 'xj', 'jx', 'jn', 'sk', 'gg', 'fq', 'ff', 'xf', 'zj')
-    LABELS = {'gg': '咕噜', 'yt': urllib.parse.unquote('%E9%BB%91%E5%A4%A7%E5%B8%85'), 'xf': '稀饭', 'xj': '小鸡',
+    LABELS = {'gg': '咕噜', 'yt': '影探', 'xf': '稀饭', 'xj': '小鸡',
               'ff': 'FoFo', 'sz': '小山', 'fq': '枫奇', 'zj': '找剧',
               'jn': '橘汁新', 'sk': '四源4K', 'jx': '剧下饭'}
     DETAIL_BUDGET = 5.5    # 兼容旧配置，_fill 已改成下面的三段式
@@ -12610,7 +13069,8 @@ class Spider(_BaseSpider):
     TAIL_WAIT = 0.9        # 攒够 5 条后再收尾这么久，把已回源的线路都带上
     PLAY_TRY = 4           # 播放失败时最多换 4 条线路重试
     PLAY_HEAD = 2.5        # 本线路超过这么久没出地址才换源
-
+    # 注意：坏线路一般 0.3~0.5s 就返回空，不会等满；2.5s 是为了不误杀
+    # 「咕噜·新咕噜4K」这类要 2s 才出地址的正常线路（实测被 1.5s 切走过）
     PLAY_EACH = 3.0        # 换源时每条线路自己最多等这么久
     PLAY_BUDGET = 7.0      # 换源重试的总时长上限（秒）
     PLAY_SPEED = {'sz': 0, 'jn': 1, 'xj': 2, 'jx': 3, 'sk': 4, 'xf': 5,
@@ -12854,8 +13314,7 @@ class Spider(_BaseSpider):
                     'type_name': '%s·%s' % (self.LABELS[tag],
                                             c.get('type_name') or tid)})
         if not classes:
-            classes = [{'type_id': 'yt|电影',
-                        'type_name': '%s·电影' % self.LABELS['yt']}]
+            classes = [{'type_id': 'yt|电影', 'type_name': '影探·电影'}]
         return {'class': classes, 'filters': {}}
 
     def homeVideoContent(self):
@@ -12970,7 +13429,11 @@ class Spider(_BaseSpider):
         return t or norm_title(raw)
 
     def _fan_search(self, work, budget, grace=0.8, fq_wait=0.0):
+        """并发搜；影探回来且另有 2 个源到齐就收工，最多等 grace 秒。
 
+        fq_wait 是「从搜索开始算」的绝对上限：枫奇4K 首次过验证码约
+        3.9s，比主预算慢，不给它单独留时间就永远出不了 [枫奇] 卡片。
+        """
         box = {}
         ths = {}
         for tag in self.ORDER:
@@ -13021,7 +13484,12 @@ class Spider(_BaseSpider):
     SEARCH_TTL = 600
 
     def searchContent(self, key, quick=False, pg='1'):
+        """搜索退回最初版：六个源各出各的，按源顺序原样列前 12 条。
 
+        不做同名合并、不做相关性过滤、不重排出卡优先级 —— 壳里看到什么
+        就是各站点搜索接口返回的什么。并发与短缓存只用于提速，不改结果。
+        详情页跨源补线路的匹配另见 strict_match（不再把衍生电影挂进来）。
+        """
         if self._diag is not None:
             return self._diag.searchContent(key, quick, pg)
         kw = str(key or '')
@@ -13089,7 +13557,8 @@ class Spider(_BaseSpider):
                 if not sep:
                     nm, pid = '正片', part
                 idx += 1
-
+                # 播放码里存「集序号\x1e集名」：换源时靠它对齐同一集
+                # （影探叫「第01集」、小山叫「01」，光比名字对不上）
                 eps.append((nm.strip() or '正片',
                             self._enc_play(tag, f, pid, cid,
                                            '%d\x1e%s'
@@ -13105,21 +13574,13 @@ class Spider(_BaseSpider):
             return clean_name(f) or label        # 影探内部本来就带源名
         return clean_name('%s·%s' % (label, f)) or label
 
-    @classmethod
-    def _display_name(cls, raw, shown):
-
-        label = cls.LABELS.get('yt') or 'yt'
-        try:
-            s = str(shown or '')
-            if label and label != '影探' and s.startswith('影探'):
-                return '%s%s' % (label, s[len('影探'):])
-            return s
-        except Exception:
-            return shown
-
     @staticmethod
     def _variants(title):
+        """片名变体：全角/半角、季数后缀、括号注释、语种后缀都试一遍。
 
+        实测「葬送的芙莉莲第二季」在稀饭搜不到，去掉「第二季」才行；
+        而「庆余年第二季」在影视站带季数反而更准，所以原样排第一。
+        """
         t = str(title or '').strip()
         out = [t] if t else []
         if not t:
@@ -13140,7 +13601,10 @@ class Spider(_BaseSpider):
         return out[:2]
 
     def _fill_start(self, tag, title):
+        """其余源并发去「搜片名 → 取详情」，返回 (box, threads)。
 
+        box 会被线程陆续塞数据，所以主流程可以只等一小会儿就先渲染。
+        """
         box, ths = {}, []
         if not title:
             return box, ths
@@ -13199,7 +13663,12 @@ class Spider(_BaseSpider):
         return False
 
     def _wait_yield(self, box, ths, base_lines, budget, yt_ok=False):
+        """首屏策略：攒够 FILL_ENOUGH 条就开始收工，再收 TAIL_WAIT 秒给足。
 
+        壳拿到 detailContent 后不会原地追加线路，所以「先给 5 条、后面慢慢
+        加载」在壳侧不成立 —— 达到 5 条后仍要在预算内把已回源的线路全带上，
+        一次给足；预算内没回来的源由 _topup 后台补完写回缓存（重进即全量）。
+        """
         start = time.time()
         deadline = start + budget
         have = len(base_lines)
@@ -13269,7 +13738,8 @@ class Spider(_BaseSpider):
     TOP3 = ('影探·移动云', '影探·天翼云', '影探·联通云')
 
     def _trim_lines(self, lines):
-
+        """影探移动/天翼/联通置顶 → 4K 组 → 其余非 4K 组（FoFo 置末）。
+        各组内部保持 _r4 原本相对顺序，只做分组与抽取，不重排。"""
         try:
             kept = [x for x in lines if self._keep_line(x[0])]
             top = []
@@ -13304,7 +13774,6 @@ class Spider(_BaseSpider):
             if not eps:
                 continue
             nm = clean_name(name) or '线路'
-            nm = self._display_name(name, nm)   # 仅显示名改名，识别/播放仍用原名
             sig = (nm, len(eps))
             if sig in seen_sig:      # 跨源同名同集数 = 重复线路，丢掉
                 continue
@@ -13345,7 +13814,8 @@ class Spider(_BaseSpider):
             return {'list': []}
 
         title = str(vod.get('vod_name') or '')
-
+        # 个别源（FoFo）详情只回数字 id 当片名，跨源补线路会全部匹配失败；
+        # 用列表/搜索时记下的真实片名兜底，并修正壳里显示的名字。
         if len(title.strip()) < 2 or title.strip().isdigit():
             alt = _TITLE_MEMO.get(str(raw)) or ''
             if alt:
@@ -13360,6 +13830,8 @@ class Spider(_BaseSpider):
         except Exception:
             pass
 
+        # 其余源并发跑；首屏只等「够用」（FILL_BUDGET / FILL_ENOUGH），
+        # 没赶上的源继续在后台补，补完直接刷新缓存。
         box, ths = self._fill_start(tag, title)
         self._wait_yield(box, ths, base_lines, self.FILL_BUDGET,
                          yt_ok=(tag == 'yt'))
