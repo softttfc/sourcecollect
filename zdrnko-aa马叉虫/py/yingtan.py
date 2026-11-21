@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import base64
 import json
 import re
@@ -21,10 +20,17 @@ KEY = 'yingtan4k'
 HOST = 'http://cms.lyyytv.cn'
 CMS_KEY = 'wP5bvxoc3yv7FoBQENFZuAF0EUYr4LTy'
 
-# 解析接口（对齐 yt4k.js：fys.lyyytv.cn / parsesId=3）
-PARSE_API = 'http://4kzj.lyyytv.cn/api/index?parsesId=2&appid=10001&videoUrl='
+PARSE_API = 'http://fys.lyyytv.cn/api/index?appid=10001&videoUrl='
+PARSE_ID_WEB = 5
+PARSE_ID_4K = 6
+
+# PARSE_API = 'http://4kzj.lyyytv.cn/api/index?appid=10001&videoUrl='
+# PARSE_ID_WEB = 1
+# PARSE_ID_4K = 2
+
+# PARSE_API = 'http://jwh.lcytv.cn/api/index?parsesId=2&appid=10001&videoUrl='
+
 HEADERS = {'User-Agent': 'okhttp/4.12.0'}
-# 解析请求/回源头：对齐 JS 的 PH，避免 gzip 花屏
 PARSE_HEADERS = {'User-Agent': 'okhttp/4.12.0', 'Accept-Encoding': 'identity'}
 
 # baidu.con 前缀加密常量（对齐 yt4k.js）
@@ -45,6 +51,10 @@ HOME_CACHE_TTL = 6 * 3600
 _BASE64_RE = re.compile(r'(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?')
 _LDMAX_RE = re.compile(r'^https?://ldmax\.cooom/', re.I)
 _MEDIA_RE = re.compile(r'\.(?:mp4|m3u8?|flv|avi|mkv|ts|mov|wmv|webm|m4v|mpd)$', re.I)
+# HLS/DASH 直链：本身就能播，不需要走解析
+_STREAM_RE = re.compile(r'\.(?:m3u8?|mpd)$', re.I)
+# 4K 片源主机（ym4kjx 是主站，其余子域为历史/备用）
+_4K_HOST_RE = re.compile(r'(?:^|\.)(?:ym4kjx|hd4kjx|sd4kjx|mm4kjx|mv4kjx|vk4kjx)\.lyyytv\.cn$', re.I)
 
 _home_cache = {}
 _play_cache = {}
@@ -248,11 +258,11 @@ def resolve_parse(body):
     return candidate
 
 
-def parse_url(raw):
-    """对齐 JS play 内部：把原始地址拼到解析基址后请求，解出真实 URL。"""
+def parse_url(raw, parse_id=PARSE_ID_WEB):
+    """把原始地址拼到解析基址后请求，解出真实 URL；parse_id 选解析器（5 网页 / 6 4K 直链）。"""
     if not raw:
         return ''
-    target = PARSE_API + urllib.parse.quote(raw, safe="!'()*")
+    target = '%s%s&parsesId=%d' % (PARSE_API, urllib.parse.quote(raw, safe="!'()*"), parse_id)
     for rnd in range(PARSE_ROUNDS):
         if rnd > 0:
             time.sleep(rnd * PARSE_BACKOFF)
@@ -271,6 +281,24 @@ def is_media_url(url):
     if not is_http_url(url):
         return False
     return bool(_MEDIA_RE.search(urllib.parse.urlparse(text(url)).path))
+
+
+def is_stream_url(url):
+    """已经是 m3u8/mpd 的直链，播放器能直接拉，无需解析。"""
+    if not is_http_url(url):
+        return False
+    return bool(_STREAM_RE.search(urllib.parse.urlparse(text(url)).path))
+
+
+def is_4k_source(url):
+    """4K 线路：ym4kjx 下的 mp4/mkv 直链（站点本身 404，要走 parsesId=6 换链）。"""
+    if not is_http_url(url):
+        return False
+    host = (urllib.parse.urlparse(text(url)).hostname or '').lower()
+    if host and _4K_HOST_RE.search(host):
+        return True
+    # 主机名变了也能认：非 HLS 的直链媒体文件一律当 4K 片源
+    return is_media_url(url) and not is_stream_url(url)
 
 
 def home(extend=''):
@@ -427,7 +455,13 @@ def search(key, pg):
 
 
 def play(play_id):
-    """对齐 JS play：无条件走解析接口，解出真实地址再交播放器。"""
+    """
+    按线路类型分流解析：
+      - 4K 直链（ym4kjx 的 mp4/mkv）→ parsesId=6，换成移动云盘/华为云直链；
+        解析失败时退回原直链（兼容直链仍可用的网络）。
+      - m3u8/mpd 直链 → 原样交给播放器，不解析。
+      - 网页线路（腾讯/爱奇艺/芒果…）→ parsesId=5。
+    """
     original = decrypt_lvdou(play_id)
     if not original:
         return {'parse': 0, 'url': '', 'header': dict(PARSE_HEADERS)}
@@ -444,7 +478,17 @@ def play(play_id):
     if cached and cached[0] > now:
         return {'parse': 0, 'url': cached[1], 'header': dict(PARSE_HEADERS)}
 
-    resolved = parse_url(original)
+    if is_4k_source(original):
+        resolved = parse_url(original, PARSE_ID_4K)
+        if not resolved:
+            resolved = original
+    elif is_stream_url(original):
+        resolved = original
+    else:
+        resolved = parse_url(original, PARSE_ID_WEB)
+        if not resolved and is_media_url(original):
+            resolved = original
+
     if resolved:
         _play_cache[original] = (now + PLAY_CACHE_TTL, resolved)
 

@@ -1,21 +1,36 @@
 # -*- coding: utf-8 -*-
-"""影探聚合 —— TVBox / 影视仓 多源聚合源
+"""Kishuto —— TVBox / 影视仓 多源聚合源
 
   影探聚合(4源) · 稀饭动漫(4源) · 小鸡看看 · FoFo影院 · 小山影视 · 枫奇4K(至臻/蓝光) · 橘汁新网关4K · 四源4K专线(天堂/布布/华谊/苹果)
   分类/搜索按 tag 前缀派发，详情页跨源按标题补线路，播放按 id 派发回原源。
   本文件由 build_kishuto.py 自动生成。
 """
-# ==================== 版本（必须放在最前：被聚合代码在模块级引用） ====
-CODE_VERSION = '20261118.2'
 
-# 源显示名：所有 Spider 子类都返回这个名字，避免壳挑错类时显示成别的源
-SPIDER_NAME = '影探聚合'
+# ==================== 版本（必须放在最前：被聚合代码在模块级引用） ====
+CODE_VERSION = '20261110.211434'
 UPDATE_URL = 'https://gitee.com/tao060702/tvbox/raw/master/update_kishuto.json'
 
 # ======================================================================
 # 模块：yt
 # ======================================================================
 # -*- coding: utf-8 -*-
+"""
+影探聚合 —— 四源聚合 TVBox Python 源（单文件）
+========================================================================
+首页 / 分类 / 筛选 / 搜索：影探4K（cms.lyyytv.cn）
+详情页线路顺序：影探4K → 咕噜咕噜 → 橘汁4K → 找剧AI
+
+源说明（2026-11-04 实测）
+  影探4K   CMS + fys 解析接口，线路多为联通云/移动云/爱奇艺直链，可播率高
+  咕噜咕噜  T3 私有协议（ECDH P-256 + AES-256-GCM + protobuf），线路最多
+  橘汁4K   同 host 的另一套 T3 客户端（包名/版本/详情参数不同），目录与 id 空间
+           独立，线路与咕噜有互补
+  找剧AI   zhaoju4.com，HMAC 签名的 REST，官方 4K/1080P 线路需登录态（自动游客会话）
+
+依赖：纯标准库（无 requests / pycryptodome），自带 AES-128/256-CBC、AES-256-GCM、
+     P-256 ECDH、protobuf 裸编解码实现，可直接丢进 TVBox 的 python 目录使用。
+========================================================================
+"""
 
 import base64
 import gzip
@@ -261,12 +276,6 @@ def cache_put(key, value, ttl):
         _CACHE[key] = (time.time() + ttl, value)
 
 
-def cache_delete(key):
-    """p1：解析成功后立即解除熔断标志用。"""
-    with _CACHE_LOCK:
-        _CACHE.pop(key, None)
-
-
 # ============================================================================
 # HTTP（统一层：gzip、连接复用靠 keep-alive 由 urllib 自行管理、瞬时错误重试）
 # ============================================================================
@@ -410,57 +419,6 @@ def is_media_url(url):
     if not is_url(url):
         return False
     return bool(_MEDIA_RE.search(urllib.parse.urlparse(text(url)).path))
-
-
-def probe_media(url, headers=None, timeout=2.0):
-    """拉头 4KB 判断这条线路能不能真的出流，并记录 Content-Type 是否可信。
-
-    返回 dict: ok=True/False/None（能出流 / 4xx·5xx·HTML / 判断不了）、
-               ctype 正确的类型字符串（不可信时为空）。
-    注意：有些 CDN 会把 m3u8 的 Content-Type 标成 image/png，只能看正文判断。
-    """
-    res = {'ok': None, 'ctype': ''}
-    if not is_url(url):
-        res['ok'] = False
-        return res
-    hdr = {'Range': 'bytes=0-4095', 'Accept': '*/*'}
-    if isinstance(headers, dict):
-        hdr.update({k: v for k, v in headers.items() if v})
-    st, body, ctype = 0, b'', ''
-    try:
-        req = urllib.request.Request(safe_url(url), headers=hdr)
-        kw = {'timeout': timeout}
-        ctx = ssl_ctx()
-        if ctx is not None:
-            kw['context'] = ctx
-        with urllib.request.urlopen(req, **kw) as rsp:
-            st = rsp.getcode()
-            ctype = (rsp.headers.get('Content-Type') or '').lower()
-            body = rsp.read(4096)
-    except urllib.error.HTTPError as exc:
-        res['ok'] = False
-        return res
-    except Exception:
-        return res
-    if st >= 400:
-        res['ok'] = False
-        return res
-    head = body[:512].lstrip()
-    low = head[:256].lower()
-    if head[:1] == b'<' or b'<html' in low or b'<!doctype' in low:
-        res['ok'] = False
-        return res
-    if head.startswith(b'#EXTM3U') or head.startswith(b'#EXTINF'):
-        res['ok'] = True
-    elif b'ftyp' in body[:64] or head[:3] == b'ID3' or head[:1] == b'\x47':
-        res['ok'] = True
-    elif len(body) >= 512:
-        res['ok'] = True
-    if res['ok']:
-        if 'mpegurl' in ctype or 'video/' in ctype or 'audio/' in ctype or \
-                'octet-stream' in ctype or 'mp2t' in ctype:
-            res['ctype'] = ctype
-    return res
 
 
 # ============================================================================
@@ -1142,12 +1100,9 @@ class YT4K(object):
     NAME = '影探'
     HOST = 'http://cms.lyyytv.cn'
     CMS_KEY = 'wP5bvxoc3yv7FoBQENFZuAF0EUYr4LTy'
-    # 解析接口（2026-11-17 更新：老的 fys.lyyytv.cn 已返回「解析失败」，换到 4kzj）
-    #   parsesId=1 → 网页线路（腾讯/爱奇艺/优酷/B站…）
-    #   parsesId=2 → 4K 直链换链（ym4kjx 等站点本身 404，需换链）
-    PARSE_API = 'http://4kzj.lyyytv.cn/api/index?appid=10001&videoUrl='
-    PARSE_ID_WEB = 1
-    PARSE_ID_4K = 2
+    PARSE_API = 'http://fys.lyyytv.cn/api/index?appid=10001&videoUrl='
+    PARSE_ID_WEB = 5      # 网页线路（腾讯/爱奇艺/芒果/优酷/B站…）
+    PARSE_ID_4K = 6       # 4K 直链（ym4kjx 等，站点本身 404，需换链）
     HEADERS = {'User-Agent': 'okhttp/4.12.0'}
     PARSE_HEADERS = {'User-Agent': 'okhttp/4.12.0', 'Accept-Encoding': 'identity'}
 
@@ -1291,48 +1246,16 @@ class YT4K(object):
             pass
         return ''
 
-    # 2026-11-18 p1：熔断判定精准化。旧逻辑把「单片解析失败」也计入全局熔断，
-    # 结果几个下架片源就能误封 4kzj 整个接口（实测接口仍活着、能解析出 m3u8）。
-    # 现在：解析成功立即清零计数；只有接口本身 HTTP 错误/连续不可用才累加，
-    # 且一次成功就解除熔断；TTL 从 600s 缩到 120s，误封也能快速自愈。
-    PARSE_DEAD_TTL = 120
-
-    @staticmethod
-    def _parse_fail_add():
-        try:
-            fails = int(cache_get('yt:parsefail') or 0) + 1
-        except (TypeError, ValueError):
-            fails = 1
-        cache_put('yt:parsefail', str(fails), 300)
-        return fails
-
-    def parse_url(self, raw, parse_id, force=False):
+    def parse_url(self, raw, parse_id):
         if not raw:
-            return ''
-        # 解析接口已经明确失效时别再一条条硬打（每条要 10s，详情页会被拖死）。
-        # force=True：4K 换链等独立场景，即便全局熔断也强试一次（接口成功会自愈）。
-        if not force and cache_get('yt:parsedead'):
             return ''
         target = '%s%s&parsesId=%d' % (
             self.PARSE_API, urllib.parse.quote(raw, safe="!'()*"), parse_id)
-        st, txt = http_text(target, headers=self.PARSE_HEADERS, timeout=6, retries=1)
-        # 接口级失败（HTTP 错误/空响应）：才可能是接口真挂了
-        if not st or st >= 400 or not txt:
-            if self._parse_fail_add() >= 4:
-                cache_put('yt:parsedead', '1', self.PARSE_DEAD_TTL)
-            return ''
-        resolved = self.resolve_parse(txt)
-        if resolved and resolved.startswith('http'):
-            # 解析成功：接口是活的，立即清零失败计数并解除熔断
-            cache_put('yt:parsefail', '0', 300)
-            cache_delete('yt:parsedead')
-            return resolved
-        # 接口 200 但这片解析不出：视为「单片失败」，仅在明确 code:0/解析失败
-        # 且连续累计时谨慎熔断；普通单片失败不再误伤全局。
-        flat = txt.replace(' ', '')
-        if '解析失败' in txt or '"code":0' in flat or '"code":500' in flat:
-            if self._parse_fail_add() >= 4:
-                cache_put('yt:parsedead', '1', self.PARSE_DEAD_TTL)
+        st, txt = http_text(target, headers=self.PARSE_HEADERS, timeout=20, retries=2)
+        if st and st < 400 and txt:
+            resolved = self.resolve_parse(txt)
+            if resolved and resolved.startswith('http'):
+                return resolved
         return ''
 
     # ---------- 类型判断 ----------
@@ -1490,28 +1413,7 @@ class YT4K(object):
             return {'parse': 0, 'url': cached, 'header': dict(self.PARSE_HEADERS)}
 
         if self.is_4k_source(original):
-            # 4K 直链多为失效的 ym4kjx 404，必须换链。p1：即便全局熔断生效也强试
-            # 一次换链（parsesId=2 独立且实测有效），避免把 404 原链交给播放器。
-            resolved = (self.parse_url(original, self.PARSE_ID_4K)
-                        or self.parse_url(original, self.PARSE_ID_4K, force=True)
-                        or original)
-            # 2026-11-18 p2：换链出的地址在「盒子网络」未必连得上——
-            #   · 联通云 pan.wo.cn:30443 非标端口，很多盒子/运营商直接封；
-            #   · 移动云 cmecloud.cn 呼和浩特节点 + AWS 15min 预签名，对盒子网络/
-            #     系统时间敏感（盒子时间不准会签名 403）。
-            # 沙箱能播不代表盒子能播，所以在这里用盒子本地网络实测一次：
-            # 明确连不上(ok=False)就换链重试一次，仍不通则返回空，交给上层
-            # Spider 的 _play_other 自动换源到能播的线路。
-            # 注意：探活失败不写缓存、不动全局熔断标志，避免误伤别的线路。
-            if resolved and resolved.startswith('http'):
-                pr = probe_media(resolved, dict(self.PARSE_HEADERS), timeout=2.5)
-                if pr.get('ok') is False:
-                    alt = self.parse_url(original, self.PARSE_ID_4K, force=True)
-                    if alt and alt.startswith('http') and alt != resolved:
-                        pr2 = probe_media(alt, dict(self.PARSE_HEADERS), timeout=2.5)
-                        resolved = alt if pr2.get('ok') is not False else ''
-                    else:
-                        resolved = ''
+            resolved = self.parse_url(original, self.PARSE_ID_4K) or original
         elif is_stream_url(original):
             resolved = original
         else:
@@ -2577,11 +2479,6 @@ class YtAggSpider(_BaseSpider):
         self._update_url = ''
         self._update = {}
         self._updating = False
-        # 线路可用性校验：详情页把确认打不开（404/解析失败）的线路剔掉，
-        # 否则默认选中第一条死线路 → ExoPlayer 报 IO_BAD_HTTP_STATUS
-        self.verify = True
-        self.verify_budget = 2.5
-        self.line_order = 'source'
 
     # ---------- 生命周期 ----------
     def getName(self):
@@ -2611,13 +2508,6 @@ class YtAggSpider(_BaseSpider):
         except (TypeError, ValueError):
             self.max_lines = self.MAX_LINES_PER_SRC
         self.zj_cookie = text(cfg.get('zj_cookie') or cfg.get('cookie'))
-        try:
-            self.verify_budget = float(cfg.get('verify_budget') or self.verify_budget)
-        except (TypeError, ValueError):
-            pass
-        self.verify = text(cfg.get('verify_lines', '1')).lower() not in ('0', 'false', 'no', 'off')
-        # source=保留源站原顺序（默认，与原版一致）；auto=按探活结果把能播的排前面
-        self.line_order = text(cfg.get('line_order', 'source')).lower()
         with self._lock:
             if self.zj_cookie and 'zj' in self._sources:
                 self._sources.pop('zj', None)
@@ -2664,17 +2554,6 @@ class YtAggSpider(_BaseSpider):
             try:
                 if 'zj' in self.order:
                     self._src('zj')._ensure_session()
-            except Exception:
-                pass
-            # 影探的网页线路解析接口是否还活着：后台先探一次，详情页就不用一条条等。
-            # 2026-11-18 p1：这只是「探测样本」，探完无论成败都清零误伤计数——
-            # 单一探测链接下架不代表接口挂了，不能让它参与全局熔断判定。
-            try:
-                if 'yt' in self.order and not cache_get('yt:parsedead'):
-                    src = self._src('yt')
-                    src.parse_url('https://v.qq.com/x/cover/mzc002009suxdpv/d4102bz0ln6.html',
-                                  src.PARSE_ID_WEB)
-                    cache_put('yt:parsefail', '0', 300)
             except Exception:
                 pass
 
@@ -2893,7 +2772,7 @@ class YtAggSpider(_BaseSpider):
         lines = list(base_lines)
         for other in [t for t in self.order if t != tag]:
             lines.extend(as_list(extra.get(other)))
-        items = []
+        froms, urls = [], []
         used = {}
         for src_tag, name, eps in lines:
             label = clean_name('%s·%s' % (self.LABELS.get(src_tag, src_tag),
@@ -2909,11 +2788,8 @@ class YtAggSpider(_BaseSpider):
                 if code:
                     segs.append('%s$%s' % (clean_name(ep_name) or '正片', code))
             if segs:
-                items.append((label, segs))
-
-        items = self._rank_lines(items)
-        froms = [it[0] for it in items]
-        urls = ['#'.join(it[1]) for it in items]
+                froms.append(label)
+                urls.append('#'.join(segs))
 
         vod = dict(vod)
         vod['vod_play_from'] = '$$$'.join(froms)
@@ -2923,98 +2799,6 @@ class YtAggSpider(_BaseSpider):
                                   '[聚合提示] 四个源都没有匹配到可用线路，' +
                                   '可稍后重试或换个片名搜索。').strip()
         return {'list': [vod]}
-
-    # ---------- 线路存活校验 ----------
-    @staticmethod
-    def _probe_cached(url, header):
-        """同一地址 10 分钟内只探一次；返回 probe_media 的 dict。"""
-        if not url:
-            return {'ok': False, 'ctype': ''}
-        key = 'probe:%s' % hashlib.md5(url.encode('utf-8', 'ignore')).hexdigest()
-        hit = cache_get(key)
-        if hit is not None:
-            try:
-                got = loads(hit)
-                if isinstance(got, dict):
-                    return got
-            except Exception:
-                pass
-        res = probe_media(url, header if isinstance(header, dict) else None, timeout=2.0)
-        if res.get('ok') is not None:
-            cache_put(key, json.dumps(res, ensure_ascii=False), 600)
-        return res
-
-    def _rank_lines(self, items):
-        """只给线路排优先级，一条都不删：
-        能播+类型正确 → 能播 → 未验证 → 要解析器 → 暂时打不开。"""
-        if not self.verify or not items:
-            return items
-        if text(getattr(self, 'line_order', 'source')).lower() in ('source', 'orig', 'keep'):
-            return items          # 原版顺序：只按源站给的顺序，不做探活
-        results = {}
-
-        def work(idx, code):
-            try:
-                tag, real, name = self._decode(code)
-                if tag == 'yt':
-                    # 影探：直链直接探；网页线路 2026-11-18 p1 起改为「实际解出地址再探」。
-                    # 旧逻辑仅凭 yt:parsedead 标志就把网页线路判死，而该标志会被下架片源
-                    # 误触发（4kzj 接口其实还活着），导致能播的网页线路被排到最后。
-                    src = self._src('yt')
-                    if src.is_4k_source(real) or is_stream_url(real) or is_media_url(real):
-                        results[idx] = self._probe_cached(real, {'User-Agent': 'okhttp/4.12.0'})
-                    else:
-                        # 走 playerContent 解出真实地址（内部调 parse_url，成功返回 m3u8）
-                        got = self.playerContent('', code)
-                        url = text(got.get('url'))
-                        if url.startswith('http'):
-                            results[idx] = self._probe_cached(url, got.get('header'))
-                        else:
-                            # 解不出地址：不算「接口已死」，只标记为需解析、排中间，
-                            # 交给播放时的换源重试兜底（可能只是这片没解析结果）
-                            results[idx] = {'ok': None, 'page': True}
-                    return
-                got = self.playerContent('', code)
-                url = text(got.get('url'))
-                if not url:
-                    results[idx] = {'ok': False}
-                    return
-                results[idx] = self._probe_cached(url, got.get('header'))
-            except Exception:
-                results[idx] = None
-
-        threads = []
-        for idx, (label, segs) in enumerate(items):
-            first = segs[0] if segs else ''
-            code = first.split('$', 1)[1] if '$' in first else ''
-            th = threading.Thread(target=work, args=(idx, code), daemon=True)
-            th.start()
-            threads.append(th)
-        deadline = time.time() + max(0.3, self.verify_budget)
-        for th in threads:
-            th.join(max(0.02, deadline - time.time()))
-
-        scored = []
-        for idx, it in enumerate(items):
-            res = results.get(idx)
-            if isinstance(res, bool):
-                res = {'ok': res}
-            if not isinstance(res, dict):
-                res = {'ok': None}
-            if res.get('page'):
-                rank = 3          # 要解析器的网页线路
-            elif res.get('ok') is True and res.get('ctype'):
-                rank = 0          # 能出流且类型正确：最优先
-            elif res.get('ok') is True:
-                rank = 1          # 能出流但类型标错（CDN 常见）：次选
-            elif res.get('ok') is False:
-                rank = 4          # 暂时打不开：保留线路，只排到最后
-            else:
-                rank = 2          # 没验出来：中间
-            scored.append((rank, idx, it))
-        # 线路一条都不删：只把能播的排前面，TVBox 默认选第一条才不会一播就失败
-        scored.sort(key=lambda x: (x[0], x[1]))
-        return [x[2] for x in scored]
 
     def _fill_later(self, cache_key, vid, tag, vod, base_lines, title, found, missing):
         """后台慢补：不设预算地跑完剩下的源，成功后刷新缓存。"""
@@ -4952,7 +4736,7 @@ class XifanAggSpider(_SpiderBase):
         run()          # 没有 threading 时同步探一次（上限 3s）
 
     def getName(self):
-        return SPIDER_NAME
+        return '稀饭聚合'
 
     def destroy(self):
         pool_clear()
@@ -6190,7 +5974,7 @@ class FofoSpider(_BaseSpider):
             pass
 
     def getName(self):
-        return SPIDER_NAME
+        return 'FoFo影院'
 
     def destroy(self):
         try:
@@ -13059,7 +12843,7 @@ class Spider(_BaseSpider):
     标题模糊匹配，把匹配到的线路追加在后面。播放时按线路 id 里编码的 tag 派发回原源。
     """
 
-    NAME = SPIDER_NAME
+    NAME = 'Kishuto'
     ORDER = ('yt', 'sz', 'xj', 'jx', 'jn', 'sk', 'gg', 'fq', 'ff', 'xf', 'zj')
     LABELS = {'gg': '咕噜', 'yt': '影探', 'xf': '稀饭', 'xj': '小鸡',
               'ff': 'FoFo', 'sz': '小山', 'fq': '枫奇', 'zj': '找剧',

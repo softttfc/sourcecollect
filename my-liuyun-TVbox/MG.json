@@ -25,28 +25,40 @@
     "ext": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/lib/公告.php"
 },
 {
-    "key": "js_mohe",
-    "name": "🈴┃魔盒┃首页",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/魔盒.js"
-},
-{
     "key": "js_mohezb",
     "name": "🈴┃魔盒┃直播",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/lib/glzb.js"
 },
 {
-    "key": "dr_小山影视",
-    "name": "🆘┃山楂┃C4K",
+    "key": "dr_好趣",
+    "name": "🈴┃好趣┃直播",
     "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/小山.js"
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/好趣.js"
 },
 {
-    "key": "js_腾讯视频",
-    "name": "🆘┃企鹅┃C4K",
+    "key": "js_mohe",
+    "name": "🆚┃魔盒┃首页",
     "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/qq4K.js"
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/魔盒.js"
+},
+{
+    "key": "dr_懂片帝",
+    "name": "🆚┃懂片┃秒播",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/懂片.py"
+},
+{
+    "key": "dr_河豚",
+    "name": "🆚┃河豚┃秒播",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/河豚.py"
+},
+{
+    "key": "dr_豆播AI",
+    "name": "🆚┃豆播┃秒播",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/豆播AI.py"
 },
 {
     "key": "dr_MTYY",
@@ -65,12 +77,6 @@
     "name": "🆚┃半日┃秒播",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/半日.js"
-},
-{
-    "key": "dr_剧下饭",
-    "name": "🆚┃下饭┃秒播",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/下饭.js"
 },
 {
     "key": "dr_追剧影视",
@@ -95,12 +101,6 @@
     "name": "🆚┃咕噜┃秒播",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/咕噜.js"
-},
-{
-    "key": "dr_奇优影视",
-    "name": "🆚┃奇优┃秒播",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/奇优.js"
 },
 {
     "key": "dr_王子TV",
@@ -646,11 +646,10 @@
     "ext": "https://www.lovedan.net/api.php/provide/vod"
 },
 {
-    "key":"spider_2097848346373787648",
-    "name":"🈚┃热播┃C4T",
-    "type":4,
-    "api":"https://banyeomni.780420.xyz:17777/api/tvbox/source/2097848346373787648?token=banye666",
-    "filterable":0
+    "key": "js_腾讯视频",
+    "name": "🈚┃企鹅┃C4K",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/qq4K.js"
 },
 {
     "key":"spider_2097848347502055424",
