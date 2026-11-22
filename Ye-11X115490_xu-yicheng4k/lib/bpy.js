@@ -1,1 +1,887 @@
-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
+var rule = {
+    title: '白嫖鸭',
+    host: '',
+    homeUrl: '',
+    searchUrl: '**',
+    detailUrl: 'fyid',
+    searchable: 2,
+    quickSearch: 0,
+    filterable: 1,
+    multi: 1,
+    class_name: '电影&剧集&综艺&动漫&记录&少儿&短剧&漫剧&体育&中视频&宠物',
+    class_url: 'movie&tv&variety&cartoon&doco&child&short&manju&sports&midvideo&pettv',
+    limit: 20,
+    play_parse: true,
+    headers: {
+        'User-Agent': 'PC_UA'
+    },
+    timeout: 10000,
+    filter: {
+        "movie":[
+            {key:"itype",name:"类型",value:[{n:"全部",v:"-1"},{n:"动作",v:"4"},{n:"喜剧",v:"3"},{n:"爱情",v:"5"},{n:"科幻",v:"12"},{n:"犯罪",v:"6"},{n:"冒险",v:"7"},{n:"恐怖",v:"11"},{n:"动画",v:"15"},{n:"战争",v:"8"},{n:"悬疑",v:"10"},{n:"灾难",v:"25"},{n:"青春",v:"26"}]},
+            {key:"iarea",name:"地区",value:[{n:"全部",v:"-1"},{n:"内地",v:"100024"},{n:"中国香港",v:"100025"},{n:"中国台湾",v:"100026"},{n:"美国",v:"100029"},{n:"日本",v:"100027"},{n:"韩国",v:"100028"},{n:"泰国",v:"100031"},{n:"印度",v:"100030"},{n:"英国",v:"15"},{n:"法国",v:"16"},{n:"德国",v:"17"},{n:"加拿大",v:"18"},{n:"西班牙",v:"19"},{n:"意大利",v:"20"},{n:"澳大利亚",v:"21"},{n:"其他",v:"100033"}]},
+            {key:"iyear",name:"年份",value:[{n:"全部",v:"-1"},{n:"即将上线",v:"999"},{n:"2026",v:"2026"},{n:"2025",v:"2025"},{n:"2024",v:"2024"},{n:"2023",v:"2023"},{n:"2022",v:"2022"},{n:"2021",v:"2021"},{n:"2020",v:"2020"},{n:"2019",v:"20"},{n:"2018",v:"2018"},{n:"2017",v:"1"},{n:"2016",v:"2"},{n:"2015",v:"3"},{n:"2014",v:"4"},{n:"2013-2011",v:"5"},{n:"2010-2006",v:"6"},{n:"2005-2000",v:"7"},{n:"90年代",v:"8"},{n:"80年代",v:"9"},{n:"其他",v:"10"}]}
+        ],
+        "tv":[
+            {key:"itype",name:"类型",value:[{n:"全部",v:"-1"},{n:"爱情",v:"1"},{n:"都市",v:"2"},{n:"青春",v:"3"},{n:"奇幻",v:"4"},{n:"武侠",v:"5"},{n:"古装",v:"6"},{n:"科幻",v:"7"},{n:"猎奇",v:"8"},{n:"竞技",v:"9"},{n:"传奇",v:"10"},{n:"逆袭",v:"19"},{n:"军旅",v:"11"},{n:"家庭",v:"12"},{n:"喜剧",v:"13"},{n:"悬疑",v:"14"},{n:"权谋",v:"15"},{n:"革命",v:"16"},{n:"现实",v:"17"},{n:"刑侦",v:"18"},{n:"民国",v:"20"},{n:"IP改编",v:"21"}]},
+            {key:"iarea",name:"地区",value:[{n:"全部",v:"-1"},{n:"内地",v:"0"},{n:"中国香港",v:"14"},{n:"中国台湾",v:"4"},{n:"美国",v:"8"},{n:"泰国",v:"9"},{n:"英国",v:"1"},{n:"韩国",v:"5"},{n:"日本",v:"10"},{n:"其他",v:"9999"}]},
+            {key:"iyear",name:"年份",value:[{n:"全部",v:"-1"},{n:"即将上线",v:"1"},{n:"2026",v:"2026"},{n:"2025",v:"2025"},{n:"2024",v:"2"},{n:"2023",v:"3"},{n:"2022",v:"4"},{n:"2021",v:"5"},{n:"2020-2016",v:"6"},{n:"2015-2011",v:"7"},{n:"2010-2000",v:"8"},{n:"更早",v:"9"}]}
+        ],
+        "variety":[
+            {key:"itype",name:"类型",value:[{n:"全部",v:"-1"},{n:"游戏",v:"10"},{n:"脱口秀",v:"2"},{n:"音乐舞台",v:"11"},{n:"情感",v:"12"},{n:"生活",v:"22"},{n:"职场",v:"20"},{n:"喜剧",v:"14"},{n:"美食",v:"19"},{n:"潮流运动",v:"21"},{n:"竞技",v:"24"},{n:"影视",v:"16"},{n:"电竞",v:"15"},{n:"推理",v:"25"},{n:"访谈",v:"3"},{n:"亲子",v:"17"},{n:"文化",v:"26"},{n:"互动",v:"23"},{n:"晚会",v:"6"},{n:"资讯",v:"7"}]},
+            {key:"iarea",name:"地区",value:[{n:"全部",v:"-1"},{n:"国内",v:"1"},{n:"海外",v:"2"}]},
+            {key:"iyear",name:"年份",value:[{n:"全部",v:"-1"},{n:"2026",v:"2026"},{n:"2025",v:"2025"},{n:"2024",v:"2024"},{n:"2023",v:"2023"},{n:"2022",v:"2022"},{n:"2021",v:"2021"},{n:"2020",v:"50"},{n:"2019",v:"7"},{n:"2018",v:"1"},{n:"2017",v:"2"},{n:"2016",v:"3"},{n:"2015",v:"4"},{n:"2014",v:"5"},{n:"2013",v:"6"},{n:"2012",v:"2012"},{n:"2011",v:"2011"},{n:"2010",v:"2010"},{n:"更早",v:"99"}]}
+        ],
+        "cartoon":[
+            {key:"itype",name:"类型",value:[{n:"全部",v:"-1"},{n:"玄幻",v:"9"},{n:"科幻",v:"4"},{n:"奇幻",v:"21"},{n:"武侠",v:"13"},{n:"仙侠",v:"23"},{n:"都市",v:"24"},{n:"恋爱",v:"7"},{n:"搞笑",v:"1"},{n:"冒险",v:"2"},{n:"悬疑",v:"17"},{n:"竞技",v:"20"},{n:"日常",v:"15"},{n:"真人",v:"18"},{n:"治愈",v:"25"},{n:"游戏",v:"26"},{n:"异能",v:"27"},{n:"历史",v:"19"},{n:"古风",v:"28"},{n:"智斗",v:"29"},{n:"恐怖",v:"30"},{n:"美食",v:"31"},{n:"音乐",v:"32"},{n:"其他",v:"12"}]},
+            {key:"iarea",name:"地区",value:[{n:"全部",v:"-1"},{n:"内地",v:"1"},{n:"日本",v:"2"},{n:"欧美",v:"3"},{n:"其他",v:"4"}]},
+            {key:"iyear",name:"年份",value:[{n:"全部",v:"-1"},{n:"2026",v:"2026"},{n:"2025",v:"2025"},{n:"2024",v:"2024"},{n:"2023",v:"2023"},{n:"2022",v:"2022"},{n:"2021",v:"2021"},{n:"2020",v:"50"},{n:"2019",v:"11"},{n:"2018",v:"2018"},{n:"2017",v:"2017"},{n:"2016",v:"1"},{n:"2015",v:"2"},{n:"2014",v:"3"},{n:"2013",v:"4"},{n:"2012",v:"5"},{n:"2011",v:"6"},{n:"00年代",v:"7"},{n:"90年代",v:"8"},{n:"80年代",v:"9"},{n:"更早",v:"10"}]}
+        ]
+    },
+
+    // 播放：直接返回播放页地址，绿豆后台解析
+    lazy: $js.toString(() => {
+        let playUrl = input;
+        if (playUrl.indexOf("$") > -1) {
+            playUrl = playUrl.split("$")[1];
+        }
+        input = {
+            parse: 1,
+            url: playUrl,
+            jx: 1
+        };
+    }),
+
+    一级: $js.toString(() => {
+        // drpy2打平eval，所有函数必须内联
+        let tid = MY_CATE || 'movie';
+        let CATE_MAP = {
+            'movie': [['qq', 'movie'], ['mgtv', '3'], ['iqiyi', '1'], ['iqiyi', '16'], ['bili', '2']],
+            'tv': [['qq', 'tv'], ['mgtv', '2'], ['iqiyi', '2'], ['bili', '5']],
+            'variety': [['qq', 'variety'], ['mgtv', '1'], ['iqiyi', '6'], ['bili', '7']],
+            'cartoon': [['qq', 'cartoon'], ['mgtv', '50'], ['iqiyi', '4'], ['bili', '1'], ['bili', '4']],
+            'doco': [['qq', 'doco'], ['mgtv', '51'], ['iqiyi', '3'], ['bili', '3']],
+            'child': [['qq', 'child'], ['mgtv', '10'], ['mgtv', '115'], ['iqiyi', '15']],
+            'short': [['qq', 'short'], ['iqiyi', '35']],
+            'manju': [['iqiyi', '37']],
+            'sports': [['qq', 'sports']],
+            'midvideo': [['qq', 'midvideo']],
+            'pettv': [['qq', 'pettv']],
+        };
+        let PRIORITY = { 'mgtv': 0, 'bili': 1, 'qq': 2, 'iqiyi': 3 };
+
+        function normTitle(t) {
+            if (!t) return '';
+            return t.replace(/<[^>]+>/g, '').replace(/[\s\p{P}]/gu, '').toLowerCase();
+        }
+        function mergeResults(results) {
+            let map = {};
+            let order = [];
+            results.forEach(function (item) {
+                let key = normTitle(item.title);
+                if (!key) return;
+                if (!map[key]) {
+                    map[key] = item;
+                    order.push(key);
+                } else {
+                    let oldP = map[key].url.split('__')[0];
+                    let newP = item.url.split('__')[0];
+                    let oldRank = PRIORITY[oldP] !== undefined ? PRIORITY[oldP] : 99;
+                    let newRank = PRIORITY[newP] !== undefined ? PRIORITY[newP] : 99;
+                    if (newRank < oldRank) map[key] = item;
+                }
+            });
+            return order.map(function (k) { return map[k]; });
+        }
+
+        let platforms = CATE_MAP[tid] || [];
+        let all = [];
+        var fl = MY_FL || {};
+        var pg = MY_PAGE || 1;
+
+        // 构建腾讯filter_params（只保留类型/地区/年份）
+        var qqFp = 'sort=75';
+        if (fl.itype && fl.itype !== '-1') qqFp += '&itype=' + fl.itype;
+        if (fl.iarea && fl.iarea !== '-1') qqFp += '&iarea=' + fl.iarea;
+        if (fl.iyear && fl.iyear !== '-1') qqFp += '&iyear=' + fl.iyear;
+
+        // 先生成各平台请求，再一次并发拉取。旧宿主没有batchFetch时自动
+        // 回退为原来的串行request，不影响绿豆UI9兼容性。
+        let categoryUa = (typeof PC_UA !== 'undefined' && PC_UA) ? PC_UA : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
+        let categoryTasks = platforms.map(function (pf) {
+            let platform = pf[0];
+            let chanId = pf[1];
+            if (platform === 'qq') {
+                let QQ_CHAN = { 'movie': 100173, 'tv': 100113, 'variety': 100109, 'cartoon': 100119, 'child': 100150, 'doco': 100105, 'short': 120188, 'sports': 100103, 'midvideo': 110852, 'pettv': 100302 };
+                let cid = QQ_CHAN[chanId] || 100173;
+                let headers = {
+                    'User-Agent': categoryUa, 'Content-Type': 'application/json',
+                    'origin': 'https://v.qq.com', 'referer': 'https://v.qq.com/'
+                };
+                // 体育/中视频/宠物TV 网页端走 PageService/getPage（getMVLPage 对其返回空）
+                if (chanId === 'sports' || chanId === 'midvideo' || chanId === 'pettv') {
+                    let gp = {
+                        page_params: { page_type: 'channel', page_id: String(cid), scene: 'channel', new_mark_label_enabled: '1' },
+                        page_bypass_params: { params: { platform_id: '2', caller_id: '3000010', data_mode: 'default', user_mode: 'default', page_type: 'channel', page_id: String(cid), scene: 'channel', new_mark_label_enabled: '1' }, scene: 'channel' },
+                        page_context: null
+                    };
+                    return {
+                        platform: platform, chanId: chanId,
+                        url: 'https://pbaccess.video.qq.com/trpc.vector_layout.page_view.PageService/getPage?video_appid=3000010&vversion_platform=2',
+                        options: { method: 'POST', headers: headers, data: gp },
+                        fallbackOptions: { method: 'POST', headers: headers, body: gp }, jsonBody: true, relay: 'getpage', cid: String(cid)
+                    };
+                }
+                let body = { page_params: { channel_id: String(cid), filter_params: qqFp, page_type: 'operation', page_id: 'channel_list' } };
+                if (pg > 1) {
+                    let m = pg - 1;
+                    body.page_context = {
+                        "_ctrl_page_index": String(m), "_ctrl_showed_module_num": String(m),
+                        "_ds_cli_6970df954e7a9803_poster_offset": String(m * 12),
+                        "_ds_cli_6970df954e7a9803_poster_size": "12", "_merger_mod_cnt": String(m),
+                        "page_index": String(m),
+                        "sdk_page_ctx": '{"page_offset":' + m + ',"page_size":5,"used_module_num":' + m + '}',
+                        "video_un_page_index": String(m)
+                    };
+                }
+                return {
+                    platform: platform, chanId: chanId,
+                    url: 'https://pbaccess.video.qq.com/trpc.multi_vector_layout.mvl_controller.MVLPageHTTPService/getMVLPage?&vversion_platform=2',
+                    options: { method: 'POST', headers: headers, data: body },
+                    fallbackOptions: { method: 'POST', headers: headers, body: body }, jsonBody: true
+                };
+            }
+            if (platform === 'mgtv') {
+                let url = 'https://pianku.api.mgtv.com/rider/list/pcweb/v3?platform=pcweb&channelId=' + chanId + '&pn=' + pg + '&pc=20&hudong=1&_support=10000000&kind=a1&area=a1';
+                if (fl.iyear && fl.iyear !== '-1') url += '&year=' + fl.iyear;
+                return { platform: platform, chanId: chanId, url: url, options: { headers: { 'User-Agent': categoryUa, 'Referer': 'https://www.mgtv.com' } } };
+            }
+            if (platform === 'iqiyi') {
+                return {
+                    platform: platform, chanId: chanId,
+                    url: 'https://pcw-api.iqiyi.com/search/recommend/list?channel_id=' + chanId + '&data_type=1&page_id=' + pg + '&ret_num=20',
+                    options: { headers: { 'User-Agent': categoryUa } }
+                };
+            }
+            return {
+                platform: platform, chanId: chanId,
+                url: 'https://api.bilibili.com/pgc/season/index/result?order=2&pagesize=20&type=1&season_type=' + chanId + '&page=' + pg + '&season_status=-1',
+                options: { headers: { 'User-Agent': categoryUa, 'Referer': 'https://www.bilibili.com' } }
+            };
+        });
+
+        // getPage频道(体育/中视频/宠物)的游标必须链式翻页，单独处理
+        function fetchGetPage(task){
+            try {
+                var cid = task.cid;
+                var gHeaders = {
+                    'User-Agent': categoryUa, 'Content-Type': 'application/json',
+                    'origin': 'https://v.qq.com', 'referer': 'https://v.qq.com/'
+                };
+                var ctx = null, html = '';
+                for (var kk = 1; kk <= pg; kk++) {
+                    var gp = {
+                        page_params: { page_type: 'channel', page_id: cid, scene: 'channel', new_mark_label_enabled: '1' },
+                        page_bypass_params: { params: { platform_id: '2', caller_id: '3000010', data_mode: 'default', user_mode: 'default', page_type: 'channel', page_id: cid, scene: 'channel', new_mark_label_enabled: '1' }, scene: 'channel' },
+                        page_context: ctx
+                    };
+                    html = request(task.url, { method: 'POST', headers: gHeaders, body: gp }, true);
+                    var pj = JSON.parse(html);
+                    ctx = (pj.data && pj.data.page_context) ? pj.data.page_context : null;
+                    if (!ctx) break;
+                }
+                return html;
+            } catch (e) { log('getPage翻页错误: ' + e.message); return ''; }
+        }
+        let categoryHtml = categoryTasks.map(function(){ return ''; });
+        let normalIdx = [];
+        categoryTasks.forEach(function(t,i){ if(t.relay!=='getpage') normalIdx.push(i); });
+        if (normalIdx.length > 1 && typeof batchFetch === 'function') {
+            try {
+                let bres = batchFetch(normalIdx.map(function(i){ let t=categoryTasks[i]; return { url:t.url, options:t.options||{} }; }));
+                if(Array.isArray(bres) && bres.length===normalIdx.length){ normalIdx.forEach(function(i,n){ categoryHtml[i]=bres[n]; }); }
+            } catch (e) { log('分类并发不可用，切换串行: ' + e.message); }
+        }
+        normalIdx.forEach(function(i){
+            if(categoryHtml[i]===''){
+                let t=categoryTasks[i];
+                try { categoryHtml[i]=request(t.url,t.fallbackOptions||t.options||{},t.jsonBody===true); }
+                catch(e){ log(t.platform+'分类请求错误: '+e.message); categoryHtml[i]=''; }
+            }
+        });
+        categoryTasks.forEach(function(t,i){ if(t.relay==='getpage') categoryHtml[i]=fetchGetPage(t); });
+
+        categoryTasks.forEach(function (task, taskIndex) {
+            let platform = task.platform;
+            let chanId = task.chanId;
+            try {
+                let html = categoryHtml[taskIndex] || '';
+                if (!html) return;
+                let json = JSON.parse(html);
+                if (platform === 'qq') {
+                    let qqSeen = {};
+                    function collectQqCards(node) {
+                        if (!node) return;
+                        if (Array.isArray(node)) { node.forEach(function (child) { collectQqCards(child); }); return; }
+                        if (typeof node !== 'object') return;
+                        let p = node.params;
+                        if (p && p.cid && !qqSeen[p.cid]) {
+                            let title = p.title || p.mz_title || '';
+                            if (title) {
+                                qqSeen[p.cid] = 1;
+                                let remark = p.third_title || p.update_desc || p.second_title || p.sub_title || p.episode_updated || p.mark_label || p.year || '';
+                                let pic = p.image_url_vertical || p.new_pic_vt || p.new_pic_hz || p.pic_276x386 || p.image_url || p.ready_image_url || '';
+                                all.push({ title: title, img: pic, pic_url: pic, url: 'qq__' + p.cid, desc: '腾讯视频-4K' });
+                            }
+                        }
+                        Object.keys(node).forEach(function (key) {
+                            if (key === 'params') return;
+                            let child = node[key];
+                            if (child && typeof child === 'object') collectQqCards(child);
+                        });
+                    }
+                    collectQqCards(json.data || json);
+                } else if (platform === 'mgtv') {
+                    let items = json.data ? json.data.hitDocs || [] : [];
+                    items.forEach(function (item) {
+                        if (item.title && (item.playPartId || item.clipId)) {
+                            let mgtvId = item.playPartId || item.clipId;
+                            let remark = item.updateInfo || (item.rightCorner && item.rightCorner.text) || item.update_info || item.subtitle || '';
+                            let pic = item.img || '';
+                            all.push({ title: item.title, img: pic, pic_url: pic, url: 'mgtv__' + mgtvId, desc: '芒果视频-4K' });
+                        }
+                    });
+                } else if (platform === 'iqiyi') {
+                    let items = json.data ? json.data.list || [] : [];
+                    items.forEach(function (item) {
+                        if (item.name && item.albumId) {
+                            let pic = item.imageUrl || '';
+                            if (pic.startsWith('//')) pic = 'https:' + pic;
+                            let remark = '';
+                            let latest = item.latestOrder || 0;
+                            let total = item.videoCount || 0;
+                            let channel = Number(item.channelId || chanId || 0);
+                            if (channel === 1) remark = item.score ? item.score + '分' : '';
+                            else if (channel === 6) remark = item.period ? item.period + (String(item.period).indexOf('期') > -1 ? '' : '期') : '';
+                            else if (channel === 5) remark = item.focus || '';
+                            else if (latest && total) remark = Number(latest) === Number(total) ? latest + '集全' : latest + '/' + total + '集';
+                            else if (latest) remark = '更新至 ' + latest + '集';
+                            else if (total) remark = '共' + total + '集';
+                            else remark = item.focus || item.period || item.subtitle || '';
+                            if (item.score && channel !== 1) remark = item.score + '分\t' + remark;
+                            all.push({ title: item.name, img: pic, pic_url: pic, url: 'iqiyi__' + item.albumId, desc: '爱奇艺-2K' });
+                        }
+                    });
+                } else if (platform === 'bili') {
+                    let items = (json.data && json.data.list) ? json.data.list : [];
+                    items.forEach(function (vod) {
+                        if (vod.season_id && vod.title) {
+                            let remark = (vod.new_ep && vod.new_ep.index_show) || vod.index_show || vod.badge || '';
+                            let pic = vod.cover || '';
+                            all.push({ title: vod.title, img: pic, pic_url: pic, url: 'bili__' + vod.season_id, desc: '哔哩哔哩-4K' });
+                        }
+                    });
+                }
+            } catch (e) { log(platform + '分类解析错误: ' + e.message); }
+        });
+
+        let merged = mergeResults(all);
+        setResult(merged);
+    }),
+
+    二级: $js.toString(() => {
+        // 兼容DRPY环境变量
+        if (typeof log === 'undefined') log = function () {};
+        if (typeof fetch_params === 'undefined') fetch_params = { headers: {} };
+        if (!fetch_params.headers) fetch_params.headers = {};
+        var PC_UA = (typeof PC_UA !== 'undefined' && PC_UA) ? PC_UA : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        var MOBILE_UA = (typeof MOBILE_UA !== 'undefined' && MOBILE_UA) ? MOBILE_UA : 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1';
+        let parts = input.split('__');
+        let platform = parts[0];
+        let vid = parts[1];
+        let d = [];
+        VOD = {};
+
+        try {
+            if (platform === 'mgtv') {
+                fetch_params.headers.Referer = 'https://www.mgtv.com';
+                fetch_params.headers['User-Agent'] = MOBILE_UA;
+
+                var epUrl = 'https://pcweb.api.mgtv.com/episode/list?page=1&size=50&video_id=' + vid;
+                var epHtml = request(epUrl);
+                var epJson = null;
+                try { epJson = JSON.parse(epHtml); } catch (e) { log('芒果episode解析错误: ' + e.message); }
+                var epList = (epJson && epJson.data) ? epJson.data.list || [] : [];
+                var totalPage = (epJson && epJson.data) ? epJson.data.total_page || 1 : 1;
+
+                // 如果返回空，vid是专辑ID，从专辑页获取视频ID
+                if (!epList.length) {
+                    fetch_params.headers['User-Agent'] = PC_UA;
+                    var albumHtml = request('https://www.mgtv.com/b/' + vid + '/');
+                    var videoId = '';
+                    var m1 = albumHtml.match(/\/b\/\d+\/(\d+)\.html/);
+                    if (m1) videoId = m1[1];
+                    if (!videoId) {
+                        var m2 = albumHtml.match(/url=([^"'\s>]+)/i);
+                        if (m2) {
+                            var redir = m2[1];
+                            if (redir.indexOf('http') !== 0) redir = 'https://www.mgtv.com' + redir;
+                            var html2 = request(redir);
+                            var m3 = html2.match(/\/b\/\d+\/(\d+)\.html/);
+                            if (m3) videoId = m3[1];
+                        }
+                    }
+                    log('芒果专辑ID=' + vid + ' 视频ID=' + videoId);
+                    if (videoId) {
+                        fetch_params.headers['User-Agent'] = MOBILE_UA;
+                        epHtml = request('https://pcweb.api.mgtv.com/episode/list?page=1&size=50&video_id=' + videoId);
+                        try { epJson = JSON.parse(epHtml); } catch (e) {}
+                        epList = (epJson && epJson.data) ? epJson.data.list || [] : [];
+                        totalPage = (epJson && epJson.data) ? epJson.data.total_page || 1 : 1;
+                    }
+                }
+
+                // 分页获取全部剧集
+                if (totalPage > 1) {
+                    for (var pi = 2; pi <= totalPage; pi++) {
+                        try {
+                            var pHtml = request('https://pcweb.api.mgtv.com/episode/list?page=' + pi + '&size=50&video_id=' + vid);
+                            var pJson = JSON.parse(pHtml);
+                            if (pJson && pJson.data && pJson.data.list) epList = epList.concat(pJson.data.list);
+                        } catch (e) { break; }
+                    }
+                }
+
+                // 获取详情页标题和图片
+                if (epList.length) {
+                    fetch_params.headers['User-Agent'] = MOBILE_UA;
+                    var ourl = epList[0].url;
+                    if (ourl && ourl.indexOf('http') !== 0) ourl = 'https://www.mgtv.com' + ourl;
+                    if (ourl) {
+                        var detailHtml = request(ourl);
+                        if (detailHtml.indexOf('302') > -1 || detailHtml.indexOf('window.location') > -1) {
+                            var rm = detailHtml.match(/url=([^"'\s>]+)/i) || detailHtml.match(/href=["']([^"']+)/i);
+                            if (rm) {
+                                ourl = rm[1];
+                                if (ourl.indexOf('http') !== 0) ourl = 'https://www.mgtv.com' + ourl;
+                                detailHtml = request(ourl);
+                            }
+                        }
+                        var tm = detailHtml.match(/<title>([^<]+)<\/title>/);
+                        if (tm) {
+                            var t = tm[1];
+                            if (t && t.indexOf('302') < 0 && t.indexOf('Found') < 0 && t.indexOf('芒果TV') < 0 && t.indexOf('首页') < 0) {
+                                t = t.replace(/\s*第\d+集.*$/i, '').replace(/\s*[-_]\s*芒果TV.*$/i, '').replace(/\s*[-_]\s*湖南卫视.*$/i, '').trim();
+                                if (t) VOD.vod_name = t;
+                            }
+                        }
+                        var pm = detailHtml.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/i);
+                        if (pm) VOD.vod_pic = pm[1];
+                    }
+                }
+
+                // 构建播放列表
+                for (var ei = 0; ei < epList.length; ei++) {
+                    var ep = epList[ei];
+                    if (ep.isIntact == '1' && ep.url) {
+                        var playUrl = ep.url;
+                        if (playUrl.indexOf('http') !== 0) playUrl = 'https://www.mgtv.com' + playUrl;
+                        d.push({ title: ep.t4 || ep.t2 || '正片', url: playUrl });
+                    }
+                }
+                // 兜底标题
+                if (!VOD.vod_name && epList[0]) {
+                    var rawName = epList[0].t3 || '';
+                    VOD.vod_name = rawName.replace(/\s*第\d+集.*$/, '').trim();
+                }
+                if (!VOD.vod_pic && epList[0]) VOD.vod_pic = epList[0].img || '';
+
+            } else if (platform === 'bili') {
+                fetch_params.headers['User-Agent'] = PC_UA;
+                fetch_params.headers.Referer = 'https://www.bilibili.com';
+                let detailUrl = 'https://api.bilibili.com/pgc/view/web/season?season_id=' + vid;
+                let html = request(detailUrl);
+                let json = JSON.parse(html);
+                let result = json.result || {};
+                let episodes = result.episodes || [];
+
+                episodes.forEach(function (ep) {
+                    let badge = ep.badge || '';
+                    if (ep.section_type === 1 || ep.badge_type === 1 || badge.indexOf('预告') > -1) return;
+                    let title = (ep.title || '') + ' ' + (ep.long_title || '');
+                    if (ep.link) d.push({ title: title.trim(), url: ep.link });
+                });
+                VOD.vod_name = result.title || '';
+                VOD.vod_pic = result.cover || '';
+
+            } else if (platform === 'qq') {
+                // 参考腾讯.js：用fetch请求float_vinfo2
+                let QZOutputJson;
+                fetch_params.headers['User-Agent'] = PC_UA;
+                let detailUrl = 'https://node.video.qq.com/x/api/float_vinfo2?cid=' + vid;
+                let html = fetch(detailUrl, fetch_params);
+                let json = JSON.parse(html);
+                let videoIds = (json.c && json.c.video_ids) || [];
+                VOD.vod_name = (json.c && json.c.title) || '';
+                VOD.vod_pic = (json.c && json.c.pic) || '';
+
+                if (videoIds.length === 1) {
+                    d.push({ title: '在线播放', url: 'https://v.qq.com/x/cover/' + vid + '/' + videoIds[0] + '.html' });
+                } else if (videoIds.length > 1) {
+                    for (let i = 0; i < videoIds.length; i += 30) {
+                        let batch = videoIds.slice(i, i + 30);
+                        try {
+                            let oUrl = 'https://union.video.qq.com/fcgi-bin/data?otype=json&tid=1804&appid=20001238&appkey=6c03bbe9658448a4&union_platform=1&idlist=' + batch.join(',');
+                            let oHtml = fetch(oUrl, fetch_params);
+                            eval(oHtml);
+                            if (QZOutputJson && QZOutputJson.results) {
+                                QZOutputJson.results.forEach(function (it1) {
+                                    it1 = it1.fields;
+                                    let catStr = JSON.stringify(it1.category_map || []);
+                                    if (catStr.indexOf('预告') < 0 && catStr.indexOf('花絮') < 0) {
+                                        let url = 'https://v.qq.com/x/cover/' + vid + '/' + it1.vid + '.html';
+                                        d.push({ title: it1.c_title_output || it1.title, url: url });
+                                    }
+                                });
+                            }
+                        } catch (e) { log('腾讯批量获取错误: ' + e.message); }
+                    }
+                }
+
+            } else if (platform === 'iqiyi') {
+                // 参考爱奇艺.js：先请求详情API建立session，再按channelId获取剧集
+                fetch_params.headers['User-Agent'] = PC_UA;
+                let detailUrl = 'https://pcw-api.iqiyi.com/video/video/videoinfowithuser/' + vid + '?agent_type=1&authcookie=&subkey=' + vid + '&subscribe=1';
+                let html = request(detailUrl);
+                let json = JSON.parse(html).data || {};
+                VOD.vod_name = json.name || '';
+                VOD.vod_pic = json.imageUrl || '';
+                let channelId = json.channelId || 0;
+                let albumId = json.albumId || vid;
+
+                let playlists = [];
+                if (channelId === 1 || channelId === 5) {
+                    // 电影：直接用playUrl
+                    playlists = [{ playUrl: json.playUrl, shortTitle: json.shortTitle || '正片' }];
+                } else if (channelId === 6) {
+                    // 综艺：用svlistinfo
+                    try {
+                        let qs = (json.period || '').split('-')[0];
+                        let listUrl = 'https://pcw-api.iqiyi.com/album/source/svlistinfo?cid=6&sourceid=' + albumId + '&timelist=' + qs;
+                        let playData = JSON.parse(request(listUrl)).data || {};
+                        if (playData[qs]) {
+                            playData[qs].forEach(function (it) {
+                                playlists.push({ playUrl: it.playUrl, shortTitle: it.shortTitle });
+                            });
+                        }
+                    } catch (e) { log('爱奇艺综艺错误: ' + e.message); }
+                } else {
+                    // 电视剧等：用avlistinfo（需先请求详情建立session）
+                    try {
+                        let listUrl = 'https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=' + albumId + '&size=200&page=1';
+                        let listData = JSON.parse(request(listUrl)).data || {};
+                        let epsodelist = listData.epsodelist || [];
+                        let total = listData.total || 0;
+                        if (total > 200) {
+                            let totalPages = Math.ceil(total / 200);
+                            // 不能限制为前3页：每页200集会把《航海王》等长篇动漫
+                            // 固定截断为600集。按接口total把所有分页完整取回。
+                            for (let page = 2; page <= totalPages; page++) {
+                                try {
+                                    let pageUrl = 'https://pcw-api.iqiyi.com/albums/album/avlistinfo?aid=' + albumId + '&size=200&page=' + page;
+                                    epsodelist = epsodelist.concat((JSON.parse(request(pageUrl)).data || {}).epsodelist || []);
+                                } catch (e) { break; }
+                            }
+                        }
+                        playlists = epsodelist;
+                    } catch (e) { log('爱奇艺剧集错误: ' + e.message); }
+                }
+
+                playlists.forEach(function (ep) {
+                    let epUrl = ep.playUrl || '';
+                    if (epUrl.startsWith('//')) epUrl = 'https:' + epUrl;
+                    let title = ep.shortTitle || ('第' + (ep.order || '') + '集');
+                    if (epUrl) d.push({ title: title, url: epUrl });
+                });
+            }
+        } catch (e) { log('二级错误: ' + e.message); }
+
+        VOD.vod_play_from = '白嫖鸭';
+        VOD.vod_play_url = d.map(function (it) { return it.title + '$' + it.url; }).join('#');
+        setResult(d);
+    }),
+
+    搜索: $js.toString(() => {
+        let keyword = KEY;
+        let PRIORITY = { 'mgtv': 0, 'bili': 1, 'qq': 2, 'iqiyi': 3 };
+        // 兼容PC_UA全局变量
+        if (typeof PC_UA === 'undefined') var PC_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+        // MD5实现（确保DRPY环境可用）
+        function md5(s) {
+            function rh(n, j) { var s32 = (n & 0xFFFF) + (j & 0xFFFF); var hi16 = (n >> 16) + (j >> 16) + (s32 >> 16); return (hi16 << 16) | (s32 & 0xFFFF); }
+            function rol(n, c) { return (n << c) | (n >>> (32 - c)); }
+            function cmn(q, a, b, x, s, t) { return rh(rol(rh(rh(a, q), rh(x, t)), s), b); }
+            function ff(a, b, c, d, x, s, t) { return cmn((b & c) | ((~b) & d), a, b, x, s, t); }
+            function gg(a, b, c, d, x, s, t) { return cmn((b & d) | (c & (~d)), a, b, x, s, t); }
+            function hh(a, b, c, d, x, s, t) { return cmn(b ^ c ^ d, a, b, x, s, t); }
+            function ii(a, b, c, d, x, s, t) { return cmn(c ^ (b | (~d)), a, b, x, s, t); }
+            function coreMd5(x, len) {
+                x[len >> 5] |= 0x80 << (len % 32);
+                x[(((len + 64) >>> 9) << 4) + 14] = len;
+                var a = 1732584193, b = -271733879, c = -1732584194, d = 271733878;
+                for (var i = 0; i < x.length; i += 16) {
+                    var oa = a, ob = b, oc = c, od = d;
+                    a = ff(a, b, c, d, x[i], 7, -680876936); d = ff(d, a, b, c, x[i + 1], 12, -389564586); c = ff(c, d, a, b, x[i + 2], 17, 606105819); b = ff(b, c, d, a, x[i + 3], 22, -1044525330);
+                    a = ff(a, b, c, d, x[i + 4], 7, -176418897); d = ff(d, a, b, c, x[i + 5], 12, 1200080426); c = ff(c, d, a, b, x[i + 6], 17, -1473231341); b = ff(b, c, d, a, x[i + 7], 22, -45705983);
+                    a = ff(a, b, c, d, x[i + 8], 7, 1770035416); d = ff(d, a, b, c, x[i + 9], 12, -1958414417); c = ff(c, d, a, b, x[i + 10], 17, -42063); b = ff(b, c, d, a, x[i + 11], 22, -1990404162);
+                    a = ff(a, b, c, d, x[i + 12], 7, 1804603682); d = ff(d, a, b, c, x[i + 13], 12, -40341101); c = ff(c, d, a, b, x[i + 14], 17, -1502002290); b = ff(b, c, d, a, x[i + 15], 22, 1236535329);
+                    a = gg(a, b, c, d, x[i + 1], 5, -165796510); d = gg(d, a, b, c, x[i + 6], 9, -1069501632); c = gg(c, d, a, b, x[i + 11], 14, 643717713); b = gg(b, c, d, a, x[i], 20, -373897302);
+                    a = gg(a, b, c, d, x[i + 5], 5, -701558691); d = gg(d, a, b, c, x[i + 10], 9, 38016083); c = gg(c, d, a, b, x[i + 15], 14, -660478335); b = gg(b, c, d, a, x[i + 4], 20, -405537848);
+                    a = gg(a, b, c, d, x[i + 9], 5, 568446438); d = gg(d, a, b, c, x[i + 14], 9, -1019803690); c = gg(c, d, a, b, x[i + 3], 14, -187363961); b = gg(b, c, d, a, x[i + 8], 20, 1163531501);
+                    a = gg(a, b, c, d, x[i + 13], 5, -1444681467); d = gg(d, a, b, c, x[i + 2], 9, -51403784); c = gg(c, d, a, b, x[i + 7], 14, 1735328473); b = gg(b, c, d, a, x[i + 12], 20, -1926607734);
+                    a = hh(a, b, c, d, x[i + 5], 4, -378558); d = hh(d, a, b, c, x[i + 8], 11, -2022574463); c = hh(c, d, a, b, x[i + 11], 16, 1839030562); b = hh(b, c, d, a, x[i + 14], 23, -35309556);
+                    a = hh(a, b, c, d, x[i + 1], 4, -1530992060); d = hh(d, a, b, c, x[i + 4], 11, 1272893353); c = hh(c, d, a, b, x[i + 7], 16, -155497632); b = hh(b, c, d, a, x[i + 10], 23, -1094730640);
+                    a = hh(a, b, c, d, x[i + 13], 4, 681279174); d = hh(d, a, b, c, x[i], 11, -358537222); c = hh(c, d, a, b, x[i + 3], 16, -722521979); b = hh(b, c, d, a, x[i + 6], 23, 76029189);
+                    a = hh(a, b, c, d, x[i + 9], 4, -640364487); d = hh(d, a, b, c, x[i + 12], 11, -421815835); c = hh(c, d, a, b, x[i + 15], 16, 530742520); b = hh(b, c, d, a, x[i + 2], 23, -995338651);
+                    a = ii(a, b, c, d, x[i], 6, -198630844); d = ii(d, a, b, c, x[i + 7], 10, 1126891415); c = ii(c, d, a, b, x[i + 14], 15, -1416354905); b = ii(b, c, d, a, x[i + 5], 21, -57434055);
+                    a = ii(a, b, c, d, x[i + 12], 6, 1700485571); d = ii(d, a, b, c, x[i + 3], 10, -1894986606); c = ii(c, d, a, b, x[i + 10], 15, -1051523); b = ii(b, c, d, a, x[i + 1], 21, -2054922799);
+                    a = ii(a, b, c, d, x[i + 8], 6, 1873313359); d = ii(d, a, b, c, x[i + 15], 10, -30611744); c = ii(c, d, a, b, x[i + 6], 15, -1560198380); b = ii(b, c, d, a, x[i + 13], 21, 1309151649);
+                    a = ii(a, b, c, d, x[i + 4], 6, -145523070); d = ii(d, a, b, c, x[i + 11], 10, -1120210379); c = ii(c, d, a, b, x[i + 2], 15, 718787259); b = ii(b, c, d, a, x[i + 9], 21, -343485551);
+                    a = rh(a, oa); b = rh(b, ob); c = rh(c, oc); d = rh(d, od);
+                }
+                return [a, b, c, d];
+            }
+            function rawToHex(raw) {
+                var hex = '0123456789abcdef', str = '';
+                for (var i = 0; i < raw.length * 4; i++) {
+                    str += hex.charAt((raw[i >> 2] >> ((i % 4) * 8 + 4)) & 0x0F) + hex.charAt((raw[i >> 2] >> ((i % 4) * 8)) & 0x0F);
+                }
+                return str;
+            }
+            function rawToStr(raw) {
+                var str = '';
+                for (var i = 0; i < raw.length * 4; i++) {
+                    str += String.fromCharCode((raw[i >> 2] >> ((i % 4) * 8)) & 0xFF);
+                }
+                return str;
+            }
+            function strToRaw(str) {
+                var raw = [];
+                for (var i = 0; i < str.length * 8; i += 8) {
+                    raw[i >> 5] |= (str.charCodeAt(i / 8) & 0xFF) << (i % 32);
+                }
+                return raw;
+            }
+            function utf8Encode(str) {
+                var utftext = '', start = 0, end = 0;
+                for (var n = 0; n < str.length; n++) {
+                    var c = str.charCodeAt(n);
+                    if (c < 128) end++;
+                    else if (c > 127 && c < 2048) end += 2;
+                    else end += 3;
+                }
+                utftext = new Array(end);
+                for (n = 0; n < str.length; n++) {
+                    c = str.charCodeAt(n);
+                    if (c < 128) utftext[start++] = String.fromCharCode(c);
+                    else if (c > 127 && c < 2048) {
+                        utftext[start++] = String.fromCharCode((c >> 6) | 192);
+                        utftext[start++] = String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext[start++] = String.fromCharCode((c >> 12) | 224);
+                        utftext[start++] = String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext[start++] = String.fromCharCode((c & 63) | 128);
+                    }
+                }
+                return utftext.join('');
+            }
+            return rawToHex(coreMd5(strToRaw(utf8Encode(s)), s.length * 8));
+        }
+
+        function normTitle(t) {
+            if (!t) return '';
+            return t.replace(/<[^>]+>/g, '').replace(/[\s\p{P}]/gu, '').toLowerCase();
+        }
+        function cleanTitle(t) {
+            if (!t) return '';
+            return t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        }
+        function mergeResults(results, kw) {
+            let normKw = normTitle(kw);
+            function matchScore(title) {
+                let t = normTitle(title);
+                if (!t) return 0;
+                if (t === normKw) return 100;
+                if (t.indexOf(normKw) === 0) return 80;
+                if (t.indexOf(normKw) > -1) return 60;
+                return 0;
+            }
+            let filtered = results.filter(function (item) {
+                let t = cleanTitle(item.title);
+                if (!t || t.length < 2) return false;
+                if (t.indexOf('<') > -1 || t.indexOf('>') > -1) return false;
+                // 过滤全网搜和外站资源
+                let desc = item.desc || '';
+                if (desc.indexOf('全网搜') > -1 || desc.indexOf('外站') > -1) return false;
+                let pf = item.url.split('__')[0];
+                // 腾讯/芒果过滤带《》的新闻/路透，哔哩/爱奇艺不过滤
+                if (pf === 'qq' || pf === 'mgtv') {
+                    if (/[《》]/.test(t)) return false;
+                }
+                item.title = t;
+                return matchScore(t) > 0;
+            });
+            filtered.sort(function (a, b) {
+                let sa = matchScore(a.title);
+                let sb = matchScore(b.title);
+                if (sb !== sa) return sb - sa;
+                let ak = a.url.split('__')[0], bk = b.url.split('__')[0];
+                let pa = PRIORITY[ak] !== undefined ? PRIORITY[ak] : 99;
+                let pb = PRIORITY[bk] !== undefined ? PRIORITY[bk] : 99;
+                return pa - pb;
+            });
+            // 搜索结果不去重，显示4个平台的匹配结果
+            return filtered;
+        }
+
+        let all = [];
+
+        // 统一过滤：预告/花絮/剪辑/解说/新闻/路透等非正片内容
+        let FILTER_KW = ['预告', '花絮', '片花', '剪辑', '片段', '解说', '速看', '速通', '合集', '精彩', '集锦', '盘点', '回顾', 'MV', '主题曲', '插曲', '彩蛋', '特辑', '独家', '专访', '纯享', '制作', '幕后', '宣传', '反应', 'reaction', '名场面', '抢先看', '评测', 'cut', 'CUT', '音频', '原创', '深度', '解读', '看完', '分钟', '路透', '曝光', '造型', '片场', '背台词', '告别', '长文', '新剧', '公子', '呆萌', '仪态', '清冷', '温润', '仙气', '白衣', '古装', '高马尾', '蓝衣', '素衣', '青色'];
+        function isMainContent(title) {
+            if (!title) return false;
+            // 只过滤《》括号（新闻/路透标题），不过滤其他括号（多季剧名可能带括号）
+            if (/[《》]/.test(title)) return false;
+            return !FILTER_KW.some(function (kw) { return title.indexOf(kw) > -1; });
+        }
+
+        // 四个平台的首轮搜索并发请求；不支持batchFetch的旧宿主会自动
+        // 使用原request串行回退，保证绿豆UI9不同版本都能运行。
+        let searchUa = (typeof PC_UA !== 'undefined' && PC_UA) ? PC_UA : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
+        let MGTV_SALT = 'xHAa3YZflWLogZUOzl';
+        function searchUuid() {
+            return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                let r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+        }
+        function buildMgtvSearchUrl() {
+            let params = {
+                allowedRC: '1', src: 'mgtv', did: 'cf03b95969454cb6bcb388762459354d',
+                timestamp: new Date().toISOString().replace(/\.\d{3}Z/, 'Z'),
+                signVersion: '1', signNonce: searchUuid(),
+                q: keyword, pn: '1', pc: '10', corr: '1', _support: '10000000'
+            };
+            let keys = Object.keys(params).sort();
+            let qs = keys.map(function (k) { return k + '=' + encodeURI(String(params[k])); }).join('&');
+            return 'https://mobileso.bz.mgtv.com/pc/search/v2?' + qs + '&signature=' + md5(MGTV_SALT + qs + MGTV_SALT);
+        }
+        var BAK = '1d8b6e7d45233436';
+        var BSC = '560c52ccd288fed045859ed18bffd973';
+        function buildBiliSearchUrl(t) {
+            let p = { appkey: BAK, build: '7000300', keyword: keyword, mobi_app: 'android', pagesize: 20, pn: 1, ts: Math.round(Date.now() / 1000), type: t };
+            let ks = Object.keys(p).sort();
+            let raw = ks.map(function (k) { return k + '=' + p[k]; }).join('&');
+            let sg = md5(raw + BSC);
+            let enc = ks.map(function (k) { return k + '=' + encodeURIComponent(p[k]); }).join('&');
+            return 'https://app.bilibili.com/x/v2/search/type?' + enc + '&sign=' + sg;
+        }
+        let qqSearchUrl = 'https://pbaccess.video.qq.com/trpc.videosearch.mobile_search.MultiTerminalSearch/MbSearch?vplatform=2';
+        let qqSearchBody = {
+            "version": "25042201", "clientType": 1, "filterValue": "",
+            "uuid": "B1E50847-D25F-4C4B-BBA0-36F0093487F6", "retry": 0,
+            "query": keyword, "pagenum": 0, "isPrefetch": true, "pagesize": 30, "queryFrom": 0,
+            "searchDatakey": "", "transInfo": "", "isneedQc": true, "preQid": "", "adClientInfo": "",
+            "extraInfo": {"isNewMarkLabel": "1", "multi_terminal_pc": "1", "themeType": "1", "sugRelatedIds": "{}", "appVersion": ""}
+        };
+        let qqSearchHeaders = {
+            'User-Agent': searchUa, 'Content-Type': 'application/json',
+            'origin': 'https://v.qq.com', 'referer': 'https://v.qq.com/'
+        };
+        let iqiyiSearchUrl = 'https://search.video.iqiyi.com/o?if=html5&key=' + encodeURIComponent(keyword) + '&pageNum=1&pos=1&pageSize=30&site=iqiyi';
+        let searchTasks = [
+            { key: 'mgtv', url: buildMgtvSearchUrl(), options: { headers: { 'User-Agent': searchUa, 'Referer': 'https://www.mgtv.com' } } },
+            { key: 'bili7', url: buildBiliSearchUrl(7), options: { headers: { 'User-Agent': searchUa, 'Referer': 'https://www.bilibili.com' } } }
+        ];
+        // 并发环境把哔哩影视(type=8)也放进同一批，不增加等待时间；
+        // 串行环境仍按命中情况决定是否请求，避免无谓变慢。
+        if (typeof batchFetch === 'function') {
+            searchTasks.push({ key: 'bili8', url: buildBiliSearchUrl(8), options: { headers: { 'User-Agent': searchUa, 'Referer': 'https://www.bilibili.com' } } });
+        }
+        searchTasks.push(
+            { key: 'qq', url: qqSearchUrl, options: { method: 'POST', headers: qqSearchHeaders, data: qqSearchBody }, fallbackOptions: { method: 'POST', headers: qqSearchHeaders, body: qqSearchBody }, jsonBody: true },
+            { key: 'iqiyi', url: iqiyiSearchUrl, options: { headers: { 'User-Agent': searchUa } } }
+        );
+        let searchResponses = [];
+        let searchBatched = false;
+        if (typeof batchFetch === 'function') {
+            try {
+                searchResponses = batchFetch(searchTasks.map(function (task) { return { url: task.url, options: task.options || {} }; }));
+                searchBatched = Array.isArray(searchResponses) && searchResponses.length === searchTasks.length;
+            } catch (e) { log('搜索并发请求不可用，切换串行: ' + e.message); }
+        }
+        if (!searchBatched) {
+            searchResponses = searchTasks.map(function (task) {
+                try { return request(task.url, task.fallbackOptions || task.options || {}, task.jsonBody === true); }
+                catch (e) { log(task.key + '搜索请求错误: ' + e.message); return ''; }
+            });
+        }
+        let searchHtml = {};
+        searchTasks.forEach(function (task, index) { searchHtml[task.key] = searchResponses[index] || ''; });
+
+        // 芒果搜索
+        try {
+            let html = searchHtml.mgtv;
+            let json = JSON.parse(html);
+
+            if (json.data && json.data.contents) {
+                json.data.contents.forEach(function (data) {
+                    let d0 = data.data;
+                    if (!d0 || typeof d0 !== 'object' || Array.isArray(d0)) return;
+                    let cards = (d0.yearList && d0.yearList.length) ? d0.yearList : [d0];
+                    cards.forEach(function (item) {
+                        let title = cleanTitle(item.hitTitle || item.title || '');
+                        let img = item.pic || '';
+                        let vid = '';
+                        let src = (item.sourceList && item.sourceList.length) ? item.sourceList[0] : null;
+                        // 过滤芒果单视频(/s/格式)，只保留专辑(/b/格式)
+                        let pageUrl = (src && src.url) || item.url || '';
+                        if (pageUrl.indexOf('/s/') > -1) return;
+                        if (src) {
+                            if (src.source !== 'imgo') return;
+                            vid = src.vid ? String(src.vid) : '';
+                            if (!vid) {
+                                let m = String(pageUrl).match(/\/b\/\d+\/(\d+)\.html/);
+                                if (m) vid = m[1];
+                            }
+                        } else if (item.vid) {
+                            vid = String(item.vid);
+                        }
+                        if (!vid) {
+                            let m = String(pageUrl).match(/\/b\/\d+\/(\d+)\.html/);
+                            if (m) vid = m[1];
+                        }
+                        if (!vid || !title) return;
+                        if (!isMainContent(title)) return;
+                        // 参照mg(1).js保留搜索结果中的标签备注与播出时间；
+                        // updateInfo存在时仍优先显示更直接的更新集数。
+                        let descParts = [];
+                        if (Array.isArray(item.desc)) {
+                            item.desc.forEach(function (x) {
+                                if (x && (x.text || x.label)) descParts.push((x.label ? x.label + ':' : '') + (x.text || ''));
+                            });
+                        }
+                        if (item.playTime) descParts.push(item.playTime);
+                        let remark = item.updateInfo || descParts.join(',') || item.subtitle || '';
+                        all.push({ title: title, img: img, pic_url: img, url: 'mgtv__' + vid, desc: '芒果视频-4K' });
+                    });
+                });
+            }
+        } catch (e) { log('芒果搜索错误: ' + e.message); }
+
+        // 哔哩搜索（参考bili.js实现）
+        try {
+            function biliAppSearch(t, firstHtml) {
+                let text = firstHtml;
+                if (!text) text = request(buildBiliSearchUrl(t), { headers: { 'User-Agent': searchUa, 'Referer': 'https://www.bilibili.com' } });
+                var jo = JSON.parse(text);
+                if (jo && jo.code === 0 && jo.data && jo.data.items) return jo.data.items;
+                return [];
+            }
+            var seen = {};
+            function biliPush(items) {
+                items.forEach(function (vod) {
+                    var aid = vod.season_id;
+                    if (aid === undefined || aid === null || aid === 0) return;
+                    aid = (aid + '').trim();
+                    if (seen[aid]) return;
+                    seen[aid] = 1;
+                    var title = (vod.title || '').replace(/<[^>]+>/g, '').trim();
+                    var img = (vod.cover || '').trim();
+                    // 搜索接口字段不固定：优先集数，其次沿用bili.js的类型备注。
+                    var remark = (vod.new_ep && vod.new_ep.index_show) || vod.index_show || vod.styles || vod.badge || vod.season_type_name || '';
+                    // 哔哩不过滤，直接加入（用原始标题）
+                    all.push({ title: title, img: img, pic_url: img, url: 'bili__' + aid, desc: '哔哩哔哩-4K' });
+                });
+            }
+            // 动漫(type=7)已命中完全同名结果时，不再重复请求影视(type=8)。
+            // 电视剧等在type=7未命中时仍会继续查询type=8，不影响《外来媳妇本地郎》。
+            var biliItems7 = biliAppSearch(7, searchHtml.bili7);
+            biliPush(biliItems7);
+            var biliNormKeyword = normTitle(keyword);
+            var biliHasExact = biliItems7.some(function (vod) {
+                return normTitle((vod.title || '').replace(/<[^>]+>/g, '').trim()) === biliNormKeyword;
+            });
+            if (!biliHasExact) biliPush(biliAppSearch(8, searchHtml.bili8));
+        } catch (e) { log('哔哩搜索错误: ' + e.message); }
+
+        // 腾讯搜索
+        try {
+            let html = searchHtml.qq;
+            let json = JSON.parse(html);
+            let itemList = [];
+            if (json.data && json.data.normalList && json.data.normalList.itemList) {
+                itemList = itemList.concat(json.data.normalList.itemList);
+            }
+            if (json.data && json.data.areaBoxList) {
+                json.data.areaBoxList.forEach(function (box) {
+                    if (box.itemList) itemList = itemList.concat(box.itemList);
+                });
+            }
+
+            // 用viewType过滤正片（viewType=1是正片专辑，viewType=100是剪辑/解说）
+            itemList.forEach(function (it) {
+                if (it && it.videoInfo) {
+                    let cid = (it.doc && it.doc.id) || it.videoInfo.cid || it.videoInfo.coverId || '';
+                    if (!cid) return;
+                    cid = String(cid);
+                    let title = cleanTitle(it.videoInfo.title || '');
+                    if (!title || title.indexOf('<') > -1 || title.indexOf('>') > -1) return;
+                    if (!isMainContent(title)) return;
+                    // 只保留正片专辑（viewType=1），过滤剪辑/解说（viewType=100）
+                    let viewType = it.videoInfo.viewType;
+                    if (viewType !== 1 && viewType !== 25) return; // 25可能是最终季/特别篇
+                    let desc = it.videoInfo.secondLine || it.videoInfo.updateInfo || it.videoInfo.episodeUpdated || it.videoInfo.secondTitle || it.videoInfo.subTitle || '';
+                    all.push({ title: title, img: it.videoInfo.imgUrl || it.videoInfo.pic || '', pic_url: it.videoInfo.imgUrl || it.videoInfo.pic || '', url: 'qq__' + cid, desc: '腾讯视频-4K' });
+                }
+            });
+        } catch (e) { log('腾讯搜索错误: ' + e.message); }
+
+        // 爱奇艺搜索
+        try {
+            let html = searchHtml.iqiyi;
+            let json = JSON.parse(html);
+            let docinfos = json.data ? json.data.docinfos : [];
+            let validCh = ['电影', '电视剧', '综艺', '动漫', '纪录片', '少儿', '短剧', '漫剧'];
+            docinfos.forEach(function (doc) {
+                let album = doc.albumDocInfo || {};
+                let title = cleanTitle(album.albumTitle || '');
+                let albumId = album.albumId || '';
+                let pic = album.albumVImage || '';
+                let channel = album.channel || '';
+                if (!title || !albumId) return;
+                if (!isMainContent(title)) return;
+                if (!validCh.some(function (ch) { return channel.indexOf(ch) > -1; })) return;
+                if (pic.startsWith('//')) pic = 'https:' + pic;
+                let remark = '';
+                let latest = album.latestOrder || 0;
+                let total = album.videoCount || album.itemTotalNumber || 0;
+                if (latest && total) {
+                    remark = Number(latest) === Number(total) ? latest + '集全' : latest + '/' + total + '集';
+                } else if (latest) {
+                    remark = '更新至 ' + latest + '集';
+                } else if (total) {
+                    remark = '共' + total + '集';
+                } else {
+                    remark = album.period || album.focus || album.albumSubtitle || album.subTitle || '';
+                }
+                if (album.score) remark = album.score + '分\t' + remark;
+                all.push({ title: title, img: pic, pic_url: pic, url: 'iqiyi__' + albumId, desc: '爱奇艺-2K' });
+            });
+        } catch (e) { log('爱奇艺搜索错误: ' + e.message); }
+
+        let merged = mergeResults(all, keyword);
+        setResult(merged);
+    }),
+}
