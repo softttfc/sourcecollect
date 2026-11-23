@@ -37,6 +37,12 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/央视.py"
 },
 {
+    "key": "dr_豆播AI",
+    "name": "🆚┃豆播┃秒播",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/豆播AI.py"
+},
+{
     "key": "js_mohe",
     "name": "🆚┃魔盒┃首页",
     "type": 3,
@@ -55,10 +61,16 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/河豚.py"
 },
 {
-    "key": "dr_豆播AI",
-    "name": "🆚┃豆播┃秒播",
+    "key": "dr_苹果",
+    "name": "🆚┃苹果┃影視",
     "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/豆播AI.py"
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/苹果.py"
+},
+{
+    "key": "dr_看客",
+    "name": "🆚┃看客┃影視",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/看客.py"
 },
 {
     "key": "dr_MTYY",
@@ -97,12 +109,6 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/四季.js"
 },
 {
-    "key": "dr_咕噜",
-    "name": "🆚┃咕噜┃秒播",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/咕噜.js"
-},
-{
     "key": "dr_王子TV",
     "name": "🆚┃王子┃影視",
     "type": 3,
@@ -137,6 +143,12 @@
     "name": "🆚┃茶杯┃影視",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/茶杯.js"
+},
+{
+    "key": "dr_咕噜",
+    "name": "🆚┃咕噜┃秒播",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/咕噜.js"
 },
 {
     "key": "dr_剧圈",
@@ -203,12 +215,6 @@
     "name": "🆚┃毒舌┃影視",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/毒舌.js"
-},
-{
-    "key": "dr_葫芦",
-    "name": "🆚┃葫芦┃影視",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/葫芦.js"
 },
 {
     "key": "dr_蓝鸟",
@@ -283,14 +289,8 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/鬼片.js"
 },
 {
-    "key": "dr_小鸡看看",
-    "name": "🆚┃看看┃影視",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/小鸡.py"
-},
-{
-    "key": "dr_小苹果",
-    "name": "🆚┃苹果┃影視",
+    "key": "dr_天堂",
+    "name": "🆚┃天堂┃影視",
     "type": 3,
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/苹果.js"
 },
@@ -640,11 +640,10 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/qq4K.js"
 },
 {
-    "key":"spider_2097848347502055424",
-    "name":"🈚┃天堂┃C4T",
-    "type":4,
-    "api":"https://banyeomni.780420.xyz:17777/api/tvbox/source/2097848347502055424?token=banye666",
-    "filterable":0
+    "key": "py_咕噜",
+    "name": "🈚┃咕噜┃C4K",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/咕噜.py"
 },
 {
     "key":"csp_影探",
