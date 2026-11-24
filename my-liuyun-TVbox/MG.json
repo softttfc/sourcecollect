@@ -49,6 +49,30 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/魔盒.js"
 },
 {
+    "key": "dr_搜剧AI",
+    "name": "🆚┃搜剧┃影視",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/搜剧AI.js"
+},
+{
+    "key": "dr_看剧AI",
+    "name": "🆚┃看剧┃影視",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/看剧AI.js"
+},
+{
+    "key": "dr_星辰AI",
+    "name": "🆚┃星辰┃影視",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/星辰AI.js"
+},
+{
+    "key": "dr_八戒",
+    "name": "🆚┃八戒┃影視",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/八戒.js"
+},
+{
     "key": "dr_懂片帝",
     "name": "🆚┃懂片┃秒播",
     "type": 3,
@@ -58,7 +82,7 @@
     "key": "dr_河豚",
     "name": "🆚┃河豚┃秒播",
     "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/河豚.py"
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/河豚.js"
 },
 {
     "key": "dr_苹果",

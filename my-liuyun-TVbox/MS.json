@@ -97,20 +97,6 @@
     "ext": "https://www.gs4x7nq4.com,https://www.sunnafh.com"
 },
 {
-    "key": "csp_1234影视",
-    "name": "🥨┃影視┃四季",
-    "type": 3,
-    "api": "csp_Bdjmcc",
-    "indexs": 0
-},
-{
-    "key": "csp_搜剧AI",
-    "name": "🎆┃影視┃搜剧",
-    "type": 3,
-    "api": "csp_SouJu",
-    "indexs": 0
-},
-{
     "key": "csp_懂片帝",
     "name": "🍭┃影視┃懂片",
     "type": 3,

@@ -162,7 +162,7 @@ async function detail(id) {
             vod_area: data.Region,
             vod_actor: Array.isArray(data.Actor) ? data.Actor.join(',') : data.Actor,
             vod_director: data.Director,
-            vod_content:'【琉🔹璃❤广告勿信👉剧情】📢'+ data.Description,
+            vod_content:'【琉🔹芸❤广告勿信👉剧情】📢'+ data.Description,
             vod_play_from: '魔盒专线',
             vod_play_url: playUrls,
             type_name: `${data.Genre || ''},${data.Scenario || ''}`
