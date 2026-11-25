@@ -1,6 +1,5 @@
 {
               "spider": "https://gh-proxy.org/raw.githubusercontent.com/goodcommunication/mydm/main/danmu-spider-native.jar",
-              "wallpaper": "http://fmys.top/img.php",
               "logo": "https://pic.nximg.cn/file/20250530/35182407_094206711109_2.jpg",
               "notice": "❤️马叉虫收集整理🐸支持正版人人有责❤️",
   "sites": [
@@ -38,7 +37,7 @@
              "playUrl": "json:http://110.42.66.100:5666/api/?key=c31bfd818ac47875ab4922f03834afcc&url=",
             "searchable": 1,
             "quickSearch": 1,
-            "filterable": 0
+            "filterable": 1
         },
         {
              "key": "sx4k_cms",
@@ -47,10 +46,13 @@
              "api": "http://8.134.205.252:39466/pz/sx4k.php/api.php/provide/vod/?ac=list"
         },
         {
-             "key": "yunzhenxiang_py",
-             "name": "云帧享视频",
-             "type": 3,
-             "api": "https://gh-proxy.org/github.com/ssm123-coder/a/raw/main/py/yunzhenxiang.py"
+             "key": "ddcj_cms",
+             "name": "开心果视频",
+             "type": 4,
+             "api": "http://116.62.133.86:56688/%E9%87%87%E9%9B%86/cai.php?filter=true",
+             "searchable": 1,
+             "quickSearch": 1,
+             "filterable": 1
         },
         {
              "key": "baipiao_js",
@@ -88,10 +90,22 @@
             "api": "https://gitee.com/zdrnko/aa/raw/master/py/ydyp.py"
         },
         {
-             "key": "juxiafan_py",
-             "name": "剧下饭视频",
+             "key": "gulu_py",
+             "name": "咕噜视频",
              "type": 3,
-             "api": "https://gitee.com/zdrnko/aa/raw/master/py/juxiafan.py"
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/gulu.py"
+        },
+        {
+             "key": "dyls_py",
+             "name": "猎手视频",
+             "type": 3,
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/dyls.py"
+        },
+        {
+             "key": "yunzhenxiang_py",
+             "name": "云帧享视频",
+             "type": 3,
+             "api": "https://gh-proxy.org/github.com/ssm123-coder/a/raw/main/py/yunzhenxiang.py"
         },
         {
              "key": "hanju_py",
@@ -118,7 +132,7 @@
              "api": "https://gitee.com/zdrnko/aa/raw/master/py/ghgdm.py"
         },
         {
-             "key": "某音短剧",
+             "key": "dydj_py",
              "name": "某音短剧",
              "type": 3,
              "api": "https://gitee.com/zdrnko/aa/raw/master/py/dydj.py",
@@ -131,6 +145,12 @@
              "name": "红果短剧",
              "type": 3,
              "api": "https://gitee.com/zdrnko/aa/raw/master/py/hgdj.py"
+        },
+        {
+             "key": "hgdj备用_py",
+             "name": "红果备用",
+             "type": 3,
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/hgdj备用.py"
         },
         {
              "key": "kwmusic_py",
@@ -163,8 +183,8 @@
              "type": 3,
              "api": "https://gitee.com/zdrnko/aa/raw/master/py/tingyou.py",
              "searchable": 1,
-             "quickSearch": 0,
-             "changeable": 0
+             "quickSearch": 1,
+             "changeable": 1
         },
         {
              "key": "体育聚合",
@@ -174,6 +194,8 @@
              "style": {
              "type": "rect"
              },
+             "changeable": 1,
+             "quickSearch": 1,
              "changeable": 1
         },
         {
@@ -181,8 +203,8 @@
              "name": "绝色🔞禁",
              "type": 3,
              "api": "https://gh-proxy.org/github.com/ssm123-coder/a/raw/main/py/juese.py",
-             "searchable": 0,
-             "changeable": 0
+             "searchable": 1,
+             "changeable": 1
         }
   ],
   "lives": [
@@ -202,9 +224,19 @@
   ],
   "parses": [
         {
-            "name": "白嫖鸭",
+            "name": "解析",
+            "type": 1,
+            "url": "http://niubi.69mini.com/api?key=5826c5388ce47abc5919ef5474f075d1&url="
+        },
+        {
+            "name": "备用",
             "type": 1,
             "url": "http://jiexi.fc8001.top/leZNmbHdSceTrNsR.php?url="
+        },
+        {
+            "name": "白嫖鸭",
+            "type": 1,
+            "url": "https://jx4k.fuyingapi.top/api/?key=f9ecd007748997c6a81a83c425e9448a&url="
         }
   ]
 }

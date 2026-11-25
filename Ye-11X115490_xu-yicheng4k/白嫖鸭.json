@@ -8,6 +8,12 @@
             "ext": "https://raw.giteeusercontent.com/Ye-11X115490/xu-yicheng/raw/master/lib/bpy.js"
         },
         {
+            "key": "电影猎手",
+            "name": "电影猎手",
+            "type": 3,
+            "api": "https://raw.giteeusercontent.com/Ye-11X115490/xu-yicheng/raw/master/lib/dyls.py"
+        },
+        {
             "key": "影探",
             "name": "影探影视",
             "type": 3,
@@ -23,7 +29,7 @@
         {
             "name": "白嫖鸭",
             "type": 1,
-            "url": "http://jiexi.fc8001.top/leZNmbHdSceTrNsR.php?url="
+            "url": "https://jx4k.fuyingapi.top/api/?key=f9ecd007748997c6a81a83c425e9448a&url="
         }
     ]
 }

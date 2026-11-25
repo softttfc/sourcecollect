@@ -264,8 +264,8 @@ var rule = {
     quickSearch: 0,
     filterable: 1,
     multi: 1,
-    class_name: '电影&剧集&综艺&动漫&记录&少儿&短剧&漫剧&体育&中视频&宠物',
-    class_url: 'movie&tv&variety&cartoon&doco&child&short&manju&sports&midvideo&pettv',
+    class_name: '推荐&电影&剧集&综艺&动漫&记录&少儿&短剧&漫剧&体育&中视频&宠物',
+    class_url: 'recommend&movie&tv&variety&cartoon&doco&child&short&manju&sports&midvideo&pettv',
     limit: 20,
     play_parse: true,
     headers: {
@@ -426,6 +426,77 @@ var rule = {
                 }
                 if (!VOD.vod_pic && epList[0]) VOD.vod_pic = epList[0].img || '';
 
+                // 补全: 地区/年份/简介/演员/类型 (解析详情页 __NUXT__ 内联数据, 失败静默)
+                try {
+                    var nuxtSrc = (typeof detailHtml !== 'undefined' && detailHtml) ? detailHtml : ((typeof albumHtml !== 'undefined' && albumHtml) ? albumHtml : '');
+                    if (nuxtSrc && nuxtSrc.indexOf('__NUXT__') > -1) {
+                        var nuxt = nuxtSrc.slice(nuxtSrc.indexOf('__NUXT__'));
+                        var npm = nuxt.match(/^__NUXT__=\(function\(([^)]*)\)/);
+                        var nam2 = nuxt.match(/\}\(([\s\S]*)\);/);
+                        if (npm && nam2) {
+                            function mgtvUnesc(s) {
+                                return String(s || '').replace(/\\u002F/gi, '/').replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '').replace(/^"|"$/g, '');
+                            }
+                            function mgtvSplitArgs(s) {
+                                var out = [], buf = '', inq = false, esc = false;
+                                s = String(s || '').replace(/\)\s*$/, '');
+                                for (var i = 0; i < s.length; i++) {
+                                    var ch = s.charAt(i);
+                                    if (esc) { buf += ch; esc = false; continue; }
+                                    if (ch === '\\') { buf += ch; esc = true; continue; }
+                                    if (ch === '"') { inq = !inq; buf += ch; continue; }
+                                    if (ch === ',' && !inq) { out.push(buf); buf = ''; continue; }
+                                    buf += ch;
+                                }
+                                if (buf) out.push(buf);
+                                return out;
+                            }
+                            var nparams = npm[1].split(',').map(function (s) { return s.trim(); });
+                            var nargs = mgtvSplitArgs(nam2[1]);
+                            function argVal(name) {
+                                var i = nparams.indexOf(name);
+                                return (i > -1 && i < nargs.length) ? nargs[i] : '';
+                            }
+                            // 片名兜底: 详情页 <title> "xxx - 芒果TV..."
+                            if (!VOD.vod_name) {
+                                var tm2 = nuxtSrc.match(/<title[^>]*>([^<]+)<\/title>/);
+                                if (tm2) {
+                                    var t2 = tm2[1].replace(/\s*-\s*芒果TV.*$/, '').trim();
+                                    if (t2 && t2.indexOf('302') < 0 && t2.indexOf('Found') < 0) VOD.vod_name = t2;
+                                }
+                            }
+                            var areaM = nuxt.match(/area:"([^"]+)"/);
+                            if (areaM) VOD.vod_area = areaM[1];
+                            var rtM = nuxt.match(/releaseTime:"(\d{4})/);
+                            if (rtM) VOD.vod_year = rtM[1];
+                            var introM = nuxt.match(/intro:"((?:[^"\\]|\\.)*)"|intro:([A-Za-z_$][\w$]*)/);
+                            if (introM) {
+                                if (introM[1] !== undefined) VOD.vod_content = mgtvUnesc(introM[1]);
+                                else {
+                                    var ii = nparams.indexOf(introM[2]);
+                                    if (ii > -1 && ii < nargs.length) VOD.vod_content = mgtvUnesc(nargs[ii]);
+                                }
+                            }
+                            // 演员/类型: clipInfo.detail 数组里 type 为变量(实参表取值)
+                            var jVal = argVal('j'), rVal = argVal('r');
+                            var detailM = nuxt.match(/detail:\[([\s\S]*?)\]/);
+                            if (detailM && jVal && rVal && jVal !== rVal) {
+                                var seg = detailM[1];
+                                var itemRe = /font:"([^"]+)"[\s\S]*?type:([A-Za-z_$][\w$]*|\d+)/g;
+                                var actors = [], styles = [], mm2;
+                                while ((mm2 = itemRe.exec(seg)) !== null) {
+                                    var tok = String(mm2[2]).replace(/^"|"$/g, '');
+                                    var tv = (/^[A-Za-z_$]/.test(tok)) ? String(argVal(tok)) : tok;
+                                    if (tv === String(jVal)) actors.push(mm2[1]);
+                                    else if (tv === String(rVal)) styles.push(mm2[1]);
+                                }
+                                if (actors.length) VOD.vod_actor = actors.join(' ');
+                                if (styles.length) VOD.type_name = styles.join(',');
+                            }
+                        }
+                    }
+                } catch (e) { log('芒果元数据补全错误: ' + e.message); }
+
             } else if (platform === 'bili') {
                 fetch_params.headers['User-Agent'] = PC_UA;
                 fetch_params.headers.Referer = 'https://www.bilibili.com';
@@ -443,6 +514,22 @@ var rule = {
                 });
                 VOD.vod_name = result.title || '';
                 VOD.vod_pic = result.cover || '';
+                // 补全: 类型/地区/演员/导演/年份/简介
+                try {
+                    function styleName(x) { return (x && x.name) ? x.name : String(x || ''); }
+                    VOD.type_name = (result.styles || []).map(styleName).filter(function (n) { return n; }).join(',');
+                    VOD.vod_area = (result.areas || []).map(styleName).filter(function (n) { return n; }).join(',');
+                    VOD.vod_actor = (result.actors || '').replace(/\n+/g, ' ').trim();
+                    // staff 为 "导演: xxx\n编剧: yyy", 提取导演行
+                    var staffLine = '';
+                    (result.staff || '').split('\n').forEach(function (ln) {
+                        if (ln.indexOf('导演') > -1 && ln.indexOf(':') > -1) staffLine = ln.split(':').slice(1).join(':').trim();
+                    });
+                    VOD.vod_director = staffLine;
+                    VOD.vod_content = (result.evaluate || '').trim();
+                    var pt = (result.publish && result.publish.pub_time) || '';
+                    if (pt) VOD.vod_year = pt.slice(0, 4);
+                } catch (e) { log('哔哩元数据补全错误: ' + e.message); }
 
             } else if (platform === 'qq') {
                 // 参考腾讯.js：用fetch请求float_vinfo2
@@ -454,6 +541,14 @@ var rule = {
                 let videoIds = (json.c && json.c.video_ids) || [];
                 VOD.vod_name = (json.c && json.c.title) || '';
                 VOD.vod_pic = (json.c && json.c.pic) || '';
+                // 补全: 类型/演员/年份/简介 (对齐腾讯.js 写法; 地区接口未提供)
+                try {
+                    VOD.type_name = (json.typ || []).map(function (x) { return Array.isArray(x) ? x.join(',') : String(x); }).join(',');
+                    VOD.vod_actor = (json.nam || []).map(function (x) { return Array.isArray(x) ? x.join(',') : String(x); }).join(',');
+                    VOD.vod_year = (json.c && json.c.year) || '';
+                    VOD.vod_content = ((json.c && json.c.description) || '').replace(/\r\n/g, '\n').trim();
+                    if (json.rec) VOD.vod_remarks = json.rec;
+                } catch (e) { log('腾讯元数据补全错误: ' + e.message); }
 
                 if (videoIds.length === 1) {
                     d.push({ title: '在线播放', url: 'https://v.qq.com/x/cover/' + vid + '/' + videoIds[0] + '.html' });
@@ -486,6 +581,28 @@ var rule = {
                 let json = JSON.parse(html).data || {};
                 VOD.vod_name = json.name || '';
                 VOD.vod_pic = json.imageUrl || '';
+                // 补全: 类型/演员/导演/年份/简介 (people/categories/period/description; 地区接口未提供)
+                try {
+                    var people = json.people || {};
+                    VOD.vod_actor = (people.main_charactor || []).map(function (p) { return p.name || ''; }).filter(function (n) { return n; }).join(' ');
+                    VOD.vod_director = (people.director || []).map(function (p) { return p.name || ''; }).filter(function (n) { return n; }).join(' ');
+                    // 类型只取主类型: 过滤混入 categories 的地区/语言/发行标签; 地区单独提取
+                    var AREA_WORDS = ['中国大陆', '中国香港', '中国台湾', '美国', '日本', '韩国', '英国', '法国', '德国', '泰国', '印度', '加拿大', '西班牙', '意大利', '澳大利亚', '欧美', '海外', '内地', '丹麦', '俄罗斯', '巴西', '墨西哥'];
+                    var BAD_WORDS = ['普通话', '粤语', '英语', '日语', '韩语', '院线', '网络电影', '独播', 'VIP', '付费'];
+                    var typeParts = [], areaParts = [];
+                    (json.categories || []).forEach(function (cat) {
+                        if (!cat || !cat.name) return;
+                        var nm = String(cat.name);
+                        if (AREA_WORDS.some(function (w) { return nm === w; })) { areaParts.push(nm === '内地' ? '中国大陆' : nm); return; }
+                        if (BAD_WORDS.some(function (w) { return nm === w; })) return;
+                        typeParts.push(nm);
+                    });
+                    VOD.type_name = typeParts.join(',');
+                    if (areaParts.length) VOD.vod_area = areaParts.join(',');
+                    VOD.vod_year = (json.period || '').slice(0, 4);
+                    VOD.vod_content = (json.description || '').trim();
+                    if (json.score) VOD.vod_score = String(json.score);
+                } catch (e) { log('爱奇艺元数据补全错误: ' + e.message); }
                 let channelId = json.channelId || 0;
                 let albumId = json.albumId || vid;
 
