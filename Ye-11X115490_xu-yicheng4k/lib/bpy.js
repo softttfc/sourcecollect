@@ -264,8 +264,8 @@ var rule = {
     quickSearch: 0,
     filterable: 1,
     multi: 1,
-    class_name: '推荐&电影&剧集&综艺&动漫&记录&少儿&短剧&漫剧&体育&中视频&宠物',
-    class_url: 'recommend&movie&tv&variety&cartoon&doco&child&short&manju&sports&midvideo&pettv',
+    class_name: '电影&剧集&综艺&动漫&记录&少儿&短剧&漫剧&体育&中视频&宠物',
+    class_url: 'movie&tv&variety&cartoon&doco&child&short&manju&sports&midvideo&pettv',
     limit: 20,
     play_parse: true,
     headers: {
@@ -295,17 +295,56 @@ var rule = {
         ]
     },
 
-    // 播放：直接返回播放页地址，绿豆后台解析
+    // 播放：按平台分流源内置解析，失败回退壳内置解析
     lazy: $js.toString(() => {
         let playUrl = input;
         if (playUrl.indexOf("$") > -1) {
             playUrl = playUrl.split("$")[1];
         }
-        input = {
-            parse: 1,
-            url: playUrl,
-            jx: 1
-        };
+        // 平台专属解析: 腾讯/哔哩哔哩走4K解析, 爱奇艺/芒果走fc8001解析
+        let JX_4K = 'https://jx4k.fuyingapi.top/api/?key=f9ecd007748997c6a81a83c425e9448a&url=';
+        let JX_FC = 'http://jiexi.fc8001.top/leZNmbHdSceTrNsR.php?url=';
+        let JX_HOSTS = [
+            ['v.qq.com', JX_4K],
+            ['bilibili.com', JX_4K],
+            ['iqiyi.com', JX_FC],
+            ['mgtv.com', JX_FC],
+            ['youku.com', JX_FC]
+        ];
+        let jxBase = '';
+        for (let i = 0; i < JX_HOSTS.length; i++) {
+            if (playUrl.indexOf(JX_HOSTS[i][0]) > -1) {
+                jxBase = JX_HOSTS[i][1];
+                break;
+            }
+        }
+        let ok = false;
+        if (jxBase) {
+            try {
+                let jxUrl = jxBase + encodeURIComponent(playUrl);
+                let jxHtml = request(jxUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 11; M2012K11AC Build/RKQ1.211119.001) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36' } });
+                let jxJson = JSON.parse(jxHtml);
+                // fuyingapi成功: code=200+url直链 / 失败: code=404无url
+                // fc8001成功: code=200+url直链 / 失败: url为相对路径error.mp4
+                if (jxJson && jxJson.code == 200 && jxJson.url && jxJson.url.indexOf('http') === 0 && jxJson.url.indexOf('error.mp4') < 0) {
+                    input = {
+                        parse: 0,
+                        url: jxJson.url,
+                        jx: 0,
+                        header: { 'User-Agent': 'Mozilla/5.0 (Linux; Android 11; M2012K11AC Build/RKQ1.211119.001) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36' }
+                    };
+                    ok = true;
+                }
+            } catch (e) { log('bpy内置解析错误: ' + e.message); }
+        }
+        if (!ok) {
+            // 无匹配平台或解析失败: 回退壳内置解析
+            input = {
+                parse: 1,
+                url: playUrl,
+                jx: 1
+            };
+        }
     }),
 
     // 首页：聚合六个频道的最热内容（腾讯最热电影/剧集/综艺 + 芒果电视剧 + 爱奇艺电影 + B站电影热榜）

@@ -6,14 +6,14 @@
 
 星海音乐源是一款 LX Music 自定义音源插件，聚合 GDAPI、ChKSz API 等公开接口，支持网易云、QQ、酷我、酷狗、咪咕五大平台的音乐获取。
 
-酷我平台返回的加密音频（`.mflac` / `.mgg`）可配合 [kuwo-music-relay](https://github.com/cdyUuu/kuwo-music-relay) 中转解密服务器实现实时解密播放，无需下载后手动处理。
+酷我平台返回的加密音频（暂时弃用）（`.mflac` / `.mgg`）可配合 [kuwo-music-relay](https://github.com/cdyUuu/kuwo-music-relay) 中转解密服务器实现实时解密播放，无需下载后手动处理。
 
 ## 支持平台与音质
 
 | 平台 | 音质选项 |
 |------|----------|
 | 网易云音乐 | 128k / 192k / 320kbps / FLAC / FLAC 24bit / Hi-Res / 臻品音质 / 沉浸声 / 臻品母带 |
-| QQ音乐 | 128k / 192k / 320kbps / FLAC / Hi-Res / 杜比全景声 / 杜比全景声+ / 母带 |
+| QQ音乐 （不一定能用）| 128k / 192k / 320kbps / FLAC / Hi-Res / 杜比全景声 / 杜比全景声+ / 母带 |
 | 酷我音乐 | 128k / 320kbps / FLAC / Hi-Res / 杜比全景声 / 母带 |
 | 酷狗音乐 | 128k / 320kbps / FLAC / Hi-Res / 杜比全景声 / 母带 |
 | 咪咕音乐 | 128k / 320kbps / FLAC |

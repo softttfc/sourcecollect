@@ -1,250 +1,285 @@
-const DOMAIN_CFG = 'http://osstexll.oss-rg-china-mainland.aliyuncs.com/domainPath.json';
-const UA = 'okhttp/4.12.0';
+
+// APP JSON API：动态域名 + 访客令牌 + 多线路/虚拟剧集播放
+
+const DOMAIN_CONFIG = 'http://osstexll.oss-rg-china-mainland.aliyuncs.com/domainPath.json';
 const PLAY_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1';
-const DEVICE_ID = '2d590b9842d064a1';
-const PREFIX = '【琉🔹璃❤广告勿信👉剧情】📢';
+const TIMEOUT = 20000;
 
-let host = '';
-let userid = '';
-let token = '';
+let HOST = '';
+let USER_ID = '';
+const HEADERS = {
+    'User-Agent': 'okhttp/4.12.0',
+    'client': 'app',
+    'deviceType': 'Android',
+    'deviceId': '2d590b9842d064a1',
+    'token': ''
+};
 
-function str(value) {
+function text(value) {
     return value === null || value === undefined ? '' : String(value);
 }
 
-function baseHeaders() {
-    return {
-        'User-Agent': UA,
-        'Connection': 'Keep-Alive',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Cache-Control': 'no-cache',
-        'token': token,
-        'deviceId': DEVICE_ID,
-        'client': 'app',
-        'deviceType': 'Android'
-    };
-}
-
-async function httpReq(url, method, data, headers) {
+function getJson(url) {
     try {
-        const options = { method, headers: headers || baseHeaders(), timeout: 15000 };
-        if (data !== null && data !== undefined) options.data = data;
-        const r = await req(url, options);
-        return r && r.content ? r.content : '';
+        const res = req(url, {
+            method: 'GET',
+            headers: HEADERS,
+            timeout: TIMEOUT
+        });
+        return JSON.parse((res && res.content) || '{}');
     } catch (e) {
-        return '';
+        return {};
     }
 }
 
-async function httpGet(path, headers) {
-    const url = /^https?:\/\//.test(path) ? path : host + path;
-    return httpReq(url, 'GET', null, headers);
-}
-
-async function httpPost(path, data) {
-    const body = typeof data === 'string' ? data : JSON.stringify(data);
-    return httpReq(host + path, 'POST', body, baseHeaders());
-}
-
-function json(text) {
-    return JSON.parse(text);
-}
-
-async function init(cfg) {
-    host = '';
-    userid = '';
-    token = '';
+function postJson(path, data) {
     try {
-        const headers = { 'User-Agent': UA, 'Connection': 'Keep-Alive' };
-        const config = json(await httpGet(DOMAIN_CFG, headers));
-        const status = Number(config.status || 0);
-        if (status === 400 || status === 401 || status === 403) return;
-        if (!Array.isArray(config.url) || !config.url.length) return;
-        host = str(config.url[0]).replace(/\/+$/, '');
-        const info = json(await httpGet('/api/v1/app/user/visitorInfo')).data;
-        userid = str(info.id);
-        token = str(info.token);
-    } catch (e) {}
-}
-
-async function home(filter) {
-    try {
-        const data = json(await httpPost('/api/v1/app/screen/screenType', '')).data || [];
-        const classes = data.map(item => ({ type_id: item.id, type_name: str(item.name) }));
-        return JSON.stringify({ class: classes });
+        const headers = Object.assign({}, HEADERS, {
+            'Content-Type': 'application/json;charset=UTF-8'
+        });
+        const res = req(HOST + path, {
+            method: 'POST',
+            headers: headers,
+            data: data,
+            postType: 'json',
+            timeout: TIMEOUT
+        });
+        return JSON.parse((res && res.content) || '{}');
     } catch (e) {
-        return JSON.stringify({ class: [] });
+        return {};
     }
 }
 
-async function homeVod() {
-    try {
-        const sections = json(await httpPost('/api/v1/app/recommend/recommendList', '')).data || [];
-        const tasks = sections.map(section => httpPost('/api/v1/app/recommend/recommendSubList', {
-            condition: str(section.id),
+function init(ext) {
+    HOST = '';
+    USER_ID = '';
+    HEADERS.token = '';
+    ext = text(ext).trim();
+
+    if (ext.indexOf('http') === 0) {
+        if (/\.json(?:\?|$)/i.test(ext)) {
+            const config = getJson(ext);
+            HOST = config.url && config.url.length ? text(config.url[0]) : '';
+        } else {
+            HOST = ext.replace(/\/$/, '');
+        }
+    } else {
+        const config = getJson(DOMAIN_CONFIG);
+        HOST = config.url && config.url.length ? text(config.url[0]) : '';
+    }
+    HOST = HOST.replace(/\/$/, '');
+    if (!HOST) return;
+
+    const res = getJson(HOST + '/api/v1/app/user/visitorInfo');
+    if (res.data) {
+        USER_ID = text(res.data.id);
+        HEADERS.token = text(res.data.token);
+    }
+}
+
+function home(filter) {
+    const classes = [];
+    const res = postJson('/api/v1/app/screen/screenType', {});
+    const data = Array.isArray(res.data) ? res.data : [];
+    for (const item of data) {
+        classes.push({
+            type_id: text(item.id),
+            type_name: text(item.name)
+        });
+    }
+    return JSON.stringify({ 'class': classes, list: [], filters: {} });
+}
+
+function homeVod() {
+    const list = [];
+    const recommend = postJson('/api/v1/app/recommend/recommendList', {});
+    const groups = Array.isArray(recommend.data) ? recommend.data : [];
+
+    for (const group of groups) {
+        const res = postJson('/api/v1/app/recommend/recommendSubList', {
+            condition: parseInt(text(group.id), 10),
             pageNum: 1,
             pageSize: 6
-        }));
-        const responses = await Promise.all(tasks);
-        const list = [];
-        for (const text of responses) {
-            try {
-                const records = json(text).data.records || [];
-                for (const item of records) {
-                    list.push({ vod_id: item.id, vod_name: str(item.name), vod_pic: str(item.cover) });
-                }
-            } catch (e) {}
-        }
-        return JSON.stringify({ list });
-    } catch (e) {
-        return JSON.stringify({ list: [] });
-    }
-}
-
-async function category(tid, pg, filter, extend = {}) {
-    try {
-        const body = {
-            condition: {
-                classify: '',
-                region: '',
-                sreecnTypeEnum: 'NEWEST',
-                typeId: tid,
-                year: ''
-            },
-            pageNum: str(pg),
-            pageSize: 40
-        };
-        const records = json(await httpPost('/api/v1/app/screen/screenMovie', body)).data.records || [];
-        const list = records.map(item => ({
-            vod_id: item.id,
-            vod_name: str(item.name),
-            vod_pic: str(item.cover),
-            vod_remarks: str(item.area),
-            vod_year: str(item.year)
-        }));
-        return JSON.stringify({ list, page: str(pg) });
-    } catch (e) {
-        return JSON.stringify({ list: [], page: str(pg) });
-    }
-}
-
-async function detail(id) {
-    try {
-        id = str(Array.isArray(id) ? id[0] : id);
-        const data = json(await httpPost('/api/v1/app/play/movieDetails', {
-            id,
-            source: 0,
-            typeId: 'M17',
-            userId: userid
-        })).data;
-        const mainPlayerId = str(data.playerId);
-        const playUrls = [];
-        const playFrom = [];
-        const episodes = data.episodeList;
-        if (Array.isArray(episodes)) {
-            playUrls.push(episodes.map(item => str(item.episode) + '$' + id + '@' + mainPlayerId + '@' + str(item.id) + '@episode').join('#'));
-        }
-        const players = data.moviePlayerList;
-        if (Array.isArray(players)) {
-            for (const player of players) {
-                const playerId = str(player.id);
-                if (playerId === mainPlayerId) continue;
-                if (player.episodeTotal === null || player.episodeTotal === undefined) continue;
-                const total = Number(player.episodeTotal) || 0;
-                if (total <= 0) continue;
-                const items = [];
-                for (let i = 1; i <= total; i++) {
-                    items.push('第' + i + '集$' + i + '@' + playerId + '@' + id + '@virtual');
-                }
-                playUrls.push(items.join('#'));
-                const name = str(player.moviePlayerName);
-                if (!playFrom.includes(name)) playFrom.push(name);
-            }
-            for (const player of players) {
-                if (str(player.id) === mainPlayerId) {
-                    const name = str(player.moviePlayerName);
-                    const index = playFrom.indexOf(name);
-                    if (index >= 0) playFrom.splice(index, 1);
-                    playFrom.unshift(name);
-                    break;
-                }
-            }
-        }
-        const desc = json(await httpPost('/api/v1/app/play/movieDesc', { id, typeId: 'M17' })).data;
-        return JSON.stringify({
-            list: [{
-                vod_id: desc.id,
-                vod_name: str(desc.name),
-                vod_pic: str(desc.cover),
-                vod_content: PREFIX + str(desc.introduce),
-                vod_year: str(desc.year),
-                vod_area: str(desc.area),
-                vod_remarks: '',
-                vod_score: desc.score,
-                type_name: str(desc.classify),
-                vod_director: str(desc.director),
-                vod_play_from: playFrom.join('$$$'),
-                vod_play_url: playUrls.join('$$$')
-            }]
         });
-    } catch (e) {
-        return JSON.stringify({ list: [] });
-    }
-}
-
-function encodePlayerUrl(url) {
-    return encodeURIComponent(url).replace(/[!'()*~]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
-}
-
-async function play(flag, id, flags) {
-    try {
-        const parts = String(id).split('@');
-        if (parts.length < 4) return '';
-        const body = {
-            playerId: parts[1],
-            source: 0,
-            typeId: 'M16',
-            userId: userid
-        };
-        if (parts[3] === 'virtual') {
-            body.episodeIndex = str(parseInt(parts[0], 10) - 1);
-            body.id = parseInt(parts[2], 10);
-        } else {
-            body.episodeId = parts[2];
-            body.id = parts[0];
+        const records = res.data && Array.isArray(res.data.records) ? res.data.records : [];
+        for (const item of records) {
+            list.push({
+                vod_id: text(item.id),
+                vod_name: text(item.name),
+                vod_pic: text(item.cover),
+                vod_remarks: ''
+            });
         }
-        const data = json(await httpPost('/api/v1/app/play/movieDetails', body)).data;
-        const playerUrl = str(data.url);
-        const playerId = str(data.playerId);
-        const analysis = json(await httpGet('/api/v1/app/play/analysisMovieUrl?playerUrl=' + encodePlayerUrl(playerUrl) + '&playerId=' + playerId));
+    }
+    return JSON.stringify({ list: list });
+}
+
+function category(tid, pg, filter, extend) {
+    const page = parseInt(pg, 10) || 1;
+    const res = postJson('/api/v1/app/screen/screenMovie', {
+        condition: {
+            classify: '',
+            region: '',
+            sreecnTypeEnum: 'NEWEST',
+            typeId: text(tid),
+            year: ''
+        },
+        pageNum: page,
+        pageSize: 40
+    });
+    const records = res.data && Array.isArray(res.data.records) ? res.data.records : [];
+    const list = records.map(item => ({
+        vod_id: text(item.id),
+        vod_name: text(item.name),
+        vod_pic: text(item.cover),
+        vod_remarks: text(item.area),
+        vod_year: text(item.year)
+    }));
+    return JSON.stringify({
+        list: list,
+        page: page,
+        pagecount: 9999,
+        limit: 40,
+        total: 99999
+    });
+}
+
+function detail(ids) {
+    const vodId = text(Array.isArray(ids) ? ids[0] : ids);
+    const playUrls = [];
+    const playFrom = [];
+
+    const detailRes = postJson('/api/v1/app/play/movieDetails', {
+        id: parseInt(vodId, 10),
+        source: 0,
+        typeId: 'M17',
+        userId: USER_ID
+    });
+    const detailData = detailRes.data || {};
+    const playerId = text(detailData.playerId);
+    const episodeList = Array.isArray(detailData.episodeList) ? detailData.episodeList : [];
+    const episodes = [];
+
+    for (const item of episodeList) {
+        episodes.push(
+            text(item.episode) + '$' + vodId + '@' + playerId + '@' + text(item.id) + '@episode'
+        );
+    }
+    playUrls.push(episodes.join('#'));
+
+    const players = Array.isArray(detailData.moviePlayerList) ? detailData.moviePlayerList : [];
+    for (const item of players) {
+        if (text(item.id) === playerId) {
+            playFrom.push(text(item.moviePlayerName));
+        }
+    }
+
+    for (const item of players) {
+        const id = text(item.id);
+        const total = item.episodeTotal === null || item.episodeTotal === undefined
+            ? -1 : parseInt(item.episodeTotal, 10);
+        if (id === playerId || total === -1) continue;
+
+        const virtualEpisodes = [];
+        for (let i = 1; i <= total; i++) {
+            virtualEpisodes.push(
+                '第' + i + '集$' + i + '@' + id + '@' + vodId + '@virtual'
+            );
+        }
+        playUrls.push(virtualEpisodes.join('#'));
+
+        const name = text(item.moviePlayerName);
+        if (playFrom.indexOf(name) < 0) playFrom.push(name);
+    }
+
+    const descRes = postJson('/api/v1/app/play/movieDesc', {
+        id: parseInt(vodId, 10),
+        typeId: 'M17'
+    });
+    const desc = descRes.data || {};
+    const vod = {
+        vod_id: text(desc.id),
+        vod_name: text(desc.name),
+        vod_pic: text(desc.cover),
+        vod_content:'【琉🔹芸❤广告勿信👉剧情】📢'+ text(desc.introduce),
+        vod_remarks: '',
+        vod_year: text(desc.year),
+        vod_area: text(desc.area),
+        vod_class: text(desc.classify),
+        vod_director: text(desc.director),
+        vod_play_from: playFrom.join('$$$'),
+        vod_play_url: playUrls.join('$$$')
+    };
+    return JSON.stringify({ list: [vod] });
+}
+
+function play(flag, id, vipFlags) {
+    try {
+        const parts = text(id).split('@');
+        if (parts.length < 4) return JSON.stringify({ parse: 0, url: '' });
+
+        let body;
+        if (parts[3] === 'virtual') {
+            body = {
+                episodeIndex: text(parseInt(parts[0], 10) - 1),
+                id: parseInt(parts[2], 10),
+                playerId: parts[1],
+                source: 0,
+                typeId: 'M16',
+                userId: USER_ID
+            };
+        } else {
+            body = {
+                episodeId: parts[2],
+                id: parseInt(parts[0], 10),
+                playerId: parts[1],
+                source: 0,
+                typeId: 'M16',
+                userId: USER_ID
+            };
+        }
+
+        const detailRes = postJson('/api/v1/app/play/movieDetails', body);
+        const data = detailRes.data || {};
+        const analysis = getJson(
+            HOST + '/api/v1/app/play/analysisMovieUrl?playerUrl=' +
+            encodeURIComponent(text(data.url)) + '&playerId=' + text(data.playerId)
+        );
         return JSON.stringify({
-            jx: '0',
-            parse: '0',
-            url: str(analysis.data),
+            parse: 0,
+            playUrl: '',
+            url: text(analysis.data),
             header: { 'User-Agent': PLAY_UA }
         });
     } catch (e) {
-        return '';
+        return JSON.stringify({ parse: 0, playUrl: '', url: '' });
     }
 }
 
-async function search(wd, quick, pg = 1) {
-    try {
-        const body = { condition: { value: wd }, pageNum: str(pg), pageSize: 40 };
-        const records = json(await httpPost('/api/v1/app/search/searchMovie', body)).data.records || [];
-        const list = records.map(item => ({
-            vod_id: item.id,
-            vod_name: str(item.name),
-            vod_pic: str(item.cover),
-            vod_remarks: str(item.area),
-            vod_year: str(item.year),
-            vod_area: str(item.area),
-            vod_content: str(item.desc)
-        }));
-        return JSON.stringify({ list, page: str(pg) });
-    } catch (e) {
-        return JSON.stringify({ list: [], page: str(pg) });
-    }
+function search(wd, quick, pg) {
+    const page = parseInt(pg, 10) || 1;
+    const res = postJson('/api/v1/app/search/searchMovie', {
+        condition: { value: text(wd) },
+        pageNum: page,
+        pageSize: 40
+    });
+    const records = res.data && Array.isArray(res.data.records) ? res.data.records : [];
+    const list = records.map(item => ({
+        vod_id: text(item.id),
+        vod_name: text(item.name),
+        vod_pic: text(item.cover),
+        vod_content: text(item.desc),
+        vod_remarks: text(item.area),
+        vod_year: text(item.year),
+        vod_area: text(item.area)
+    }));
+    return JSON.stringify({
+        list: list,
+        page: page,
+        pagecount: 9999,
+        limit: 40,
+        total: 99999
+    });
 }
 
 export default { init, home, homeVod, category, detail, play, search };

@@ -1,445 +1,538 @@
-# coding: utf-8
-# 影探4K（cms.lyyytv.cn）· TVBox / FongMi Python 站源
-# 站型：苹果CMS 的 app 接口（/api.php/app/*）；播放走 fys 解析（parsesId=6 专线 / 5 通用），
-#       返回 https://baidu.con/<key16><base64> 形态，用「前 16 字符当 key/iv」AES-CBC 解。
+# -*- coding: utf-8 -*-
 import base64
 import json
 import re
 import time
 import urllib.parse
-import urllib.request
+
+import requests
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 
 try:
-    from base.spider import Spider as BaseSpider
-except Exception:
-    class BaseSpider(object):
-        pass
+    from base.spider import Spider
+except ImportError:
+    import sys
+    sys.path.append('..')
+    from base.spider import Spider
 
-HOST = "http://cms.lyyytv.cn"
-UA = "okhttp/4.12.0"
-CHAIN_API = "http://fys.lyyytv.cn/api/index?parsesId=6&appid=10001&videoUrl="
-PARSE_API = "http://fys.lyyytv.cn/api/index?parsesId=5&appid=10001&videoUrl="
+KEY = 'yingtan4k'
+HOST = 'http://cms.lyyytv.cn'
+CMS_KEY = 'wP5bvxoc3yv7FoBQENFZuAF0EUYr4LTy'
+PARSE_API = 'http://fys.lyyytv.cn/api/index?appid=10001&videoUrl='
+# PARSE_API = 'http://jwh.lcytv.cn/api/index?parsesId=5&appid=10001&videoUrl='
+# PARSE_API = 'http://jwh.lcytv.cn/api/index?appid=10001&videoUrl='
+# PARSE_ID_WEB = 6
+# PARSE_ID_4K = 5
 
+PARSE_ID_WEB = 7
+PARSE_ID_4K = 8
+PARSE_FALLBACK_WEB = (7, 5, 8)
+PARSE_FALLBACK_4K = (8, 6, 7)
+HEADERS = {'User-Agent': 'okhttp/4.12.0'}
+PARSE_HEADERS = {'User-Agent': 'okhttp/4.12.0', 'Accept-Encoding': 'identity'}
 
-# PARSE_API = 'http://4kzj.lyyytv.cn/api/index?appid=10001&videoUrl='
-# PARSE_ID_WEB = 1
-# PARSE_ID_4K = 2
+DEC_PREFIX = 'https://baidu.con/'
 
-# PARSE_API = 'http://jwh.lcytv.cn/api/index?parsesId=2&appid=10001&videoUrl='
+PARSE_ROUNDS = 3
+PARSE_BACKOFF = 0.35
+PLAY_CACHE_TTL = 120
 
+PAGE_LIMIT = 20
+FILTER_NAMES = {
+    'class': '类型', 'area': '地区', 'lang': '语言', 'year': '年份',
+    'letter': '字母', 'by': '排序', 'sort': '顺序',
+}
+HOME_CACHE_TTL = 6 * 3600
 
-CMS_KEY = "wP5bvxoc3yv7FoBQENFZuAF0EUYr4LTy"
-DEC_PREFIX = "https://baidu.con/"
-YT4K_HOST = re.compile(r"(?:^|\.)(?:ym4kjx|hd4kjx|sd4kjx|mm4kjx|mv4kjx|vk4kjx)\.lyyytv\.cn$", re.I)
-MEDIA_RE = re.compile(r"\.(?:mp4|m3u8|m3u|flv|mkv|ts|mov|webm|m4v|mpd)(?:[?#]|$)", re.I)
-FILTER_KEYS = [("class", "类型"), ("area", "地区"), ("lang", "语言"), ("year", "年份"),
-               ("letter", "字母"), ("by", "排序"), ("sort", "顺序"), ("star", "主演"),
-               ("director", "导演"), ("state", "状态"), ("version", "版本")]
+_BASE64_RE = re.compile(r'(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?')
+_LDMAX_RE = re.compile(r'^https?://ldmax\.cooom/', re.I)
+_MEDIA_RE = re.compile(r'\.(?:mp4|m3u8?|flv|avi|mkv|ts|mov|wmv|webm|m4v|mpd)$', re.I)
+_STREAM_RE = re.compile(r'\.(?:m3u8?|mpd)$', re.I)
+_4K_HOST_RE = re.compile(r'(?:^|\.)(?:ym4kjx|hd4kjx|sd4kjx|mm4kjx|mv4kjx|vk4kjx)\.lyyytv\.cn$', re.I)
 
-# ---------------------------------------------------------------- AES（解密用）
-def _gmul(a, b):
-    p = 0
-    for _ in range(8):
-        if b & 1:
-            p ^= a
-        hi = a & 0x80
-        a = (a << 1) & 0xFF
-        if hi:
-            a ^= 0x1B
-        b >>= 1
-    return p
-
-
-def _build_sbox():
-    inv = [0] * 256
-    for i in range(1, 256):
-        r, base, e = 1, i, 254
-        while e:
-            if e & 1:
-                r = _gmul(r, base)
-            base = _gmul(base, base)
-            e >>= 1
-        inv[i] = r
-
-    def rotl(x, n):
-        return ((x << n) | (x >> (8 - n))) & 0xFF
-
-    return [inv[i] ^ rotl(inv[i], 1) ^ rotl(inv[i], 2) ^ rotl(inv[i], 3) ^ rotl(inv[i], 4) ^ 0x63
-            for i in range(256)]
+_home_cache = {}
+_play_cache = {}
 
 
-SBOX = _build_sbox()
-INV_SBOX = [0] * 256
-for _i, _v in enumerate(SBOX):
-    INV_SBOX[_v] = _i
-RCON = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36, 0x6C, 0xD8, 0xAB, 0x4D]
+def text(value):
+    return '' if value is None else str(value).strip()
 
 
-class _AES(object):
-    def __init__(self, key):
-        if len(key) not in (16, 24, 32):
-            raise ValueError("bad key")
-        self.nk = len(key) // 4
-        self.nr = self.nk + 6
-        self.rk = self._expand(key)
-
-    def _expand(self, key):
-        w = [list(key[i:i + 4]) for i in range(0, len(key), 4)]
-        for i in range(self.nk, 4 * (self.nr + 1)):
-            t = list(w[i - 1])
-            if i % self.nk == 0:
-                t = t[1:] + t[:1]
-                t = [SBOX[b] for b in t]
-                t[0] ^= RCON[i // self.nk - 1]
-            elif self.nk > 6 and i % self.nk == 4:
-                t = [SBOX[b] for b in t]
-            w.append([w[i - self.nk][j] ^ t[j] for j in range(4)])
-        return w
-
-    def _add(self, s, rnd):
-        for c in range(4):
-            for r in range(4):
-                s[r][c] ^= self.rk[rnd * 4 + c][r]
-
-    def enc(self, block):
-        s = [[block[r + 4 * c] for c in range(4)] for r in range(4)]
-        self._add(s, 0)
-        for rnd in range(1, self.nr + 1):
-            for r in range(4):
-                for c in range(4):
-                    s[r][c] = SBOX[s[r][c]]
-            for r in range(1, 4):
-                s[r] = s[r][r:] + s[r][:r]
-            if rnd != self.nr:
-                for c in range(4):
-                    a0, a1, a2, a3 = s[0][c], s[1][c], s[2][c], s[3][c]
-                    s[0][c] = _gmul(a0, 2) ^ _gmul(a1, 3) ^ a2 ^ a3
-                    s[1][c] = a0 ^ _gmul(a1, 2) ^ _gmul(a2, 3) ^ a3
-                    s[2][c] = a0 ^ a1 ^ _gmul(a2, 2) ^ _gmul(a3, 3)
-                    s[3][c] = _gmul(a0, 3) ^ a1 ^ a2 ^ _gmul(a3, 2)
-            self._add(s, rnd)
-        return bytes(s[r][c] for c in range(4) for r in range(4))
-
-    def dec(self, block):
-        s = [[block[r + 4 * c] for c in range(4)] for r in range(4)]
-        self._add(s, self.nr)
-        for rnd in range(self.nr - 1, -1, -1):
-            for r in range(1, 4):
-                s[r] = s[r][-r:] + s[r][:-r]
-            for r in range(4):
-                for c in range(4):
-                    s[r][c] = INV_SBOX[s[r][c]]
-            self._add(s, rnd)
-            if rnd != 0:
-                for c in range(4):
-                    a0, a1, a2, a3 = s[0][c], s[1][c], s[2][c], s[3][c]
-                    s[0][c] = _gmul(a0, 14) ^ _gmul(a1, 11) ^ _gmul(a2, 13) ^ _gmul(a3, 9)
-                    s[1][c] = _gmul(a0, 9) ^ _gmul(a1, 14) ^ _gmul(a2, 11) ^ _gmul(a3, 13)
-                    s[2][c] = _gmul(a0, 13) ^ _gmul(a1, 9) ^ _gmul(a2, 14) ^ _gmul(a3, 11)
-                    s[3][c] = _gmul(a0, 11) ^ _gmul(a1, 13) ^ _gmul(a2, 9) ^ _gmul(a3, 14)
-        return bytes(s[r][c] for c in range(4) for r in range(4))
+def page_of(value):
+    m = re.match(r'\s*[+-]?\d+', '' if value is None else str(value))
+    n = int(m.group(0)) if m else 0
+    return max(1, n) if n else 1
 
 
-def _aes_cbc_enc(data, key, iv):
-    aes = _AES(key)
-    n = 16 - len(data) % 16
-    data = data + bytes([n]) * n
-    out, prev = bytearray(), iv
-    for i in range(0, len(data), 16):
-        blk = bytes(data[i + j] ^ prev[j] for j in range(16))
-        enc = aes.enc(blk)
-        out += enc
-        prev = enc
-    return bytes(out)
+def list_of(value):
+    return value if isinstance(value, list) else []
 
 
-def _aes_cbc_dec(data, key, iv):
-    aes = _AES(key)
-    out, prev = bytearray(), iv
-    for i in range(0, len(data), 16):
-        blk = data[i:i + 16]
-        dec = aes.dec(blk)
-        out += bytes(dec[j] ^ prev[j] for j in range(16))
-        prev = blk
-    n = out[-1]
-    return bytes(out[:-n])
-
-# ---------------------------------------------------------------- 工具
-
-
-def _clean(s):
-    s = str(s or "")
-    s = re.sub(r"<[^>]+>", "", s)
-    s = s.replace("&amp;nbsp;", " ").replace("&nbsp;", " ").replace("&amp;", "&")
-    return " ".join(s.split()).strip()
-
-
-def _safe(s):
-    return _clean(s).replace("$", " ").replace("#", " ").strip()
-
-
-def _fix(u):
-    u = str(u or "").strip()
-    if u.startswith("//"):
-        u = "http:" + u
-    return u
-
-
-def _decrypt_baidu(url):
-    """https://baidu.con/<16 chars key><base64(ct)> → AES-CBC(key,key) 明文"""
-    if not url or not url.startswith(DEC_PREFIX):
-        return ""
-    body = url[len(DEC_PREFIX):]
-    if len(body) <= 16:
-        return ""
-    key = body[:16].encode()
-    ct = body[16:]
-    try:
-        raw = base64.b64decode(ct + "=" * (-len(ct) % 4))
-    except Exception:
-        return ""
-    if not raw or len(raw) % 16:
-        return ""
-    try:
-        text = _aes_cbc_dec(raw, key, key).decode("utf-8", "ignore")
-    except Exception:
-        return ""
-    return text if text.startswith("http") else ""
-
-
-class Spider(BaseSpider):
-    def getName(self):
-        return "影探4K"
-
-    def getDependence(self):
-        return []
-
-    def setExtendInfo(self, extend):
-        pass
-
-    def init(self, extend=""):
-        self.host = HOST
+def object_of(value):
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
         try:
-            if isinstance(extend, str) and extend.strip().startswith("{"):
-                cfg = json.loads(str(extend))
-                if cfg.get("host"):
-                    self.host = str(cfg["host"]).rstrip("/")
+            parsed = json.loads(value)
+        except Exception:
+            return {}
+        return parsed if isinstance(parsed, dict) else {}
+    return {}
+
+
+def get_json(url, headers=None, timeout=15):
+    headers = HEADERS if headers is None else headers
+    rsp = requests.get(url, headers=headers, timeout=timeout, allow_redirects=True)
+    try:
+        data = object_of(rsp.json())
+    except Exception:
+        data = {}
+    if not data:
+        raise Exception('影探4K：接口未返回有效 JSON')
+    return data
+
+
+def cms(path, params=None):
+    params = params or {}
+    query = urllib.parse.urlencode(params)
+    data = get_json('%s/api.php/app/%s?%s' % (HOST, path, query))
+    code = data.get('code')
+    if code is not None:
+        try:
+            ok = int(code) in (1, 200)
+        except (TypeError, ValueError):
+            ok = False
+        if not ok:
+            raise Exception('影探4K：CMS 请求失败')
+    return data
+
+
+def decode_base64(value):
+    clean = re.sub(r'\s+', '', text(value))
+    if not clean or not _BASE64_RE.fullmatch(clean):
+        return None
+    try:
+        return base64.b64decode(clean)
+    except Exception:
+        return None
+
+
+def decrypt_lvdou(value):
+    """对齐 JS decUrlOne：lvdou+ → 前16 key/后16 iv AES/CBC/PKCS7"""
+    original = text(value)
+    if not original.startswith('lvdou+'):
+        return original
+    if not CMS_KEY:
+        return original
+    try:
+        encrypted = decode_base64(original[6:])
+        if not encrypted:
+            return original
+        key = CMS_KEY[:16].encode('utf-8')
+        iv = CMS_KEY[16:32].encode('utf-8') if len(CMS_KEY) >= 32 else key
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        plain = unpad(cipher.decrypt(encrypted), AES.block_size)
+        result = plain.decode('utf-8', errors='replace').strip()
+        if result.startswith('http'):
+            return result
+    except Exception:
+        pass
+    return original
+
+
+def is_http_url(value):
+    try:
+        parsed = urllib.parse.urlparse(text(value))
+        return parsed.scheme in ('http', 'https') and bool(parsed.netloc)
+    except Exception:
+        return False
+
+
+def is_site_url(value):
+    if not is_http_url(value):
+        return False
+    host = (urllib.parse.urlparse(text(value)).hostname or '').lower()
+    return host == 'lyyytv.cn' or host.endswith('.lyyytv.cn')
+
+
+def is_ldmax_url(value):
+    return bool(_LDMAX_RE.match(text(value)))
+
+
+def decrypt_ldmax(value, depth=0):
+    """兼容老加密：ldmax.cooom 前缀"""
+    if depth > 5:
+        return ''
+    url = text(value)
+    decoded = decode_base64(url)
+    if decoded:
+        url = re.sub(r'\s+', '', decoded.decode('utf-8', errors='replace'))
+    if not is_ldmax_url(url):
+        return url
+    path = _LDMAX_RE.sub('', url)
+    if len(path) <= 16:
+        return ''
+    try:
+        key = path[:16][::-1].encode('utf-8')
+        encrypted = decode_base64(path[16:])
+        if not encrypted or len(encrypted) % 16:
+            return ''
+        cipher = AES.new(key, AES.MODE_CBC, key)
+        plain = bytearray(cipher.decrypt(encrypted))
+        pad = plain[-1]
+        if 0 < pad <= 16:
+            del plain[-pad:]
+        result = bytes(plain).decode('utf-8', errors='replace').strip()
+        return decrypt_ldmax(result, depth + 1) if is_ldmax_url(result) else result
+    except Exception:
+        return ''
+
+
+def find_url(value):
+    """对齐 JS findUrl：从解析响应 JSON 中挑出 url/playUrl/link/data.url"""
+    if not isinstance(value, dict):
+        return ''
+    for key in ('url', 'playUrl', 'link'):
+        v = value.get(key)
+        if v:
+            return text(v)
+    return find_url(value.get('data'))
+
+
+def resolve_parse(body):
+    """
+    对齐 JS resolveParse：
+      1) JSON 包裹 → 取出 url
+      2) https://baidu.con/ 前缀 → 前16位 key=iv，余下 base64 密文 AES/CBC/PKCS7
+      3) 明文 URL
+    """
+    body = text(body)
+    if not body:
+        return ''
+
+    candidate = body
+    if body.startswith('{'):
+        try:
+            parsed = json.loads(body)
+            found = find_url(parsed)
+            if found:
+                candidate = found
         except Exception:
             pass
 
-    # ---------------------------------------------------------------- HTTP
-    def _get(self, url, timeout=20):
-        h = {"User-Agent": UA, "Accept-Encoding": "identity", "Accept": "application/json"}
-        for _ in range(2):
-            try:
-                r = urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=timeout)
-                txt = r.read().decode("utf-8", "ignore")
-                try:
-                    return json.loads(txt)
-                except Exception:
-                    return {"__raw": txt[:200]}
-            except Exception:
-                time.sleep(0.4)
-        return {}
+    if candidate.startswith(DEC_PREFIX):
+        rest = candidate[len(DEC_PREFIX):]
+        if len(rest) <= 16:
+            return ''
+        key = rest[:16].encode('utf-8')
+        cipher_b64 = rest[16:]
+        # 优先按 base64 密文解密
+        try:
+            encrypted = base64.b64decode(cipher_b64, validate=False)
+            cipher = AES.new(key, AES.MODE_CBC, key)
+            plain = unpad(cipher.decrypt(encrypted), AES.block_size)
+            result = plain.decode('utf-8', errors='replace').strip()
+            if result.startswith('http'):
+                return result
+        except Exception:
+            pass
+        # 兜底：密文本身是 raw bytes
+        try:
+            raw = cipher_b64.encode('latin-1', errors='ignore')
+            if raw and len(raw) % 16 == 0:
+                cipher = AES.new(key, AES.MODE_CBC, key)
+                plain = unpad(cipher.decrypt(raw), AES.block_size)
+                result = plain.decode('utf-8', errors='replace').strip()
+                if result.startswith('http'):
+                    return result
+        except Exception:
+            pass
+        return ''
 
-    def _cms(self, action, params):
-        q = urllib.parse.urlencode(params or {})
-        return self._get("%s/api.php/app/%s?%s" % (self.host, action, q))
+    return candidate
 
-    # ---------------------------------------------------------------- 首页
-    def homeContent(self, filter):
-        j = self._cms("nav", {"token": ""})
-        classes, filters = [], {}
-        for c in (j.get("list") or []):
-            tid = str(c.get("type_id") or "")
-            name = _clean(c.get("type_name"))
-            if not tid or not name:
+
+def parse_url(raw, parse_id=PARSE_ID_WEB):
+    """把原始地址拼到解析基址后请求，解出真实 URL；parse_id 选解析器（5 网页 / 6 4K 直链）。"""
+    if not raw:
+        return ''
+    target = '%s%s&parsesId=%d' % (PARSE_API, urllib.parse.quote(raw, safe="!'()*"), parse_id)
+    for rnd in range(PARSE_ROUNDS):
+        if rnd > 0:
+            time.sleep(rnd * PARSE_BACKOFF)
+        try:
+            rsp = requests.get(target, headers=PARSE_HEADERS, timeout=30)
+            if rsp.status_code == 200 and rsp.text:
+                resolved = resolve_parse(rsp.text)
+                if resolved and resolved.startswith('http'):
+                    return resolved
+        except Exception:
+            pass
+    return ''
+
+
+def is_media_url(url):
+    if not is_http_url(url):
+        return False
+    return bool(_MEDIA_RE.search(urllib.parse.urlparse(text(url)).path))
+
+
+def is_stream_url(url):
+    """已经是 m3u8/mpd 的直链，播放器能直接拉，无需解析。"""
+    if not is_http_url(url):
+        return False
+    return bool(_STREAM_RE.search(urllib.parse.urlparse(text(url)).path))
+
+
+def is_4k_source(url):
+    """4K 线路：ym4kjx 下的 mp4/mkv 直链（站点本身 404，要走 parsesId=6 换链）。"""
+    if not is_http_url(url):
+        return False
+    host = (urllib.parse.urlparse(text(url)).hostname or '').lower()
+    if host and _4K_HOST_RE.search(host):
+        return True
+    # 主机名变了也能认：非 HLS 的直链媒体文件一律当 4K 片源
+    return is_media_url(url) and not is_stream_url(url)
+
+
+def home(extend=''):
+    cache_key = '%s_home_%s' % (KEY, text(extend))
+    cached = _home_cache.get(cache_key)
+    if cached and cached[0] > time.time():
+        return cached[1]
+    data = cms('nav', {'token': ''})
+    classes = []
+    filters = {}
+    for item in list_of(data.get('list')):
+        if not isinstance(item, dict):
+            continue
+        if item.get('type_id') is None or not text(item.get('type_name')):
+            continue
+        tid = text(item['type_id'])
+        classes.append({'type_id': tid, 'type_name': text(item['type_name'])})
+        ext = object_of(item.get('type_extend'))
+        groups = []
+        for key, name in FILTER_NAMES.items():
+            values = [v for v in (text(x) for x in text(ext.get(key)).split(',')) if v]
+            values = list(dict.fromkeys(values))
+            if values:
+                groups.append({
+                    'key': key,
+                    'name': name,
+                    'init': '',
+                    'value': [{'n': '全部', 'v': ''}] + [{'n': v, 'v': v} for v in values],
+                })
+        if groups:
+            filters[tid] = groups
+    result = {'class': classes, 'filters': filters}
+    if classes:
+        _home_cache[cache_key] = (time.time() + HOME_CACHE_TTL, result)
+    return result
+
+
+def home_vod():
+    data = cms('index_video', {'token': ''})
+    vlist = []
+    for item in list_of(data.get('list')):
+        if isinstance(item, dict):
+            vlist.extend(list_of(item.get('vlist')))
+    return {'list': vlist}
+
+
+def paginated(data, requested_page):
+    lst = list_of(data.get('list'))
+    raw_page = data.get('page')
+    page = page_of(raw_page if raw_page is not None else requested_page)
+    try:
+        limit = int(data.get('limit') or 0)
+    except (TypeError, ValueError):
+        limit = 0
+    if limit <= 0:
+        limit = PAGE_LIMIT
+    try:
+        raw_pagecount = int(data.get('pagecount') or 0)
+    except (TypeError, ValueError):
+        raw_pagecount = 0
+    has_pagecount = raw_pagecount > 0
+    pagecount = raw_pagecount if has_pagecount else page + (1 if len(lst) >= limit else 0)
+    try:
+        raw_total = data.get('total')
+        has_total = raw_total is not None and int(raw_total) >= 0
+    except (TypeError, ValueError):
+        has_total = False
+    if has_pagecount and has_total:
+        total = int(data.get('total'))
+    else:
+        total = (page - 1) * limit + len(lst) + (1 if pagecount > page else 0)
+    data['page'] = page
+    data['pagecount'] = pagecount
+    data['limit'] = limit
+    data['total'] = total
+    data['list'] = lst
+    return data
+
+
+def category(tid, pg, extend):
+    page = page_of(pg)
+    tid = text(tid)
+    if not tid:
+        return paginated({'list': []}, page)
+    extend = extend if isinstance(extend, dict) else {}
+    params = {'tid': tid, 'pg': str(page), 'limit': '18'}
+    for key in FILTER_NAMES:
+        value = text(extend.get(key))
+        if value and value != 'all':
+            params[key] = value
+    return paginated(cms('video', params), page)
+
+
+def playlist(value):
+    parts = []
+    for entry in text(value).split('#'):
+        sep = entry.find('$')
+        if sep <= 0 or not text(entry[sep + 1:]):
+            continue
+        parts.append('%s$%s' % (text(entry[:sep]), decrypt_lvdou(entry[sep + 1:])))
+    return '#'.join(parts)
+
+
+def detail(ids):
+    if not isinstance(ids, (list, tuple)):
+        ids = [ids]
+    lst = []
+    for vid in ids:
+        vid = text(vid)
+        if not vid:
+            continue
+        data = cms('video_detail', {'id': vid}).get('data')
+        if not isinstance(data, dict):
+            continue
+        players = data.get('vod_url_with_player')
+        vod = {k: v for k, v in data.items() if k != 'vod_url_with_player'}
+        names = text(vod.get('vod_play_from')).split('$$$')
+        if isinstance(players, list):
+            sources = players
+        else:
+            sources = [
+                {'name': names[i] if i < len(names) else '', 'url': u}
+                for i, u in enumerate(text(vod.get('vod_play_url')).split('$$$'))
+            ]
+        froms = []
+        urls = []
+        for index, source in enumerate(sources):
+            if not isinstance(source, dict):
                 continue
-            classes.append({"type_id": tid, "type_name": name})
-            fl = []
-            ext = c.get("type_extend") or {}
-            if filter:
-                for key, label in FILTER_KEYS:
-                    raw = _clean(ext.get(key))
-                    if not raw:
-                        continue
-                    vals = []
-                    seen = set()
-                    for v in raw.split(","):
-                        v = v.strip()
-                        if not v or v in seen:
-                            continue
-                        seen.add(v)
-                        vals.append({"n": v, "v": v})
-                    if len(vals) > 1:
-                        fl.append({"key": key, "name": label,
-                                   "value": [{"n": "全部", "v": ""}] + vals})
-            filters[tid] = fl or []
-        if not classes:
-            classes = [{"type_id": "1", "type_name": "电影"}]
-        return {"class": classes, "filters": filters}
+            url = playlist(source.get('url'))
+            if not url:
+                continue
+            name = text(source.get('name')) or text(source.get('code')) or '线路%d' % (index + 1)
+            froms.append(re.sub(r'[$#]', ' ', name))
+            urls.append(url)
+        vod['vod_play_from'] = '$$$'.join(froms)
+        vod['vod_play_url'] = '$$$'.join(urls)
+        lst.append(vod)
+    return {'list': lst}
+
+
+def search(key, pg):
+    wd = text(key)
+    page = page_of(pg)
+    if not wd:
+        return paginated({'list': []}, page)
+    data = cms('search', {'text': wd, 'pg': str(page)})
+    lst = []
+    for item in list_of(data.get('list')):
+        if isinstance(item, dict):
+            lst.append({k: v for k, v in item.items() if k != 'type'})
+    data['list'] = lst
+    return paginated(data, page)
+
+
+def play(play_id):
+    """
+    按线路类型分流解析（2026-11-26 修）：
+      - 4K 直链（ym4kjx 的 mp4/mkv，源站已 404）→ pid8 级联换链到
+        联通云盘/天翼云直链；全败退回原直链（兼容源站还活着的网络）。
+      - m3u8/mpd 直链 → 原样交给播放器，不解析。
+      - 网页线路（腾讯/爱奇艺/芒果…）→ pid7 级联解析出 m3u8。
+    """
+    original = decrypt_lvdou(play_id)
+    if not original:
+        return {'parse': 0, 'url': '', 'header': dict(PARSE_HEADERS)}
+
+    # 兼容老加密：ldmax 前缀先本地解密
+    if is_ldmax_url(original):
+        decrypted = decrypt_ldmax(original)
+        if decrypted:
+            original = decrypted
+
+    # 解析结果缓存
+    now = time.time()
+    cached = _play_cache.get(original)
+    if cached and cached[0] > now:
+        return {'parse': 0, 'url': cached[1], 'header': dict(PARSE_HEADERS)}
+
+    if is_4k_source(original):
+        # 4K 换链: pid8 → 6 → 7 级联; 全败退回原直链(网络内源站还活着的场景)
+        resolved = ''
+        for pid in PARSE_FALLBACK_4K:
+            resolved = parse_url(original, pid)
+            if resolved:
+                break
+        if not resolved:
+            resolved = original
+    elif is_stream_url(original):
+        resolved = original
+    else:
+        # 网页线路: pid7 → 5 → 8 级联; 全败且是媒体直链就原样交播放器
+        resolved = ''
+        for pid in PARSE_FALLBACK_WEB:
+            resolved = parse_url(original, pid)
+            if resolved:
+                break
+        if not resolved and is_media_url(original):
+            resolved = original
+
+    if resolved:
+        _play_cache[original] = (now + PLAY_CACHE_TTL, resolved)
+
+    return {'parse': 0, 'url': resolved or '', 'header': dict(PARSE_HEADERS)}
+
+
+class Spider(Spider):
+    def getName(self):
+        return '🎬 影探4K'
+
+    def init(self, extend=''):
+        self.extend = extend or ''
+
+    def isVideoFormat(self, url):
+        return is_media_url(url)
+
+    def manualVideoCheck(self):
+        return False
+
+    def homeContent(self, filter):
+        return home(self.extend)
 
     def homeVideoContent(self):
-        j = self._cms("index_video", {"token": ""})
-        out = []
-        for block in (j.get("list") or []):
-            for it in (block.get("vlist") or []) if isinstance(block, dict) else []:
-                v = self._item(it)
-                if v:
-                    out.append(v)
-        return {"list": out}
+        return home_vod()
 
-    def _item(self, it):
-        if not isinstance(it, dict):
-            return None
-        vid = str(it.get("vod_id") or it.get("id") or "")
-        name = _clean(it.get("vod_name") or it.get("name"))
-        if not vid or not name:
-            return None
-        pic = _fix(it.get("vod_pic") or it.get("vod_pic_thumb") or "")
-        remarks = _clean(it.get("vod_remarks") or "")
-        if not remarks and it.get("vod_score") and str(it.get("vod_score")) not in ("0.0", "0"):
-            remarks = "评分 %s" % it.get("vod_score")
-        return {"vod_id": vid, "vod_name": name, "vod_pic": pic, "vod_remarks": remarks}
-
-    # ---------------------------------------------------------------- 分类
     def categoryContent(self, tid, pg, filter, extend):
-        try:
-            page = max(1, int(str(pg).strip() or 1))
-        except Exception:
-            page = 1
-        ext = extend if isinstance(extend, dict) else {}
-        params = {"tid": str(tid), "pg": str(page), "limit": "20"}
-        for key, _ in FILTER_KEYS:
-            v = str(ext.get(key) or "").strip()
-            if v and v != "all":
-                params[key] = v
-        j = self._cms("video", params)
-        lst = [self._item(x) for x in (j.get("list") or [])]
-        lst = [x for x in lst if x]
-        try:
-            pages = int(j.get("pagecount") or 0)
-        except Exception:
-            pages = 0
-        try:
-            limit = int(j.get("limit") or 20)
-        except Exception:
-            limit = 20
-        if pages <= 0:
-            pages = page + 1 if len(lst) >= limit else page
-        try:
-            total = int(j.get("total") or 0)
-        except Exception:
-            total = 0
-        return {"page": page, "pagecount": pages, "limit": limit,
-                "total": total, "list": lst}
+        return category(tid, pg, extend)
 
-    # ---------------------------------------------------------------- 详情
     def detailContent(self, ids):
-        vid = str(ids[0] or "")
-        if not vid:
-            return {"list": []}
-        j = self._cms("video_detail", {"id": vid})
-        d = j.get("data") or {}
-        if not d:
-            return {"list": []}
-        froms = [x for x in str(d.get("vod_play_from") or "").split("$$$") if x]
-        raw_urls = [x for x in str(d.get("vod_play_url") or "").split("$$$")]
-        urls = []
-        for grp in raw_urls:
-            eps = []
-            for part in grp.split("#"):
-                part = part.strip()
-                if not part:
-                    continue
-                if "$" in part:
-                    t, u = part.split("$", 1)
-                else:
-                    t, u = "正片", part
-                t = _safe(t) or "正片"
-                u = u.strip()
-                if u:
-                    eps.append("%s$%s" % (t, u))
-            urls.append("#".join(eps))
-        while len(froms) < len(urls):
-            froms.append("线路%d" % (len(froms) + 1))
-        pairs = [(f, u) for f, u in zip(froms, urls) if u]
-        # 将 4K 线路置前，同时保持线路名与播放地址一一对应。
-        pairs.sort(key=lambda item: 0 if "4k" in item[0].lower() else 1)
-        vod = {
-            "vod_id": vid,
-            "vod_name": _clean(d.get("vod_name")),
-            "vod_pic": _fix(d.get("vod_pic") or d.get("vod_pic_thumb")),
-            "type_name": _clean(d.get("vod_class")),
-            "vod_year": str(d.get("vod_year") or ""),
-            "vod_area": _clean(d.get("vod_area")),
-            "vod_lang": _clean(d.get("vod_lang")),
-            "vod_remarks": _clean(d.get("vod_remarks")),
-            "vod_actor": _clean(d.get("vod_actor")),
-            "vod_director": _clean(d.get("vod_director")),
-            "vod_content": _clean(d.get("vod_content") or d.get("vod_blurb")),
-            "vod_play_from": "$$$".join([p[0] for p in pairs]),
-            "vod_play_url": "$$$".join([p[1] for p in pairs]),
-        }
-        if not pairs:
-            vod["vod_play_from"] = "网页"
-            vod["vod_play_url"] = "正片$%s/api.php/app/video_detail?id=%s" % (self.host, vid)
-        return {"list": [vod]}
+        return detail(ids)
 
-    # ---------------------------------------------------------------- 搜索
-    def searchContent(self, key, quick, pg="1"):
-        try:
-            page = max(1, int(str(pg).strip() or 1))
-        except Exception:
-            page = 1
-        j = self._cms("search", {"text": str(key or ""), "pg": str(page)})
-        lst = [self._item(x) for x in (j.get("list") or [])]
-        return {"list": [x for x in lst if x], "page": page}
+    def searchContent(self, key, quick, pg='1'):
+        return search(key, pg)
 
-    # ---------------------------------------------------------------- 播放
     def playerContent(self, flag, id, vipFlags):
-        url = str(id or "").strip()
-        try:
-            if url.startswith("lvdou+"):
-                url = self._decrypt_lvdou(url) or url
-            if MEDIA_RE.search(url):
-                host = urllib.parse.urlparse(url).hostname or ""
-                if YT4K_HOST.search(host) or "lyyytv.cn" in host:
-                    real = self._chain(url)
-                    if real:
-                        return {"parse": 0, "playUrl": "", "url": real,
-                                "header": '{"User-Agent":"%s"}' % UA}
-                return {"parse": 0, "playUrl": "", "url": url,
-                        "header": '{"User-Agent":"%s"}' % UA}
-            real = self._parse(url)
-            if real:
-                return {"parse": 0, "playUrl": "", "url": real,
-                        "header": '{"User-Agent":"%s"}' % UA}
-            if url.startswith("http"):
-                return {"parse": 1, "playUrl": "", "url": url, "header": ""}
-        except Exception:
-            pass
-        return {"parse": 1, "playUrl": "", "url": url, "header": ""}
+        return play(id)
 
-    def _decrypt_lvdou(self, s):
-        """lvdou+<b64> → AES-CBC(key=CMS_KEY[0:16], iv=CMS_KEY[16:32])"""
-        key = CMS_KEY[:16].encode()
-        iv = (CMS_KEY[16:32] if len(CMS_KEY) >= 32 else CMS_KEY[:16]).encode()
-        body = s[6:].strip()
-        try:
-            raw = base64.b64decode(body + "=" * (-len(body) % 4))
-            out = _aes_cbc_dec(raw, key, iv).decode("utf-8", "ignore")
-            return out if out.startswith("http") else ""
-        except Exception:
-            return ""
+    def localProxy(self, param):
+        return None
 
-    def _chain(self, media_url):
-        j = self._get(CHAIN_API + urllib.parse.quote(media_url, safe=""), timeout=25)
-        return _decrypt_baidu(str(j.get("url") or ""))
-
-    def _parse(self, page_url):
-        j = self._get(PARSE_API + urllib.parse.quote(page_url, safe=""), timeout=25)
-        url = str(j.get("url") or "")
-        if url.startswith(DEC_PREFIX):
-            return _decrypt_baidu(url)
-        return url if url.startswith("http") else ""
+    def destroy(self):
+        pass

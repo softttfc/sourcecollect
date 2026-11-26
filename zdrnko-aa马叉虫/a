@@ -4,37 +4,37 @@
               "notice": "❤️马叉虫收集整理🐸支持正版人人有责❤️",
   "sites": [
         {
-             "key": "小白弹幕",
-             "name": "豆瓣导航",
-             "type": 3,
-             "api": "csp_SecureDanmu", 
-             "searchable": 1,
-             "ext": { 
+            "key": "小白弹幕",
+            "name": "豆瓣导航",
+            "type": 3,
+            "api": "csp_SecureDanmu", 
+            "searchable": 1,
+            "ext": { 
                 "apiUrls": [
-                   "https://danmu.iyo.us.ci/theft-dastardly-prognosis-hula-agenda2-dropkick|公益源1",
-                   "https://logo.saodu.work:8888/87654321|公益源2", 
-                   "https://dm.ljiaovm.com/luosen|公益源3", 
-                   "https://logdanmu.kongcheng666.dpdns.org/a123456|公益源4",
-                   "https://api.dandanplay.net|公益源5",
-                   "https://danmu.lily.lat/lilyemby|公益源6",
-                   "https://danmu.longemby.com/lilyemby|公益源7" 
+                   "https://danmu.iyo.us.ci/theft-dastardly-prognosis-hula-agenda2-dropkick|源1",
+                   "https://logo.saodu.work:8888/87654321|源2", 
+                   "https://dm.ljiaovm.com/luosen|源3", 
+                   "https://logdanmu.kongcheng666.dpdns.org/a123456|源4",
+                   "https://api.dandanplay.net|源5",
+                   "https://danmu.lily.lat/lilyemby|源6",
+                   "https://danmu.longemby.com/lilyemby|源7" 
                 ],
                 "titleMappingsUrl": "https://gh-proxy.org/raw.githubusercontent.com/goodcommunication/mydm/main/yins.json",
                 "filter": "./lib/douban.json"
-             }
+            }
         },
         {
-             "key": "yingtan_py",
-             "name": "影探视频",
-             "type": 3,
-             "api": "https://gitee.com/zdrnko/aa/raw/master/py/yingtan.py"
+            "key": "yingtan_py",
+            "name": "影探视频",
+            "type": 3,
+            "api": "https://gitee.com/zdrnko/aa/raw/master/py/yingtan.py"
         },
         {
-             "key": "kanglong_cms",
-             "name": "亢龙视频",
-             "type": 1,
-             "api": "http://110.42.66.100:12678/api.php",
-             "playUrl": "json:http://110.42.66.100:5666/api/?key=c31bfd818ac47875ab4922f03834afcc&url=",
+            "key": "kanglong_cms",
+            "name": "亢龙视频",
+            "type": 1,
+            "api": "http://110.42.66.100:12678/api.php",
+            "playUrl": "json:http://110.42.66.100:5666/api/?key=c31bfd818ac47875ab4922f03834afcc&url=",
             "searchable": 1,
             "quickSearch": 1,
             "filterable": 1
@@ -170,21 +170,13 @@
              "key": "tangdou_py",
              "name": "糖豆舞蹈",
              "type": 3,
-             "api": "https://gitee.com/zdrnko/aa/raw/master/py/tangdou.py",
-             "searchable": 1,
-             "changeable": 1,
-             "quickSearch": 1,
-             "filterable": 1,
-             "playerType": 2
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/tangdou.py"
         },
         {
              "key": "tingyou_py",
              "name": "听友听书",
              "type": 3,
-             "api": "https://gitee.com/zdrnko/aa/raw/master/py/tingyou.py",
-             "searchable": 1,
-             "quickSearch": 1,
-             "changeable": 1
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/tingyou.py"
         },
         {
              "key": "体育聚合",
@@ -203,6 +195,14 @@
              "name": "绝色🔞禁",
              "type": 3,
              "api": "https://gh-proxy.org/github.com/ssm123-coder/a/raw/main/py/juese.py",
+             "searchable": 1,
+             "changeable": 1
+        },
+        {
+             "key": "hddj_py",
+             "name": "黄豆🔞禁",
+             "type": 3,
+             "api": "https://gitee.com/zdrnko/aa/raw/master/py/hddj.py",
              "searchable": 1,
              "changeable": 1
         }
@@ -224,19 +224,14 @@
   ],
   "parses": [
         {
-            "name": "解析",
-            "type": 1,
-            "url": "http://niubi.69mini.com/api?key=5826c5388ce47abc5919ef5474f075d1&url="
+             "name": "解析",
+             "type": 1,
+             "url": "http://niubi.69mini.com/api?key=5826c5388ce47abc5919ef5474f075d1&url="
         },
         {
-            "name": "备用",
-            "type": 1,
-            "url": "http://jiexi.fc8001.top/leZNmbHdSceTrNsR.php?url="
-        },
-        {
-            "name": "白嫖鸭",
-            "type": 1,
-            "url": "https://jx4k.fuyingapi.top/api/?key=f9ecd007748997c6a81a83c425e9448a&url="
+             "name": "备用",
+             "type": 1,
+             "url": "http://120.26.0.137:2022/api/?key=e6yF9hBqVAtIWZvGWu&url="
         }
   ]
 }
