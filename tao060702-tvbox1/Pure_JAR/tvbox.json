@@ -1,0 +1,33 @@
+{
+  "spider": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Pure_JAR/spider-20261117g.jar;md5;693bae4b7eae87de117ebc8d87bf0743",
+  "logo": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Pure_JAR/icon.gif",
+  "icon": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Pure_JAR/icon.gif",
+  "sites": [
+    {
+      "key": "agg4k",
+      "name": "Kishûtô 4K",
+      "type": 3,
+      "api": "csp_Agg4K",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "timeout": 20
+      }
+    }
+  ],
+  "parses": [],
+  "flags": [
+    "qq",
+    "qiyi",
+    "youku",
+    "mgtv",
+    "bilibili",
+    "优酷",
+    "腾讯",
+    "爱奇艺",
+    "芒果",
+    "哔哩"
+  ],
+  "lives": []
+}

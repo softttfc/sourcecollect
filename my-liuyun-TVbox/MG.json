@@ -307,6 +307,12 @@
     "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/鬼片.js"
 },
 {
+    "key": "dr_央视",
+    "name": "🈚┃央视┃栏目",
+    "type": 3,
+    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/央视.py"
+},
+{
     "key": "dr_天堂",
     "name": "🆚┃天堂┃影視",
     "type": 3,
@@ -439,13 +445,6 @@
     "name":"🈺┃护航┃短剧",
     "type":3,
     "api":"https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/du/护航.js",
-    "ext":""
-},
-{
-    "key":"dr_红果",
-    "name":"🈺┃红果┃短剧",
-    "type":3,
-    "api":"https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/du/红果.py",
     "ext":""
 },
 {
@@ -612,12 +611,6 @@
     "api":"http://110.42.66.100:12678/api.php",
     "playUrl":"json:http://110.42.66.100:5666/api/?key=c31bfd818ac47875ab4922f03834afcc&url=",
     "indexs": 0
-},
-{
-    "key": "dr_央视",
-    "name": "🈚┃央视┃栏目",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/PY/央视.py"
 },
 {
     "key": "ConfigCenter",

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import annotations
 import base64
 import binascii
@@ -43,7 +42,8 @@ except Exception:
         class _BaseSpider:
             pass
 
-
+# FongMi/TVBox 的 Chaquopy 环境未必带 cryptography，多数壳只带 pycryptodome。
+# 统一入口，避免调用点直接依赖某一个库。
 if Cipher is not None:
     AES_BACKEND = "cryptography"
 elif CryptoAES is not None:
@@ -52,6 +52,7 @@ else:
     AES_BACKEND = "none"
 
 class _PureAES128:
+    """纯 Python AES-128，供无 pycryptodome/cryptography 的壳使用。"""
 
     _S = (
         99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,125,250,89,71,240,
@@ -222,7 +223,9 @@ def _aes_cbc_decrypt(key: bytes, iv: bytes, data: bytes) -> bytes:
 
 SITE = "https://hongguoduanju.com"
 EPISODE_PREFIX = "hg-episode-v1:"
-
+# 红果每集视频模型按清晰度返回多条独立线路（360/480/540/720/1080），
+# 每条带 main_url + backup_url 双 CDN 与独立加密材料。这里把清晰度作为
+# TVBox 多线路暴露；内封音/视轨在解密 _rewrite_moov 时天然全部保留。
 _HG_QUALITY_LINES = (
     ("1080", "超清"),
     ("480",  "流畅"),
@@ -233,7 +236,7 @@ _QUALITY_LINE_NAME_TO_Q = {
 
 
 def _split_episode_token(token: str) -> tuple[str, str]:
-
+    """把 'hg-episode-v1:<q>:<vid>' 解析为 (清晰度, vid)；兼容旧格式 'hg-episode-v1:<vid>'。"""
     body = str(token or "")
     if body.startswith(EPISODE_PREFIX):
         body = body[len(EPISODE_PREFIX):]
@@ -243,15 +246,17 @@ def _split_episode_token(token: str) -> tuple[str, str]:
             return head, tail
     return "1080", body
 
+# 官网搜索 SSR 固定约 10 条且几乎不认 page；用多关键词轮换实现“翻页”
 _AI_MANJU_KEYWORDS = [
     "AI漫剧", "AI动画", "AI短剧", "AI动漫", "漫剧AI", "二次元AI", "AI漫画", "动画短剧",
 ]
 
 
+# ---- 本机解密缓存 + 自动清理 ----
 _HG_CACHE_DIR = None
-_HG_CACHE_MAX_FILES = 8 
-_HG_CACHE_MAX_BYTES = 400 * 1024 * 1024  
-_HG_CACHE_MAX_AGE = 6 * 3600     
+_HG_CACHE_MAX_FILES = 8          # 最多保留集数
+_HG_CACHE_MAX_BYTES = 400 * 1024 * 1024  # 总容量约 400MB
+_HG_CACHE_MAX_AGE = 6 * 3600     # 超过 6 小时自动删
 
 
 def _hg_cache_dir() -> str:
@@ -259,7 +264,7 @@ def _hg_cache_dir() -> str:
     if _HG_CACHE_DIR and os.path.isdir(_HG_CACHE_DIR):
         return _HG_CACHE_DIR
     candidates = []
-
+    # 优先 App 可写缓存目录（OK影视 / FongMi 常见路径）
     for root in (
         "/data/user/0/com.fongmi.android.oktv/cache",
         "/data/data/com.fongmi.android.oktv/cache",
@@ -322,12 +327,12 @@ def _hg_cache_list() -> list:
 
 
 def _hg_cache_cleanup(force: bool = False) -> None:
-
+    """按时间 + 数量 + 体积自动清理本机缓存。"""
     try:
         files = _hg_cache_list()
         if not files and not force:
             return
-
+        # 1) 过期删除
         remain = []
         for item in files:
             if item["age"] > _HG_CACHE_MAX_AGE or item["size"] <= 0:
@@ -337,7 +342,7 @@ def _hg_cache_cleanup(force: bool = False) -> None:
                     pass
             else:
                 remain.append(item)
-
+        # 2) 超量删除最旧
         total = sum(x["size"] for x in remain)
         while remain and (len(remain) > _HG_CACHE_MAX_FILES or total > _HG_CACHE_MAX_BYTES):
             old = remain.pop(0)
@@ -346,7 +351,7 @@ def _hg_cache_cleanup(force: bool = False) -> None:
             except Exception:
                 pass
             total -= old["size"]
-
+        # 3) 清理残留 tmp
         root = _hg_cache_dir()
         for name in os.listdir(root):
             if name.endswith(".tmp") or name == ".w":
@@ -360,7 +365,7 @@ def _hg_cache_cleanup(force: bool = False) -> None:
 
 
 def _hg_cached_ok(body: Any) -> bool:
-
+    """旧的整集缓存可能是 bvc2（黑屏有声），吐出去之前先验一下视轨编码。"""
     try:
         if not body:
             return False
@@ -377,7 +382,7 @@ def _hg_cache_get(vid: str, quality: str) -> bytes | None:
     path = _hg_cache_path(vid, quality)
     try:
         if os.path.isfile(path) and os.path.getsize(path) > 64:
-
+            # 读时刷新 mtime，避免刚播又被当过期删
             try:
                 os.utime(path, None)
             except Exception:
@@ -474,13 +479,14 @@ def _download_range(url: str, start: int, end: int, headers: dict | None, timeou
 
 
 def _multi_download(url: str, headers: dict | None = None, timeout: int = 90, workers: int = 4) -> bytes:
-
+    """多分片并行下载，失败则回退整文件单线程。"""
     headers = dict(headers or {})
     total = _probe_content_length(url, headers, timeout=min(30, timeout))
-
+    # 太小或未知长度：直接整下
     if total <= 0 or total < 2 * 1024 * 1024:
         return _http_get_bytes(url, headers, timeout=timeout)
 
+    # 分片大小 1~2MB，线程数限制
     workers = max(2, min(int(workers or 4), 6))
     chunk = max(1 * 1024 * 1024, min(2 * 1024 * 1024, total // workers))
     ranges = []
@@ -501,7 +507,7 @@ def _multi_download(url: str, headers: dict | None = None, timeout: int = 90, wo
                 s, data = fut.result()
                 parts[s] = data
     except Exception:
-
+        # 并行失败回退
         return _http_get_bytes(url, headers, timeout=timeout)
 
     buf = bytearray()
@@ -511,7 +517,7 @@ def _multi_download(url: str, headers: dict | None = None, timeout: int = 90, wo
             return _http_get_bytes(url, headers, timeout=timeout)
         buf.extend(piece)
     if len(buf) < total * 0.95:
-
+        # 明显不完整
         return _http_get_bytes(url, headers, timeout=timeout)
     return bytes(buf)
 
@@ -521,6 +527,7 @@ _MANJU_KEYWORDS = [
     "漫剧", "动漫短剧", "二次元", "漫画短剧", "国漫短剧", "日漫", "动态漫", "动画剧",
 ]
 
+# ===== 官方内容类型与分类（取自官方 hongguoduanju.com 的分类路由体系，与 App 同源同 ID）=====
 _HG_CONTENT_TYPES = [
     ("real-drama", "真人剧", [
         ("", "全部"), ("romance", "爱情"), ("period", "年代"), ("comeback", "逆袭"),
@@ -558,7 +565,7 @@ def _hg_route_of(tid):
     return _HG_ALIAS.get(t, "real-drama")
 
 def _hg_category_page(route, cat, page):
-
+    """官方分类页：/category/{route}/{item}?page=N，数据在 _ROUTER_DATA。"""
     route = _hg_route_of(route)
     path = "/category/" + route
     if cat:
@@ -581,6 +588,8 @@ V5_PLAYER_UA = "com.phoenix.read/73932 (Linux; U; Android 12; zh_CN_#Hans; PGT-A
 VIDEO_URL = "https://api5-normal-sinfonlineb.fqnovel.com/novel/player/multi_video_model/v1/"
 VIDEO_URL_ALT = "https://api5-normal-lf.fqnovel.com/novel/player/multi_video_model/v1/"
 
+# 取流诊断日志：壳会吞掉 playerContent 之后的异常，只弹一句通用提示，
+# 所以源自己把取流每一步落到手机能取到的纯文本文件里，方便定位。
 _DIAG_LOG_CANDIDATES = (
     "/sdcard/红果短剧_取流日志.txt",
     "/storage/emulated/0/红果短剧_取流日志.txt",
@@ -607,7 +616,7 @@ def _diag_path() -> str | None:
         return None
 
 def _diag(message: str) -> None:
-
+    """把取流诊断同时写进壳日志和手机上的纯文本文件。"""
     try:
         print("[红果取流] " + str(message))
     except Exception:
@@ -667,7 +676,8 @@ def _first(*values: Any) -> str:
 
 def _json_response(response: requests.Response) -> Any:
     response.raise_for_status()
-
+    # 上游取流接口偶发 HTTP 200 + 空体（Content-Length: 0），
+    # 直接 .json() 只会抛 JSONDecodeError，日志里看不出根因，这里单独点明。
     try:
         body = response.content
     except Exception:
@@ -847,7 +857,9 @@ def _parse_track(
     return sizes, offsets, chunk_samples, aux_sizes, aux_offset, sample_count
 
 def _replace_sinf(data: bytearray) -> None:
-
+    # sinf 盒的首个子盒必为 frma（CENC 规范：frma/schm/schi）。
+    # 这里校验后再清零，避免把 avcC/hvcC 配置数据里恰好出现的 "sinf" 字节
+    # 当成盒来清零，那样会毁掉解码器配置，表现为视轨丢失/只有声音。
     _sinf_children = (b"frma", b"schm", b"schi")
     position = 0
     while True:
@@ -927,7 +939,9 @@ def decrypt_mp4_cenc(data: bytes, content_key: bytes) -> bytes:
 MEDIA_HEADERS = {"User-Agent": MEDIA_UA, "Referer": "https://novel.snssdk.com/"}
 
 _STREAM_PORT_RANGE = (10010, 10030)
-
+# 每块越小，播放器拿到首字节越快：CENC 是整块解密完才吐，1MB 一块在纯 Python
+# AES 下要 2~8 秒才出声（真机表现为一直转圈、进度条不动）。128KB 一块首字节不到 1 秒，
+# 总吞吐不变（下游按 64KB 连续写）。
 _STREAM_CHUNK = 1 << 17
 _STREAM_HEAD_PROBE = 1 << 16
 _STREAM_TTL_SECONDS = 900
@@ -958,7 +972,7 @@ _MEDIA_TLS = threading.local()
 
 
 def _media_session() -> "requests.Session":
-
+    """拉媒体分片用的线程本地 session（keep-alive），省掉每块重新握手。"""
     ses = getattr(_MEDIA_TLS, "s", None)
     if ses is None:
         ses = requests.Session()
@@ -986,7 +1000,7 @@ def _range_get(url: str, start: int, end: int) -> tuple[bytes, int]:
             )
             continue
         body = response.content
-
+        # 上游偶发返回短包；短于请求长度时重试，避免播放器收到截断数据。
         if not body or (response.status_code == 206 and len(body) < expected):
             last_error = HongguoPluginError(
                 "媒体分片长度不足 %d/%d" % (len(body), expected)
@@ -1028,6 +1042,10 @@ def _fetch_moov(url: str) -> tuple[int, int, bytes]:
     return total, moov_start, moov
 
 
+# 解码器配置盒 -> 真实 sample entry 四字符码。
+# CENC 的 sinf/frma 缺失或无效时，这是判断真实编码最可靠的依据：
+# 一律兜底 avc1 会把 HEVC(hvc1) 错标成 H.264，播放器按错编码解视轨，
+# 表现为「有声音没画面 / 视轨缺失」——这正是低清晰度线路只有超清能看的原因。
 _CONFIG_BOX_TO_FORMAT = (
     (b"hvcC", b"hvc1"),
     (b"hev1C", b"hev1"),
@@ -1046,20 +1064,21 @@ _AUDIO_CONFIG_BOX_TO_FORMAT = (
 
 
 def _format_from_config_box(blob: bytes, kind: bytes) -> bytes:
-
+    """按 sample entry 内的解码器配置盒推断真实编码，找不到返回空串。"""
     probes = _AUDIO_CONFIG_BOX_TO_FORMAT + _CONFIG_BOX_TO_FORMAT if kind == b"enca" \
         else _CONFIG_BOX_TO_FORMAT + _AUDIO_CONFIG_BOX_TO_FORMAT
     hit_pos, hit_fmt = -1, b""
     for fourcc, fmt in probes:
         pos = blob.find(fourcc)
-
+        # 取最靠前的配置盒：sample entry 内通常只含一个，靠前者更可能是本轨的配置
         if pos >= 0 and (hit_pos < 0 or pos < hit_pos):
             hit_pos, hit_fmt = pos, fmt
     return hit_fmt
 
 
 def _original_format_near(data: bytearray, entry_pos: int, default: bytes, kind: bytes = b"encv") -> bytes:
-
+    """从 sample entry 后的 sinf/frma 读取原始四字符码（avc1/hvc1/mp4a 等）。
+    frma 缺失/无效时回退到配置盒探测，而不是一律兜底 avc1。"""
     blob = bytes(data[entry_pos : min(len(data), entry_pos + 800)])
     idx = 0
     while True:
@@ -1076,7 +1095,8 @@ def _original_format_near(data: bytearray, entry_pos: int, default: bytes, kind:
 
 
 def _restore_cenc_codecs(data: bytearray) -> None:
-
+    """把 encv/enca 还原为真实编码（frma 优先，其次按 avcC/hvcC 等配置盒判定）。
+    避免一律改成 avc1/hvc1 导致非对应编码的视轨解不出画面。"""
     pos = 0
     while True:
         pos = data.find(b"encv", pos)
@@ -1094,7 +1114,7 @@ def _restore_cenc_codecs(data: bytearray) -> None:
 
 
 def _moov_has_video_track(moov: bytes) -> bool:
-
+    """moov 中是否存在 hdlr='vide' 的轨。用于校验某清晰度是否真的带视轨。"""
     view = memoryview(moov)
     search = 0
     found_trak = False
@@ -1108,7 +1128,7 @@ def _moov_has_video_track(moov: bytes) -> bool:
         if hdlr is not None and len(hdlr) >= 12:
             if bytes(hdlr[8:12]) == b"vide":
                 return True
-
+    # 解析不出任何 trak 时不轻易判死刑，交由后续解密流程定夺
     return not found_trak
 
 
@@ -1164,12 +1184,12 @@ def _sample_table(moov: bytes, moov_start: int) -> list[tuple[int, int, bytes]]:
 _HG_Q_TO_QTYPE = {"1080": "1", "480": "30"}
 _Q_LABEL = {"1080": "超清", "480": "流畅"}
 _QTYPE_TO_Q = {"1": "1080", "30": "480"}
-
+# 壳里播放器认得的标准视轨四字符码；bvc2（ByteVC2）不在其中，只出声音不出画面
 _DECODABLE_ENTRIES = (b"hvc1", b"hev1", b"avc1", b"avc3")
 
 
 def _hg_entry_is_bytevc2(item: Any) -> bool:
-
+    """单个清晰度条目是不是 ByteVC2（壳解不了，会黑屏只有声音）。"""
     return isinstance(item, Mapping) and "bytevc2" in str(item.get("gear_des_key") or "")
 
 
@@ -1185,7 +1205,12 @@ _VIDEO_FOURCCS = (b"hvc1", b"hev1", b"hvc2", b"hev2", b"avc1", b"avc3",
 
 
 def _hg_moov_fourcc(moov: bytes) -> bytes:
+    """从 moov 的 stsd 里取视轨 sample entry 四字符码。
 
+    注意 moov 里音轨、视轨各有一个 stsd，谁在前不固定（实测《反向拿捏2》第 8 集
+    兜底直链的 moov 是音轨 mp4a 在前）。只认第一个 stsd 会把 hvc1 误判成 mp4a，
+    于是明明能播的 hvc1 直链被验成不可播。这里按顺序找第一个「视频类」四字符码。
+    """
     first = b""
     i = moov.find(b"stsd")
     pos = 0
@@ -1202,8 +1227,11 @@ def _hg_moov_fourcc(moov: bytes) -> bytes:
 
 
 def _hg_plain_candidates(model: Mapping[str, Any], quality: str = "1080", strict: bool = False) -> list:
+    """备用接口（codec_type=1）的标准 hvc1 直链候选。
 
-
+    只收非 bytevc2 且能解出地址的条目；返回 [(url, size), ...]。
+    strict=True 时只认这一档自己的清晰度，绝不跨档串用（防止 1080 被换成 720）。
+    """
     fb = _fallback_api_value(model.get("fallback_api") if isinstance(model, Mapping) else None)
     if not fb:
         return []
@@ -1265,7 +1293,7 @@ def _hg_plain_candidates(model: Mapping[str, Any], quality: str = "1080", strict
 
 
 def _hg_entry_size(item: Any) -> int:
-
+    """从模型条目里取字节数（video_meta.size 优先，缺了看顶层 size）。"""
     try:
         if not isinstance(item, Mapping):
             return 0
@@ -1278,7 +1306,11 @@ def _hg_entry_size(item: Any) -> int:
 
 
 def _hg_plain_url_session(url: str, size: int = 0) -> Any:
+    """上游本就是未加密直链时，验成标准 hvc1/avc1 且中段 206 才返回直通会话。
 
+    站点对部分集数给的是 1:normal（没有 encrypt_info）：这类流不需要解密，
+    但同样不能把 bytevc2 或加密壳丢给播放器，所以沿用同一套四字符码 + 视频轨 + 中段校验。
+    """
     if not isinstance(url, str) or not url.startswith("http"):
         return None
     try:
@@ -1304,7 +1336,10 @@ def _hg_plain_url_session(url: str, size: int = 0) -> Any:
 
 
 def _hg_plain_session(model: Mapping[str, Any], quality: str = "1080", strict: bool = True) -> Any:
+    """挑一条确认是标准 hvc1/avc1、且能按 Range 取中段（可 seek）的直通流。
 
+    三条候选都验不过就返回 None，交给调用方报错重试，绝不把 bvc2 丢给播放器。
+    """
     for url, size in _hg_plain_candidates(model, quality, strict)[:3]:
         sess = _hg_plain_url_session(url, size)
         if sess is not None:
@@ -1313,7 +1348,7 @@ def _hg_plain_session(model: Mapping[str, Any], quality: str = "1080", strict: b
 
 
 class _StreamSession:
-
+    """按 Range 逐块拉取加密 MP4，边下边解 CENC，供本地播放器直连。"""
 
     def __init__(
         self,
@@ -1393,6 +1428,11 @@ def _fresh_device_pair() -> tuple[str, str]:
     )
 
 
+# ---- 设备身份持久化（2026-11-16 移植）----
+# 取流必须用「注册过的设备」：沙箱实测同一个 vid，换成随机未注册号 + 同样的头，
+# 服务端一律回 200 空体。而壳里的进程会被反复重启，每次都现场注册等于每集都在
+# 用一台零信任的新机器，容易撞「只能看前几集」这类限制。这里把注册到的那一对
+# device_id/install_id 落到缓存目录，重启后接着用同一台设备。
 _DEVICE_FILE = "hg_device.json"
 
 
@@ -1493,7 +1533,7 @@ def _working_device_pair() -> dict[str, str] | None:
         pair = _STREAM_STATE.get("device")
     if isinstance(pair, dict) and pair.get("device_id") and pair.get("install_id"):
         return {"device_id": str(pair["device_id"]), "install_id": str(pair["install_id"])}
-
+    # 内存里没有（App 刚重启）：恢复上次注册过的那台设备，而不是重开新号
     persisted = _load_persisted_device()
     if persisted is not None:
         with _STREAM_LOCK:
@@ -1509,7 +1549,9 @@ _SIGN_PREF: dict[str, str | None] = {"mode": None}
 
 
 def _sign_modes_ordered() -> tuple[str, ...]:
-
+    """签名自适应顺序：最近一次成功的那种先试。
+    站点的门槛会随时间翻转（2026-11-10 只认海阔五头，2026-11-16 又要求多挂 x-medusa），
+    固定顺序意味着翻转后每次播放都白白多挨两次空体。"""
     with _SIGN_LOCK:
         pref = _SIGN_PREF["mode"]
     if pref in _SIGN_MODES:
@@ -1522,7 +1564,8 @@ def _sign_pref_mark(mode: str) -> None:
         _SIGN_PREF["mode"] = mode
 
 
-
+# 海阔 v277 当前主路径：先经规则同款中转取址，再沿用本机 CENC 解密。
+# 旧海阔五头直连 fqnovel 在 v277 已默认关闭；这里只搬取址，不搬它的网页预告兜底。
 _WEEOU_URL = "http://api.weeou.com/algorithm/video"
 _WEEOU_DUSA_KEY = bytes.fromhex(
     "6e6f76656c6170695f7369676e5f7365637265745f6368616e67655f6d655f32303236"
@@ -1587,7 +1630,7 @@ def _video_model_weeou(video_id: str) -> dict[str, Any]:
                 "vheight": item.get("vheight") or 0,
                 "size": item.get("size") or 0,
             },
-
+            # 只让现有解密分支识别这是加密档；真正密钥由 _media_content_key 读取。
             "spade_a": "d2Vlb3U=" if encrypted else "",
             "_weeou_key": key if encrypted else "",
         })
@@ -1599,16 +1642,22 @@ def _video_model_weeou(video_id: str) -> dict[str, Any]:
 
 def _video_model_rotating(video_id: str, config: Mapping[str, Any]) -> dict[str, Any]:
     last_err: BaseException | None = None
-
+    # 与海阔 v277 一致先走中转；失败才进入原有 v5 / 海阔 / 六神兜底。
     try:
         return _video_model_weeou(video_id)
     except Exception as err:
         last_err = err
         _diag("weeou 取流未命中，回退 App 接口 vid=%s：%s" % (video_id, err))
-
+    # 2026-11-10 18:39 真机取流日志 + 沙箱实测（同一分钟里换 5 个 vid 各试 5 次、
+    # 两个 host 交替、每次现场注册新设备号，全部 HTTP 200 + 空体；80 秒后再试仍空，
+    # 而 5 分钟前同一个 vid 一次就回 23791 字节 JSON）证明：空体是站点侧成波出现的，
+    # 不是设备号被风控、也不是某个 vid 坏了。短重试只能抓住「波刚到尾巴」这种运气，
+    # 所以这里给 5 轮（每轮新设备号 + 两个 host 交替 + 逐步退避，总耗时压在 3 秒级），
+    # 拿不到就快速失败，由上层挂后台继续试，别让播放器干等十几秒。
     for attempt in range(5):
         endpoint = VIDEO_URL if attempt % 2 == 0 else VIDEO_URL_ALT
-
+        # 每一轮按「海阔+x-medusa → 纯海阔 → 六神」依次打，请求参数和 body 完全相同，
+        # 只换签名头，日志里能直接看出是哪套过的。三者都空才换设备号重来。
         for sign_mode in _sign_modes_ordered():
             try:
                 model = _video_model(video_id, config, endpoint, sign_mode)
@@ -1637,6 +1686,10 @@ def _video_model_rotating(video_id: str, config: Mapping[str, Any]) -> dict[str,
     raise last_err if last_err is not None else HongguoPluginError("video_model 为空")
 
 
+# ===== 空体高峰期的后台重试 =====
+# 2026-11-10 实测：站点空体是成波来的（18:41~18:43 连续 16 次、跨 80 秒全空），
+# 在播放器那一次请求里死等救不回来。失败后挂一个后台线程按秒继续试，
+# 一旦拿到非空 JSON 就把会话放进缓存，用户再点一次立刻起播。
 _WARM_LOCK = threading.Lock()
 _WARM_ACTIVE: set = set()
 _WARM_WINDOW = 180.0
@@ -1687,7 +1740,8 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
         session = sessions.get(cache_key)
     if session is not None:
         return session
-
+    # 预热线程与播放器可能同时请求同一集；用 in-flight 事件去重，
+    # 避免重复拉 video_model 与 moov（冷启动 3~18s，重复会叠加首字节延迟）。
     with _STREAM_LOCK:
         inflight = _STREAM_STATE.setdefault("inflight", {})
         event = inflight.get(cache_key)
@@ -1703,13 +1757,13 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
             return session
     last_err = None
     try:
-
+        # 上游偶发抖动（同一集首次 502、重试即通）——冷启动这里做短重试。
         for _attempt in range(2):
             try:
                 model = _video_model_rotating(video_id, config)
                 rows = _video_list_from_model(model)
                 key_seed = _key_seed_from_model(model) or ""
-
+                # 按模型里真实存在的档位排，按与用户所选档的接近程度降序，绝不跳档乱配
                 avail: list = []
                 for _row in rows:
                     _q = _QTYPE_TO_Q.get(str(_row.get("quality_type") or "")) if isinstance(_row, Mapping) else None
@@ -1726,7 +1780,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
                 probed = 0
 
                 def _take(sess: Any, want: str) -> Any:
-
+                    """缓存并按档位返回会话；真的降了档就在日志里说清楚。"""
                     try:
                         sess.quality = want
                     except Exception:
@@ -1748,7 +1802,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
 
                 for want in wanted_order:
                     _, item = _select_quality(rows, want)
-
+                    # 这一档是 ByteVC2：只在这一档上要标准 hvc1，不跨档串
                     if _hg_entry_is_bytevc2(item):
                         plain_session = None
                         try:
@@ -1759,7 +1813,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
                             return _take(plain_session, want)
                         reason = "该档只有 bytevc2，同档 hvc1 也没取到 q=%s" % want
                         continue
-
+                    # 这一档本来就是标准编码：走解密路，验不过再回同一档取直通
                     raw_url = _media_url(item)
                     spade = _spade_value(item)
                     if not raw_url:
@@ -1774,7 +1828,8 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
                             url = _decrypt_spade_url(raw_url, key_seed) or raw_url
                         except HongguoPluginError:
                             url = raw_url
-
+                    # 这一档上游没有加密材料（gear_des_key 是 1:normal、无 encrypt_info）：
+                    # 本来就是未加密直链，直通转发即可，不能再当成「缺密钥」判失败
                     if not spade:
                         plain_url_session = _hg_plain_url_session(url, _hg_entry_size(item))
                         if plain_url_session is not None:
@@ -1790,7 +1845,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
                         total, moov = 0, b""
                     if total and _moov_has_video_track(moov):
                         session = _StreamSession(url, _media_content_key(item, spade), total, moov_start, moov)
-
+                        # 解密后吐给播放器的视轨必须是他认得的编码，bvc2 这种一律不交
                         _sfc = _hg_moov_fourcc(session.moov_plain)
                         if not _sfc or _sfc in _DECODABLE_ENTRIES:
                             return _take(session, want)
@@ -1827,7 +1882,7 @@ def _stream_session(video_id: str, config: Mapping[str, Any], quality: str = "10
 _RANGE_UNSATISFIABLE = "unsatisfiable"
 
 def _parse_range(value: str, total: int) -> Any:
-
+    """解析 Range 头。返回 (start, end)、None（忽略）或 _RANGE_UNSATISFIABLE。"""
     text = (value or "").strip().lower()
     if not text.startswith("bytes="):
         return None
@@ -1853,7 +1908,7 @@ def _parse_range(value: str, total: int) -> Any:
 
 
 class _PlainSession:
-
+    """直通会话：上游是标准 hvc1 MP4（未加密），按 Range 原样转发。"""
 
     def __init__(self, url: str, total: int) -> None:
         self.url = url
@@ -1920,14 +1975,14 @@ class _StreamHandler(BaseHTTPRequestHandler):
         except OSError:
             pass
 
-    def do_HEAD(self) -> None:  
+    def do_HEAD(self) -> None:  # noqa: N802 - 标准库回调命名
         self._serve(body=False)
 
-    def do_GET(self) -> None:  
+    def do_GET(self) -> None:  # noqa: N802 - 标准库回调命名
         self._serve(body=True)
 
     def _serve_danmaku(self, body: bool) -> None:
-
+        """本机弹幕路由：/hg_dm?vid=..&sid=..&fmt=xml|json，/hg_dm_debug 自检。"""
         parsed = urlparse(self.path)
         query = parse_qs(parsed.query)
         vid = (query.get("vid") or query.get("id") or [""])[0]
@@ -1946,7 +2001,7 @@ class _StreamHandler(BaseHTTPRequestHandler):
             pass
         _prior = _dm_state(vid)
         if not (_prior.get("items") or []) and _prior.get("error"):
-
+            # 上次是失败（多半撞了限流），播放器这次真来要，就再试一次
             state = _dm_get(vid, sid, did, iid, wait=min(_DM_WAIT, 10), force=True)
         else:
             state = _dm_get(vid, sid, did, iid, wait=_DM_WAIT)
@@ -2004,13 +2059,14 @@ class _StreamHandler(BaseHTTPRequestHandler):
                 params["quality"],
             )
         except Exception as exc:
-  
+            # 把真实原因回吐给壳的播放日志，避免只看到一句没头没脑的
+            # media session failed 就去猜是源写错了。
             reason = str(exc or "").strip() or exc.__class__.__name__
             _diag(
                 "本机流建会话失败 vid=%s 档位=%s 原因=%s 日志=%s"
                 % (params["vid"], params["quality"], reason, _diag_path() or "无")
             )
-
+            # 空体是成波来的：这里快速失败，同时挂后台继续试，用户过 1 分钟再点就命中缓存
             if _is_empty_model_error(exc if isinstance(exc, BaseException) else Exception(str(exc))):
                 try:
                     _warm_burst(
@@ -3823,7 +3879,8 @@ def _varint(value: int) -> bytes:
     return bytes(result)
 
 def _sint(value: int, bits: int) -> int:
-
+    # 正式 protobuf 编码规则：正数不先截断到有符号范围；
+    # 这对 Medusa.rand 等可能大于 2**31 的 sint32 字段很重要。
     value = int(value)
     return (value << 1) if value >= 0 else (value << 1) ^ (~0)
 
@@ -3957,7 +4014,7 @@ def _xg_rc4(data: bytes, key: bytes) -> bytearray:
         x = table[i]
         j = (j + x) & 0xFF
         y = table[j]
-
+        # 保持正式基线的 RC4 变体：这里只覆盖 S[i]，不交换 S[j]。
         table[i] = y
         result[index] = value ^ table[(y + y) & 0xFF]
     return result
@@ -4029,7 +4086,7 @@ def _gen_medusa_proto(url: str, url_params: Mapping[str, Any], devices: Mapping[
     proto_rand = random.randint(0, 0xFFFFFFFF)
     launch_time = random.randint(100, 120)
     process_id = random.randint(10001, 12000)
-
+    # 这些字段是正式签名实现中的固定环境采样值，不是用户设备标识。
     report_ts = 1728388016635
     report_time = int(time.time())
     device = {
@@ -4159,7 +4216,7 @@ def _device_config(config: Mapping[str, Any]) -> dict[str, str]:
     }
 
 def _hiker_query(params: Mapping[str, Any]) -> str:
-
+    """海阔视界 hgPhxQuery() 的等价实现：原样拼接，不做 URL 编码（resolution 里的 * 保留字面）。"""
     parts = []
     for key, value in params.items():
         parts.append("%s=%s" % (key, value))
@@ -4167,7 +4224,8 @@ def _hiker_query(params: Mapping[str, Any]) -> str:
 
 
 def _video_model_v5(video_id: str, config: Mapping[str, Any]) -> dict[str, Any]:
-
+    """v5 播放取流：a 域名 player/v1 + gzip body + x-khronos / x-helios / x-medusa。
+    2026-11-24 实测拿到真模型（非免费集 vid=7704580191372201022，HTTP 200 / 24213 字节）。"""
     devices = _device_config(config)
     values = {
         "aid": "8662", "app_name": "novelread", "version_code": "74332",
@@ -4657,7 +4715,12 @@ def _video_model(video_id: str, config: Mapping[str, Any], video_url: str | None
     )
     body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     if sign_mode in ("hiker", "hiker_medusa"):
-
+        # 2026-11-10 20:11 同机同网现场：海阔视界能播、狼壳空体。逐字比对两边请求，
+        # 参数、UA、body 完全一致，唯一实质差异在签名头：
+        #   海阔 FQ.signHeaders(qs, body, false, 8662, 1611921764) 只产出
+        #     x-ladon / x-argus / x-ss-stub / x-khronos / x-ss-req-ticket；
+        #   我们走 _core_sixgod，额外塞了 x-gorgon / x-medusa / x-helios / x-tt-dt
+        #     这类视频接口并不认的六神签名。本函数按海阔那套只签 ladon+argus。
         query = _hiker_query(params)
         _hiker_sig = _dm_sign_headers(
             query,
@@ -4676,7 +4739,12 @@ def _video_model(video_id: str, config: Mapping[str, Any], video_url: str | None
         }
         signed_headers.update(_hiker_sig)
         if sign_mode == "hiker_medusa":
-
+            # 2026-11-16 移植自第三方的真修复：海阔五头之上必须再带一个 x-medusa。
+            # 沙箱同一 vid 背靠背 A/B 三轮：纯海阔 0 字节 / 带 medusa 19KB 真数据。
+            # 注意这是个「门槛头」而不是真校验——值换成 FFFF…、abc、甚至空串都放行，
+            # 真正会把人拦在门外的是 x-gorgon / x-helios（六神那套），带上就回空体。
+            # 所以这里按正常算法生成一次真值（约 18ms），既不增加请求数，
+            # 万一站点哪天开始校验收到的值也能接着用。生成失败就退化成纯海阔。
             try:
                 _medusa_ts = int(_hiker_sig.get("x-khronos") or time.time())
                 _medusa_url, _medusa_params = _get_params_encrypturl(endpoint, params, devices)
@@ -4779,13 +4847,15 @@ def _quality(value: Any) -> str:
     return match.group(1) if match else "1080"
 
 def _quality_hint(value: Any) -> str:
-
+    """同 _quality，但识别不出时返回空串。
+    不能一律兜底 '1080'：否则所有未标注清晰度的条目会合并到同一个 key 并互相覆盖，
+    最终只剩最后一条，导致切任何清晰度拿到的都是同一条（甚至是没有视轨的那条）。"""
     text = _text(value).lower()
     match = re.search(r"(2160|1440|1080|720|576|540|480|360)", text)
     return match.group(1) if match else ""
 
 def _definition_of(item: Mapping[str, Any]) -> str:
-
+    """从一条播放模型条目里提取清晰度，尽量覆盖上游各种字段命名。"""
     if not isinstance(item, Mapping):
         return ""
     meta = item.get("video_meta")
@@ -4847,7 +4917,7 @@ def _select_quality(video_list: Any, wanted: str = "1080") -> tuple[str, dict[st
 
     candidates = rows_from(video_list)
     rows: dict[str, dict[str, Any]] = {}
-
+    # 无法识别清晰度时用 idxN 兜底成唯一 key，保证每条候选都被保留（不再互相覆盖）
     for index, (hinted_quality, item) in enumerate(candidates):
         definition = _definition_of(item) or _quality_hint(hinted_quality) or ("idx%d" % index)
         if definition not in rows:
@@ -4859,7 +4929,7 @@ def _select_quality(video_list: Any, wanted: str = "1080") -> tuple[str, dict[st
     for definition in order:
         if definition in rows:
             return definition, rows[definition]
-
+    # 清晰度全部识别不出：按码率/体积降序，取质量最好的一条（而不是碰运气取最后一条）
     def _rank(key: str) -> int:
         item = rows[key]
         bitrate = _int(item.get("bitrate") or item.get("bit_rate") or 0)
@@ -4929,7 +4999,7 @@ def _page(url):
     last_err = None
     for attempt in range(2):
         try:
-
+            # 复用线程本地 session（keep-alive），省掉每次新建连接 + TLS 握手的开销
             r = _hg_session().get(
                 url,
                 headers={
@@ -5003,7 +5073,10 @@ _HG_TAB_MAP = {
 _HG_SEASON_CACHE = {}
 _HG_SEARCH_API = SITE + "/api/search/result/"
 _HG_SEASON_RE = re.compile(u"第\\s*([0-9]{1,3}|[一二三四五六七八九十]{1,3})\\s*[季部]")
+# 标题结尾的裸数字也当季号（如「……我终于发达了7」），数字前不能紧跟数字，避免把年份 1980 当季号
 _HG_TAIL_RE = re.compile(u"(?:[\\s·\\-—_：:.、]+)?(?<![0-9])([0-9]{1,3}|[一二三四五六七八九十]{1,3})\\s*$")
+# 「反向拿捏2：和闺蜜穿七零带着婆婆一起离」这类：季号贴在主标题末尾、后面接冒号副标题。
+# 只看冒号前的主标题尾部，1~2 位阿拉伯数字或半/全角括号数字；数字前不能紧跟数字（防 1980、2024）
 _HG_MAIN_TAIL_RE = re.compile(u"(?:[\\s·\\-—_]*)(?:[（(]\\s*([0-9]{1,2})\\s*[)）]|(?<![0-9])([0-9]{1,2}))\\s*$")
 _HG_CN = u"零一二三四五六七八九十"
 
@@ -5044,7 +5117,7 @@ def _hg_season_no(name):
     if t:
         n = _hg_num(t.group(1))
         return n if 0 < n <= 99 else 0
-
+    # 冒号副标题写法：季号在主标题末尾（第一部没有数字，按第一季处理）
     main, sub = _hg_split_title(name)
     if sub:
         mm = _HG_MAIN_TAIL_RE.search(main)
@@ -5055,12 +5128,12 @@ def _hg_season_no(name):
 
 
 def _hg_bare_style(name):
-
+    """True 表示这部剧的季号是裸数字写法（标题里没有「第N季/部」）。"""
     return not _HG_SEASON_RE.search(name or u"")
 
 
 def _hg_split_title(name):
-
+    """按第一个冒号拆成（主标题, 副标题）；没有冒号时副标题为空串。"""
     raw = (name or u"").strip()
     for sep in (u"：", u":"):
         i = raw.find(sep)
@@ -5070,7 +5143,12 @@ def _hg_split_title(name):
 
 
 def _hg_main_style(name):
+    """「主标题+季号：副标题」写法里剥掉季号的主标题；不适用时返回空串。
 
+    只认这种形状：没有「第N季/部」、整个标题末尾没有裸数字（那是「道印入体：…7」
+    的写法，季号挂在副标题后面）、冒号前的主标题 4~12 个字。这样普通带副标题的剧
+    不会被拉去多探两轮。
+    """
     raw = (name or u"").strip()
     main, sub = _hg_split_title(raw)
     if not sub or not (4 <= len(main) <= 12):
@@ -5079,18 +5157,18 @@ def _hg_main_style(name):
         return u""
     mn = _HG_MAIN_TAIL_RE.sub(u"", main).strip(u"：:·-—_ 　")
     if mn == main and re.search(u"[0-9]", main[-2:]):
-
+        # 主标题自己就以数字结尾（重生1980、2024 这类），不是季号写法
         return u""
     return mn
 
 
 def _hg_probe_kws(base, n, name):
-
+    """缺失季的探测关键词。主标题带季号的写法要按原样拼，只搜基名搜不到。"""
     mn = _hg_main_style(name)
     if mn:
         main, sub = _hg_split_title(name)
         if _HG_MAIN_TAIL_RE.search(main):
-
+            # 手上已是第 N 部（主标题自带数字）：另一部靠基名搜索就能带出来，不必再探
             return []
         return [mn + str(n) + u"：" + sub]
     if _hg_bare_style(name):
@@ -5102,7 +5180,7 @@ def _hg_base_name(name):
     raw = (name or u"").strip()
     b = _HG_SEASON_RE.sub(u"", raw).strip(u"：:·-—_ 　")
     if b == raw:
-
+        # 裸数字结尾：剥掉数字再当基名，基名不足 4 个字就不剥（防「重生1980」这类误伤）
         b2 = _HG_TAIL_RE.sub(u"", raw).strip(u"：:·-—_ 　")
         if len(b2) >= 4 and b2 != raw:
             b = b2
@@ -5124,7 +5202,7 @@ _HG_TLS = threading.local()
 
 
 def _hg_session():
-
+    """每线程复用一条 requests 会话：keep-alive + gzip，省握手开销。"""
     ses = getattr(_HG_TLS, "ses", None)
     if ses is None:
         ses = requests.Session()
@@ -5141,7 +5219,7 @@ def _hg_session():
 
 
 def _hg_fetch_sd(sid, timeout=8):
-
+    """单次请求拉详情（不重试），失败返回 {}。"""
     try:
         r = _hg_session().get(SITE + "/detail?series_id=" + quote(str(sid), safe=u""), timeout=timeout)
         if r.status_code != 200:
@@ -5151,6 +5229,107 @@ def _hg_fetch_sd(sid, timeout=8):
         return p.get(u"seriesDetail") or {}
     except Exception:
         return {}
+
+
+# ---- 站点详情目录补全（2026-11-27）----
+# 站点把 /detail 的 vid_list 从完整数字集号改成了 3 个 v1_ 开头的不透明 id，
+# 但 episode_cnt 仍是全 80 集；完整目录改由海阔 v277 同款 multi_video_detail 返回。
+_HG_DIRECTORY_HOST = "https://api5-normal-sinfonlineb.fqnovel.com"
+_HG_DIRECTORY_PATH = "/novel/player/multi_video_detail/v1/"
+_HG_DIRECTORY_UA = (
+    "com.phoenix.read/73932 (Linux; U; Android 14; zh_CN; 2509FPN0BC; "
+    "Build/UQ1A.240205.09211156;tt-ok/3.12.13.20)"
+)
+_HG_DIRECTORY_TAIL = (
+    "&ac=wifi&channel=update_64&aid=8662&app_name=novelread&version_code=73932"
+    "&version_name=7.3.9.32&device_platform=android&os=android&ssmix=a"
+    "&device_type=2509FPN0BC&device_brand=XIAOMI&language=zh&os_api=34&os_version=14"
+    "&manifest_version_code=73932&resolution=1080*1920&dpi=480&update_version_code=73932"
+    "&host_abi=arm64-v8a&dragon_device_type=phone&pv_player=73932&compliance_status=0"
+    "&need_personal_recommend=1&player_so_load=1&is_android_pad_screen=0"
+    "&rom_version=UQ1A.240205.09211156+release-keys"
+)
+_HG_DIRECTORY_CDID = "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0"
+
+
+def _hg_valid_vids(value: Any) -> list[str]:
+    out = []
+    seen = set()
+    if not isinstance(value, (list, tuple)):
+        return out
+    for item in value:
+        vid = _text(item)
+        if not vid.isdigit() or vid in seen:
+            continue
+        seen.add(vid)
+        out.append(vid)
+    return out
+
+
+def _hg_series_video_data(sid: str) -> dict:
+    """按 series_id 拉完整剧集目录；失败返回空，详情页只降级提示、不抛异常。"""
+    sid = _text(sid)
+    if not sid.isdigit():
+        return {}
+    try:
+        pair = _working_device_pair()
+        if pair is None:
+            pair = _rotate_stream_device()
+        did = _text((pair or {}).get("device_id"))
+        iid = _text((pair or {}).get("install_id"))
+        if not did or not iid:
+            return {}
+        query = (
+            "iid=" + iid + "&device_id=" + did
+            + "&_rticket=" + str(int(time.time() * 1000))
+            + _HG_DIRECTORY_TAIL + "&cdid=" + _HG_DIRECTORY_CDID
+        )
+        body = json.dumps(
+            {"series_id": sid, "content_type": 1, "biz_param": {}, "NovelCommonParam": {}},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        headers = {
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": _HG_DIRECTORY_UA,
+            "accept": "application/json",
+            "accept-encoding": "identity",
+            "x-xs-from-web": "0",
+            "sdk-version": "2",
+        }
+        headers.update(_dm_sign_headers(query, body, did, iid, 8662, 1611921764))
+        response = requests.post(
+            _HG_DIRECTORY_HOST + _HG_DIRECTORY_PATH + "?" + query,
+            headers=headers,
+            data=body,
+            timeout=15,
+        )
+        raw = response.content or b""
+        if response.status_code != 200 or not raw:
+            _diag("目录接口空响应 sid=%s HTTP=%s" % (sid, response.status_code))
+            return {}
+        root = json.loads(raw.decode("utf-8"))
+        if not isinstance(root, Mapping):
+            return {}
+        body_text = root.get("body")
+        if isinstance(body_text, str) and body_text:
+            root = json.loads(body_text)
+        data = root.get("data") if isinstance(root, Mapping) else None
+        node = data.get(sid) if isinstance(data, Mapping) else None
+        vd = node.get("video_data") if isinstance(node, Mapping) else None
+        if not isinstance(vd, Mapping):
+            _diag("目录接口无 video_data sid=%s" % sid)
+            return {}
+        vids = _hg_valid_vids([(x or {}).get("vid") for x in (vd.get("video_list") or []) if isinstance(x, Mapping)])
+        _diag("目录接口 sid=%s 集数=%d" % (sid, len(vids)))
+        return dict(vd) if vids else {}
+    except Exception as err:
+        _diag("目录接口异常 sid=%s: %s" % (sid, err))
+        return {}
+
+
+def _hg_cache_has_vids(sd: Any) -> bool:
+    return bool(isinstance(sd, Mapping) and _hg_valid_vids(sd.get("vid_list")))
 
 
 _HG_DISK_NAME = "hg_seasons_cache.json"
@@ -5167,7 +5346,7 @@ def _hg_disk_path():
 
 
 def _hg_slim(sd):
-
+    """只留拼线路要用的字段，控制缓存文件体积。"""
     if not isinstance(sd, dict):
         return {}
     cele = [str(c.get("nickname") or "") for c in (sd.get("celebrities") or []) if isinstance(c, dict)]
@@ -5210,22 +5389,40 @@ def _hg_disk_save(all_data):
 
 
 def _hg_sd(sid):
-
+    """单部详情：进程缓存 300s → 磁盘缓存 6h → 网络单次请求。"""
     key = u"sd:" + str(sid)
     hit = _HG_SEASON_CACHE.get(key)
-    if hit and time.time() - hit[0] < 300:
+    if hit and time.time() - hit[0] < 300 and _hg_cache_has_vids(hit[1]):
         return hit[1]
     sd = _hg_fetch_sd(sid)
+    # /detail 现在只剩 3 个 v1_ 不透明 id；只有它拿不出数字集号时才补目录接口。
+    if not _hg_cache_has_vids(sd):
+        vd = _hg_series_video_data(sid)
+        if vd:
+            vids = _hg_valid_vids([(x or {}).get("vid") for x in (vd.get("video_list") or []) if isinstance(x, Mapping)])
+            if vids:
+                merged = dict(sd or {})
+                merged["series_id"] = _text(vd.get("series_id_str") or vd.get("series_id") or sid)
+                merged["series_name"] = _text(vd.get("series_title")) or _text(merged.get("series_name"))
+                merged["series_cover"] = _text(vd.get("series_cover")) or _text(merged.get("series_cover"))
+                merged["series_intro"] = _text(vd.get("series_intro")) or _text(merged.get("series_intro"))
+                merged["episode_right_text"] = _text(vd.get("episode_right_text")) or _text(merged.get("episode_right_text"))
+                try:
+                    merged["episode_cnt"] = int(vd.get("episode_cnt") or len(vids))
+                except (TypeError, ValueError):
+                    merged["episode_cnt"] = len(vids)
+                merged["vid_list"] = vids
+                sd = merged
     if not sd:
         sd = {}
-        _HG_SEASON_CACHE[key] = (time.time() - 240, sd)   
+        _HG_SEASON_CACHE[key] = (time.time() - 240, sd)   # 失败短缓存 60 秒
         return sd
     _HG_SEASON_CACHE[key] = (time.time(), sd)
     return sd
 
 
 def _hg_candidates(kw, pages=2, deadline=None):
-
+    """站内搜索取候选 (sid, name)，只认 query 参数，看 hasMore 翻页。"""
     out = []
     seen = set()
     for pg in range(1, pages + 1):
@@ -5258,7 +5455,7 @@ _HG_PRE_MAX = 3
 
 
 def _hg_prefetch(sids, limit=3):
-
+    """后台预热：给刚出现的 series_id 预拉详情写缓存。绝不阻塞调用方，异常全吞。"""
     if not sids:
         return
     todo = [str(x) for x in sids if str(x).isdigit()][:limit]
@@ -5277,7 +5474,7 @@ def _hg_prefetch(sids, limit=3):
                 _HG_PRE_RUNNING[0] += 1
             try:
                 c = disk.get(sid)
-                if isinstance(c, dict):
+                if isinstance(c, dict) and _hg_cache_has_vids(c.get("self")):
                     continue
                 sd = _hg_sd(sid)
                 if not sd:
@@ -5306,6 +5503,11 @@ def _hg_prefetch(sids, limit=3):
         pass
 
 
+# ===== 组级缓存（2026-11-11 提速）=====
+# 站点没有「按 series_group_id 查组成员」的接口（/detail?series_group_id、/api/series/group、
+# /api/detail、/api/series/list、/api/group/detail 实测全 404；fqnovel 的 multi_video_detail
+# 与 bookmall/tab 也不给组成员）。所以按组号取组详情落地成：组号做 key 的独立磁盘缓存，
+# 命中就零请求；只有第一次才用一次一页搜索发现成员，整段压在 1.5 秒内。
 _HG_GROUP_NAME = "hg_group_cache.json"
 _HG_GROUP_TTL = 7 * 86400
 _HG_GROUP_MEM: dict = {}
@@ -5353,7 +5555,7 @@ def _hg_group_save():
 
 
 def _hg_group_get(gid):
-
+    """组缓存命中返回 [(季号, 精简 sd)]；没命中或过期返回 None。"""
     if not gid:
         return None
     rec = _hg_group_load().get(str(gid))
@@ -5370,7 +5572,7 @@ def _hg_group_get(gid):
 
 
 def _hg_nums_ok(seasons):
-
+    """季号是否 1..max 连续（单季也算完整）。"""
     nums = sorted(set((no or 1) for no, d in (seasons or []) if d))
     if not nums:
         return False
@@ -5378,7 +5580,7 @@ def _hg_nums_ok(seasons):
 
 
 def _hg_group_put(gid, seasons):
-
+    """完整才落盘（7 天）；缺季的暂存内存 10 分钟，下次进入还会再补一次。"""
     if not gid or not seasons:
         return False
     ok = _hg_nums_ok(seasons) and len(seasons) >= 2
@@ -5392,7 +5594,7 @@ def _hg_group_put(gid, seasons):
 
 
 def _hg_group_discover(sid, sd, gid, deadline, deep=False):
-
+    """一次一页搜索发现同组成员；组号能核对就核对，核对不了的按剧名基名过滤。"""
     base = _hg_base_name(sd.get("series_name") or u"")
     left = deadline - time.time()
     if not base or left <= 0.25:
@@ -5450,7 +5652,7 @@ _HG_BG_SET: set = set()
 
 
 def _hg_group_finish_bg(sid, sd, gid):
-
+    """同步那次 1.5 秒没补齐时，挂后台把同组补全（最多 5 秒），写进组缓存。"""
     if not gid:
         return
     with _HG_BG_LOCK:
@@ -5487,7 +5689,7 @@ def _hg_group_finish_bg(sid, sd, gid):
 
 
 def _hg_seasons(sid, sd, budget=9.0):
-
+    """真分季：基名搜索一页 + 缺失季定向探测；探测与拉详情同池并发，命中即收敛。"""
     ck = u"season:" + str(sid)
     hit = _HG_SEASON_CACHE.get(ck)
     if hit and time.time() - hit[0] < 900:
@@ -5510,7 +5712,8 @@ def _hg_seasons(sid, sd, budget=9.0):
             _diag(u"[分季] 组缓存命中 gid=%s sid=%s 季=%s" % (gid, sid, [n for n, _d in _out]))
             return _out
     if not gid:
-
+        # 首页列表记录没挂 series_group_id 时，按剧名补搜一次同组；
+        # 补不出第二季就照旧单线路，绝不凭空造季。
         try:
             _got = _hg_group_discover(sid, sd, u"", time.time() + 1.2)
         except Exception:
@@ -5528,14 +5731,14 @@ def _hg_seasons(sid, sd, budget=9.0):
     t_end = time.time() + budget
     _nm0 = sd.get("series_name") or u""
     _bare = _hg_bare_style(_nm0)
-
+    # 「反向拿捏2：副标题」这类写法的主标题；非空才值得多探一轮
     _main_ref = _hg_main_style(_nm0)
     known = {(_hg_season_no(_nm0) or 1): str(sid)}
     extra = []
     try:
         for csid, nm in _hg_candidates(base, 1, time.time() + min(3.0, budget)):
             n = _hg_season_no(nm)
-
+            # 同一主标题、没有季号的那一部就是第一部
             if not n and _main_ref and _hg_main_style(nm) == _main_ref:
                 n = 1
             if n and n not in known:
@@ -5567,7 +5770,8 @@ def _hg_seasons(sid, sd, budget=9.0):
                 if kind == u"detail":
                     if val:
                         found[key] = val
-
+                        # 同名诱饵（标题像第 N 季但其实是别的剧）抓进来了：
+                        # 释放这一季的名额，让下面的缺口探测重新去找真身
                         if str(key) != str(sid) and _hg_group_id(val) != gid:
                             for _k, _v in list(known.items()):
                                 if str(_v) == str(key):
@@ -5578,7 +5782,8 @@ def _hg_seasons(sid, sd, budget=9.0):
                             known[key] = csid
                             pending[ex.submit(_hg_sd, csid)] = (u"detail", csid)
                             break
-
+            # 缺失季：1..max+1 里没着落的，补探测（每轮最多 4 个）
+            # 已从搜索里认到季号、详情还在路上的，也算有着落，不再重复探同一季
             _ver = set(x for x in known.keys() if x)
             for _k, _d in found.items():
                 if _d and (str(_k) == str(sid) or _hg_group_id(_d) == gid):
@@ -5591,7 +5796,7 @@ def _hg_seasons(sid, sd, budget=9.0):
                     for _kw in _hg_probe_kws(base, n, _nm0):
                         pending[ex.submit(_hg_candidates, _kw, 1,
                                           time.time() + 3)] = (u"probe", n)
-
+    # 收尾补漏：诱饵被剔除后总会留下空洞，按缺的季号再定向探一次（最多 2 个）
     _have = set()
     for _x, _d in found.items():
         if _d and (str(_x) == str(sid) or _hg_group_id(_d) == gid):
@@ -5599,7 +5804,7 @@ def _hg_seasons(sid, sd, budget=9.0):
     _mx = max(_have) if _have else 1
     _need = [x for x in range(1, _mx + 1) if x not in _have][:2]
     if _need:
-
+        # 两个缺号并发探，不再一个搜完再搜下一个
         _cand = {}
         try:
             _kwjobs = [(kw, _n) for _n in _need for kw in _hg_probe_kws(base, _n, _nm0)]
@@ -5643,7 +5848,7 @@ def _hg_seasons(sid, sd, budget=9.0):
         if x != str(sid) and _hg_group_id(d) != gid:
             continue
         seasons.append((_hg_season_no(d.get(u"series_name") or u""), d))
-
+    # 防误判：分集内容与当前剧或已收季高度重叠的（同一部的重复条目）一律剔除
     def _vset(d):
         return set(str(v) for v in (d.get("vid_list") or []))
     _self_v = _vset(sd)
@@ -5668,13 +5873,14 @@ def _hg_seasons(sid, sd, budget=9.0):
         if not dup:
             _uniq.append((no, d))
     seasons = _uniq
-
+    # 2026-11-11：不再在详情里跑两轮剧名搜索。季号连续就落组缓存（7 天），
+    # 供同组其它季零请求复用；缺季的只暂存内存，下次进入再补。
     if gid:
         _have = set((no or 1) for no, _d in seasons if _d)
         _mx = max(_have) if _have else 1
         _miss = [n for n in range(1, _mx + 1) if n not in _have]
         if _miss and len(seasons) >= 2:
-
+            # 补季整段 1.5 秒硬限：一次一页搜索 + 并发核对组号；超时先用已知季，下次再补
             _t0 = time.time()
             try:
                 _got = _hg_group_discover(sid, sd, gid, _t0 + 1.5)
@@ -5712,7 +5918,7 @@ def _hg_seasons(sid, sd, budget=9.0):
         elif len(seasons) >= 2:
             _diag(u"[分季] 组未补齐，下次进入再补 gid=%s 季=%s" % (gid, _nums))
     if len(seasons) < 2:
-
+        # 凑不出第二部同组剧就保持单线路原样，绝不凭空造季
         _HG_SEASON_CACHE[ck] = (time.time(), [(0, sd)])
         return [(0, sd)]
     seasons.sort(key=lambda t: (t[0] if t[0] else 1))
@@ -5738,7 +5944,7 @@ def _hg_cat_list(rows):
 
 
 def _hg_home_sections():
-
+    """按首页 homeSections 分板块出卡，标题取 tab_name，取不到给兜底名。"""
     ck = u"home"
     hit = _HG_SEASON_CACHE.get(ck)
     if hit and time.time() - hit[0] < 900:
@@ -5773,6 +5979,13 @@ def _hg_home_sections():
 
 
 
+# ===================== 分季 tab（2026-11-13 新增）=====================
+# 站点把每一季都做成独立的 series（各有自己的 series_id，同部共用 series_group_id），
+# 分类列表里不带组号，站点也没有「按组号列组内各季」的接口。所以「分季」类目这样取数：
+#   1) 用站内搜索按「第二季…第十季 / 第二部…」轮询，把标题里明写季号的剧捞出来；
+#   2) 按剥掉季号后的基名聚合成一条，同一部剧只出一张卡；
+#   3) 点进去仍走原来的 detailContent，由组号把同组各季补成一季一条线路。
+# 采集只在首次（或缓存超过 12 小时）跑一次，之后走本机 json 缓存，翻页零请求。
 _HG_SEASON_TID = u"season"
 _HG_SEASON_TIDS = (u"season", u"seasons", u"分季", u"jiseason")
 _HG_SEASON_INDEX = u"hg_season_index.json"
@@ -5788,7 +6001,7 @@ _HG_SEASON_TITLE_RE = re.compile(u"第\\s*([0-9]{1,3}|[一二三四五六七八�
 
 
 def _hg_season_base(name):
-
+    """剥掉「第N季/第N部」后剩下的剧名，当作聚合键；没有季号或太短的不认。"""
     raw = str(name or u"").strip()
     if not _HG_SEASON_TITLE_RE.search(raw):
         return u""
@@ -5828,7 +6041,7 @@ def _hg_season_index_save(items):
 
 
 def _hg_season_merge(groups, rows):
-
+    """把一批列表/搜索条目按基名并进 groups：基名 -> {季号: {sid,name,pic,cnt}}。"""
     if not isinstance(rows, list):
         return
     for x in rows:
@@ -5865,7 +6078,7 @@ def _hg_season_merge(groups, rows):
 
 
 def _hg_season_pack(groups):
-
+    """只留有多季迹象（出现第二季及以后）的剧，按识别到的季数、最高季排序。"""
     out = []
     for base, seasons in (groups or {}).items():
         if not isinstance(seasons, dict) or not seasons:
@@ -5879,7 +6092,7 @@ def _hg_season_pack(groups):
 
 
 def _hg_season_collect():
-
+    """并发打站内搜索（12 个关键词各一页），失败的关键词直接跳过，不重试。"""
     groups = {}
 
     def _one(kw):
@@ -5904,7 +6117,7 @@ def _hg_season_collect():
     except Exception:
         pass
     if not groups:
-
+        # 搜索全挂时退一步：扫两页官方分类，按标题兜一层（多半不会有季，至少不报错）
         for _pg in (1, 2):
             try:
                 _hg_season_merge(groups, (_hg_category_page("real-drama", u"", _pg) or {}).get("recommendList") or [])
@@ -5914,7 +6127,7 @@ def _hg_season_collect():
 
 
 def _hg_season_union(old, new):
-
+    """旧缓存 + 本次采集合并：同一部剧的季取并集，新数据覆盖同季的旧记录。"""
     merged = {}
     for it in (old or []) + (new or []):
         if not isinstance(it, dict):
@@ -5931,7 +6144,7 @@ def _hg_season_union(old, new):
 
 
 def _hg_season_items():
-
+    """分季目录：进程内 5 分钟、磁盘 12 小时；过期就重采一次并与旧缓存合并。"""
     now = time.time()
     with _HG_SEASON_LOCK:
         hit = _HG_SEASON_CACHE.get(u"season-tab")
@@ -5954,7 +6167,7 @@ def _hg_season_items():
 
 
 def _hg_season_page(page):
-
+    """分季类目分页：一页 20 部，全是识别到多季的剧，点进去走原详情按组号补季。"""
     try:
         page = max(1, int(page or 1))
     except (TypeError, ValueError):
@@ -5996,7 +6209,12 @@ _HG_SEARCH_PRIMED = [False]
 
 
 def _search_api(key: str, page: int = 1) -> dict:
+    """官网搜索接口 /api/search/result（搜索页已改客户端渲染，SSR 无数据）。
 
+    原来每次搜索都先抓一遍 586KB 的首页拿 ttwid，一部十季剧要搜七八次，
+    白花七八个首页请求（实测每次 250~1200ms）。现在复用线程本地 session 直连搜索，
+    真的返回空列表时才补一次首页 cookie 重试，且每个进程只补一次。
+    """
     empty = {"searchList": [], "totalCount": 0, "totalPages": 1, "hasMore": False}
     params = {"aid": "8662", "query": str(key or ""), "page": str(max(1, int(page or 1)))}
 
@@ -6013,7 +6231,7 @@ def _search_api(key: str, page: int = 1) -> dict:
     data = _once()
     try:
         if not (isinstance(data, dict) and data.get("searchList")) and not _HG_SEARCH_PRIMED[0]:
-
+            # 极少数情况下上游要 ttwid 才回数据：补一次首页再试（仅一次）
             _HG_SEARCH_PRIMED[0] = True
             try:
                 _hg_session().get(SITE + "/", timeout=8)
@@ -6047,7 +6265,7 @@ def _search_api(key: str, page: int = 1) -> dict:
 
 
 def _search_loader(key: str, page: int = 1) -> dict:
-
+    """搜索：优先官网 XHR 接口，失败退回旧 SSR 页（已多半无数据，仅兜底）。"""
     api = _search_api(key, page)
     if api.get("searchList"):
         return api
@@ -6069,7 +6287,7 @@ def _search_loader(key: str, page: int = 1) -> dict:
 
 
 def _search_by_keywords(keywords, page: int) -> dict:
-
+    """多关键词轮换：第 N 页用第 N 个关键词（循环），避免搜索无法翻页。"""
     page = max(1, int(page or 1))
     kws = [k for k in (keywords or []) if k]
     if not kws:
@@ -6077,7 +6295,7 @@ def _search_by_keywords(keywords, page: int) -> dict:
     key = kws[(page - 1) % len(kws)]
     p = _search_loader(key)
     rows = p.get("searchList") or []
-
+    # 去重空 id
     out = []
     seen = set()
     for x in rows:
@@ -6087,7 +6305,7 @@ def _search_by_keywords(keywords, page: int) -> dict:
             continue
         seen.add(vid)
         out.append(it)
-
+    # 虚拟页数：关键词数；若站点有 totalCount 也参考
     total = int(p.get("totalCount") or 0)
     pagecount = max(len(kws), (total + 9) // 10 if total else len(kws))
     return {
@@ -6100,7 +6318,7 @@ def _search_by_keywords(keywords, page: int) -> dict:
 
 
 def _hg_search_scan(key, page=1, max_pages=8):
-
+    """搜索兜底：官方搜索接口被风控时，扫官方分类页按标题命中（并发）。"""
     key = str(key or "").strip()
     page = max(1, int(page or 1))
     empty = {"page": page, "pagecount": 1, "limit": 0, "total": 0, "list": []}
@@ -6149,18 +6367,33 @@ def _hg_search_scan(key, page=1, max_pages=8):
     }
 
 
-_DM_ENABLED = True         
+# =============================================================================
+# 弹幕子系统（红果 App 评论 / 弹幕接口）
+#
+# 接口：POST https://api5-normal-lq.fqnovel.com/novel/commentapi/comment/list/{vid}/v1/
+#       body: business_param.book_id = 剧集 series_id, start_offset_time = 窗口起点(ms)
+#       返回 data.data_list[].comment.expand.offset_time（毫秒）与 .content.text
+#       按 30s 一个窗口顺序取，直到该窗口为空且 extra.next_query_danmaku_list_time > 0
+#       （说明已到片尾）。
+#
+# 签名：该接口不吃视频接口那套六神（gorgon/medusa），要的是 x-ladon + x-argus
+#       + x-ss-stub。ladon 是 34 轮 Feistel；argus 是 protobuf(25 字段) →
+#       Simon-64 分组 → 551 变体（魔数/异或/倒序）→ AES-128-CBC。
+#       下面的实现与 Hiker 版 JS 逐字节一致（同输入同随机数下 x-ladon / x-argus
+#       完全相等），因此同一份签名在 TVBox 的 Chaquopy 里也能直接用。
+# =============================================================================
+_DM_ENABLED = True          # 总开关：关掉则 playerContent 不再挂弹幕
 _DM_HOST = "api5-normal-lq.fqnovel.com"
-_DM_WINDOW_MS = 30000       
-_DM_MAX_WINDOWS = 20        
-_DM_TTL = 1800              
-_DM_FAIL_TTL = 45          
-_DM_MIN_GAP = 0.28         
-_DM_PAGE_WORKERS = 2     
-_DM_RETRY_DELAY = 6.0     
-_DM_WAIT = 18           
-_DM_IN_PLAYER = "list"    
-_DM_PUSH_LOCAL = True  
+_DM_WINDOW_MS = 30000       # 每个取数窗口（毫秒）
+_DM_MAX_WINDOWS = 20        # 最多取 20 个窗口（约 10 分钟，覆盖短剧整集）
+_DM_TTL = 1800              # 弹幕缓存有效期（秒，只用于取到内容的成功结果）
+_DM_FAIL_TTL = 45          # 取失败的结果只压 45 秒，绝不把一次失败锁死半小时
+_DM_MIN_GAP = 0.28         # 两次弹幕请求之间的最小间隔（秒），削峰防接口限流
+_DM_PAGE_WORKERS = 2       # 每批并发的取数窗口数，降低瞬时并发
+_DM_RETRY_DELAY = 6.0      # 撞上限流后隔多久再补一次
+_DM_WAIT = 18               # 弹幕路由最多等取数完成多少秒
+_DM_IN_PLAYER = "list"      # playerContent 里 danmaku 字段形态: list / url / off
+_DM_PUSH_LOCAL = True       # 额外用壳的 127.0.0.1:9978/action 推一次（老壳兜底）
 _DM_SID_MAP: dict[str, str] = {}
 _DM_CACHE: dict[str, dict[str, Any]] = {}
 _DM_EVENTS: dict[str, threading.Event] = {}
@@ -6347,6 +6580,7 @@ def _dm_pkcs7(data: bytes) -> bytes:
 
 # ---------------------------- protobuf 写入 ----------------------------
 class _DmPbuf:
+    """最小的 protobuf 编码器：字段顺序即写入顺序（与 JS 版 Pbuf 一致）。"""
 
     def __init__(self) -> None:
         self._fields: list = []
@@ -6526,8 +6760,9 @@ def _dm_sign_headers(query: str, body: bytes, device_id: str, install_id: str = 
     return headers
 
 
+# ---------------------------- 取数 ----------------------------
 def _dm_query(device_id: str) -> str:
-
+    """评论接口的固定 query（与红果 App 7.3.9.32 一致）。"""
     return (
         "device_id=%s&ac=wifi&channel=xiaomi_8662_64&aid=8662"
         "&app_name=novelread&version_code=73932&version_name=7.3.9.32"
@@ -6542,6 +6777,7 @@ def _dm_query(device_id: str) -> str:
 
 def _dm_page(vid: str, series_id: str, start_ms: int, device_id: str,
              install_id: str = "") -> tuple[list, dict, dict]:
+    """取一个时间窗的弹幕，返回 (items, common_list_info, extra)。"""
     payload = {
         "business_param": {
             "book_id": str(series_id),
@@ -6612,7 +6848,7 @@ def _dm_page(vid: str, series_id: str, start_ms: int, device_id: str,
 
 
 def _dm_fetch(vid: str, series_id: str, device_id: str, install_id: str = "") -> list:
-
+    """按 30s 窗口取整集弹幕（4 路并发，边取边判断片尾），返回按时间排序的 [{text, ms}]。"""
     global _DM_LAST_ERR
     items: list = []
     seen: set = set()
@@ -6662,7 +6898,7 @@ def _dm_fetch(vid: str, series_id: str, device_id: str, install_id: str = "") ->
                     next_ms = int(extra.get("next_query_danmaku_list_time") or 0)
                 except (TypeError, ValueError):
                     next_ms = 0
-
+                # 空窗 + 片尾时间戳 => 本集已结束，后面窗口不用再问
                 if not page and next_ms > 0:
                     stop = True
             empty_batches = empty_batches + 1 if batch_empty else 0
@@ -6679,6 +6915,7 @@ def _dm_fetch(vid: str, series_id: str, device_id: str, install_id: str = "") ->
 
 
 def _dm_rows(items: list) -> list:
+    """原始弹幕（含 ms）转成播放器行：time 秒 + type/color/text。"""
     out = []
     for row in items or []:
         if not isinstance(row, Mapping):
@@ -6711,13 +6948,17 @@ def _dm_set_state(vid: str, items: list, error: str = "") -> None:
 
 def _dm_get(vid: str, series_id: str = "", device_id: str = "", install_id: str = "",
             wait: float = 0, force: bool = False) -> dict:
+    """拿一集弹幕（带缓存 + 后台去重）。wait 秒内没取完就先返回当前状态。
 
+    force=True 时忽略缓存里「上次取失败」的结果，重新请求一次；
+    取到的内容仍然按 _DM_TTL 缓存，失败只按 _DM_FAIL_TTL 短存，避免一次限流就哑掉半小时。
+    """
     vid = str(vid or "")
     if not vid:
         return {"items": [], "error": "missing vid"}
     series_id = str(series_id or "")
     if not series_id:
-
+        # 没有 series_id（book_id）时接口只会回 103001，别浪费请求
         return {"items": [], "error": "no sid"}
     with _DM_LOCKS:
         state = dict(_DM_CACHE.get(vid) or {})
@@ -6737,7 +6978,7 @@ def _dm_get(vid: str, series_id: str = "", device_id: str = "", install_id: str 
                 items = _dm_fetch(vid, series_id, device_id, install_id)
                 if not items:
                     err = _DM_LAST_ERR or "empty"
-
+                    # 一次取空多半是撞了接口限流，歇一会儿补一次再下结论
                     if "103001" in err or "参数错误" in err:
                         try:
                             time.sleep(_DM_RETRY_DELAY)
@@ -6811,7 +7052,7 @@ def _dm_xml_escape(text: str) -> str:
 
 
 def _dm_to_xml(chat_id: str, items: list) -> bytes:
-
+    """B 站 XML 弹幕格式，DanmakuFlameMaster / 各壳原生支持。"""
     body = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         "<i><chatserver>hongguo</chatserver><chatid>%s</chatid><mission>0</mission>"
@@ -6830,7 +7071,13 @@ def _dm_to_json(items: list) -> bytes:
 
 
 def _dm_push_local(url: str, vid: str) -> None:
+    """老壳可能不读 playerContent.danmaku，用壳自己的本地接口补推一次。
 
+    短剧预载会在上一集还在播时先把下一集的 playerContent 要来（也会走到这里），
+    若当场就推，等于把下一集的弹幕源塞给正在播的这一集，切过去后壳反而不再来取。
+    所以推迟到「别的集已经几秒没有取流、这一集也没被播放器自己取过弹幕」时才推，
+    并且允许同一集隔一段时间重推（不再是一集一辈子一次）。
+    """
     if not _DM_PUSH_LOCAL or not url or not vid:
         return
     now = time.time()
@@ -6844,10 +7091,10 @@ def _dm_push_local(url: str, vid: str) -> None:
             for _i in range(8):
                 time.sleep(4.0)
                 if _DM_HIT.get(vid, 0) > time.time() - 30:
-                    return         
+                    return          # 播放器自己来取过了，不必推
                 _others = [t for k, t in list(_DM_STREAM_HIT.items()) if k != vid]
                 if _others and max(_others) > time.time() - 4.0:
-                    continue  
+                    continue        # 还有别的集在取流，说明在预载/还没切过来
                 target = "http://127.0.0.1:9978/action?do=refresh&type=danmaku&path=" + _quote(url, safe="")
                 session = requests.Session()
                 session.trust_env = False
@@ -6869,7 +7116,8 @@ class Spider(_BaseSpider):
     def _adopt_working_pair(self):
         pair = _working_device_pair()
         if pair is None:
-
+            # 冷启动（本机没有持久化设备）：先注册一对再播。
+            # 沙箱实测：随机未注册号 + 一模一样的新头，服务端照样回 200 空体。
             try:
                 pair = _rotate_stream_device()
             except Exception:
@@ -6904,7 +7152,7 @@ class Spider(_BaseSpider):
         return ""
 
     def init(self, extend=""):
-
+        # 每次源实例使用随机合法设备标识；不依赖用户私有配置。
         try:
             _hg_cache_cleanup(False)
         except Exception:
@@ -6916,7 +7164,7 @@ class Spider(_BaseSpider):
         return None
 
     def _danmaku_payload(self, port: int, vid: str) -> dict:
-
+        """把本机弹幕地址挂进 playerContent，并顺手预热取数。"""
         if not _DM_ENABLED or not port:
             return {}
         sid = _dm_series_of(vid)
@@ -6927,7 +7175,7 @@ class Spider(_BaseSpider):
             except Exception:
                 sid = ""
         if not sid:
-
+            # 剧集映射还没建立（没走过 detailContent），这集先不挂弹幕
             return {}
         query = urlencode({
             "vid": vid,
@@ -6937,7 +7185,9 @@ class Spider(_BaseSpider):
             "iid": self.install_id or "",
         })
         url = "http://127.0.0.1:%d/hg_dm?%s" % (port, query)
-
+        # 不在这里预取弹幕：短剧预载会提前替下一集调 playerContent，
+        # 于是两集弹幕请求在几百毫秒内挤在一起，最容易撞上接口限流（code=103001），
+        # 一旦那次失败被当成结论，切过去就再没有弹幕了。改由播放器真来取 /hg_dm 时再拉。
         _dm_push_local(url, vid)
         label = "红果弹幕"
         if _DM_IN_PLAYER == "url":
@@ -6953,7 +7203,7 @@ class Spider(_BaseSpider):
             pass
 
     def homeContent(self, filter):
-
+        """分类=官方四套内容类型（真人剧/漫剧/AI剧/漫画），二级分类取官方分类路由。"""
         class_list = [{"type_id": k, "type_name": n} for k, n, _ in _HG_CONTENT_TYPES]
         class_list.append({"type_id": _HG_SEASON_TID, "type_name": u"分季"})
         filters = {}
@@ -6976,7 +7226,7 @@ class Spider(_BaseSpider):
         return {"class": class_list, "filters": filters, "list": vlist}
 
     def categoryContent(self, tid, pg, filter, extend):
-
+        """走官方分类页 /category/{route}/{item}?page=N，标题取官方 series_name。"""
         try:
             page = max(1, int(pg))
         except (TypeError, ValueError):
@@ -7019,7 +7269,7 @@ class Spider(_BaseSpider):
         except (TypeError, ValueError):
             page = 1
         key = str(key or "").strip() or "短剧"
-
+        # AI/漫剧相关搜索也走关键词轮换，提升翻页体验
         low = key.lower()
         if key in ("AI漫剧", "ai漫剧") or "ai漫" in low:
             return _search_by_keywords(_AI_MANJU_KEYWORDS, page)
@@ -7029,7 +7279,7 @@ class Spider(_BaseSpider):
         p = _search_loader(key, page)
         rows = p.get("searchList") or []
         if not rows:
-
+            # 官方搜索风控不可用时，扫官方分类页按标题命中兜底
             scanned = _hg_search_scan(key, page)
             if scanned.get("list"):
                 return scanned
@@ -7070,10 +7320,10 @@ class Spider(_BaseSpider):
         sid = sid.replace("hg-series-v1:", "")
         s = {}
         seasons = []
-
+        # 磁盘缓存（6 小时）：同一部剧二次进入零请求
         try:
             _c = _hg_disk_load().get(sid)
-            if isinstance(_c, dict) and _c.get("v") == 4 and time.time() - float(_c.get("ts") or 0) < (
+            if isinstance(_c, dict) and _c.get("v") == 4 and _hg_cache_has_vids(_c.get("self")) and time.time() - float(_c.get("ts") or 0) < (
                     12 * 3600 if len(_c.get("seasons") or []) > 1 else 24 * 3600):
                 seasons = [(int(x.get("no") or 0), x.get("sd") or {})
                            for x in (_c.get("seasons") or []) if isinstance(x, dict)]
@@ -7099,7 +7349,7 @@ class Spider(_BaseSpider):
                 _payload = {"v": 4, "ts": time.time(), "self": _hg_slim(s),
                             "seasons": [{"no": no, "sd": _hg_slim(d)} for no, d in seasons]}
                 _all[sid] = _payload
-
+                # 同组的其它季也各存一份，从搜索直接点别的季也能零请求命中
                 for _no, _d in seasons:
                     _xid = str(_d.get("series_id") or "")
                     if _xid and _xid != sid:
@@ -7109,7 +7359,7 @@ class Spider(_BaseSpider):
                 pass
         vids = s.get("vid_list") or []
         actors = [str(x.get("nickname")) for x in (s.get("celebrities") or []) if isinstance(x, dict) and x.get("nickname")]
-
+        # 弹幕映射：把每一季的每一集都登记到本剧
         try:
             _dm_series_load()
             for _no, _d in seasons:
@@ -7123,14 +7373,14 @@ class Spider(_BaseSpider):
         play_from = []
         play_url = []
         if len(seasons) > 1:
-
+            # 多季：一季一条线路，画质固定超清（1080），线路名「第一季 超清」
             used = set()
-
+            # 季号 → 线路名：按季号排位命名，没季号的按它在序列里的位次补
             seq = sorted(seasons, key=lambda t: (t[0] if t[0] else 1))
             label_of = {}
             for i, (no, d) in enumerate(seq, 1):
                 label_of[id(d)] = u"第%s季" % _hg_cn(no if no else i)
-
+            # 当前点进来的那一季排第一，壳默认选中的就是它，避免点第五季却落在第一季上
             def _is_self(d):
                 if d is s:
                     return True
@@ -7151,7 +7401,7 @@ class Spider(_BaseSpider):
                 play_from.append(label)
                 play_url.append(eps)
         if not play_from:
-
+            # 单季：沿用模板五档画质线路，原样不动
             for q, line_name in _HG_QUALITY_LINES:
                 eps = "#".join(
                     "%d%s%s%s%s:%s" % (i + 1, "$", EPISODE_PREFIX, q, "", str(v))
@@ -7159,7 +7409,8 @@ class Spider(_BaseSpider):
                 )
                 play_from.append(line_name)
                 play_url.append(eps)
-
+        # 弹幕映射补齐：详情命中磁盘缓存时，上面登记 vid 的那段会被跳过，
+        # 导致 playerContent 里算不出 sid、弹幕字段直接消失。这里按最终播放列表补一遍。
         try:
             _seen_vid = set()
             for _grp in play_url:
@@ -7177,7 +7428,8 @@ class Spider(_BaseSpider):
 
     def playerContent(self, flag, id, vipFlags=None):
         self._adopt_working_pair()
-
+        # 从线路名（flag，如“红果超清/红果高清”）与集 token 双路解析清晰度。
+        # token 已是 'hg-episode-v1:<q>:<vid>'，flag 用于旧壳只传线路名时兜底。
         token_q, vid = _split_episode_token(id)
         line_q = "1080"
         for name_key, candidate_q in _QUALITY_LINE_NAME_TO_Q.items():
@@ -7194,7 +7446,15 @@ class Spider(_BaseSpider):
                 "url": SITE + "/",
                 "header": {"User-Agent": UA},
             }
-
+        # 取流优先级：本机 Range 流服务 > 壳代理。
+        # 壳代理（fongmi / OK影视 的 /proxy?do=py）实测会忽略 Range：对 bytes=0-1023
+        # 也回 200 + 整片 + chunked，既无 Content-Range 也无 Accept-Ranges，且必须
+        # 等整片下载 + CENC 解密完成后才吐首字节（单集 12~17MB，实测 8.7s / 16.3s，
+        # 超过播放器默认 8s 读超时）。首集常因缓存或重试侥幸起播，切到第二集时播放器
+        # 按新 URL 重新请求即超时失败，表现为“第 1 集能放、第 2 集不能放”。
+        # 本机流服务支持 206 / Content-Range / Accept-Ranges，首字节约 1s，切集稳定。
+        # 会话构建（取 video_model + 拉 moov）在冷启动时约 3~18s，若等到播放器连上来
+        # 才建会话，响应头会被拖延到读超时。这里先异步预热会话，让播放器连接时命中缓存。
         def _warm_session():
             try:
                 _stream_session(vid, {
@@ -7232,7 +7492,7 @@ class Spider(_BaseSpider):
             except Exception:
                 pass
             return result
-
+        # 回退：壳代理（保留壳自带的 do=py，不要覆盖 do）
         proxy = ""
         try:
             if hasattr(self, "getProxyUrl"):
@@ -7270,11 +7530,11 @@ class Spider(_BaseSpider):
 
 
     def proxy(self, param):
-
+        """部分壳调用 proxy 而不是 localProxy。"""
         return self.localProxy(param)
 
     def localProxy(self, param):
-
+        """壳本地代理：优先读缓存；无原生 AES 时避免一上来就解 1080 整集导致超时失败。"""
         import traceback
         param = param or {}
         self._adopt_working_pair()
@@ -7299,7 +7559,7 @@ class Spider(_BaseSpider):
                 "install_id": str(param.get("iid") or self.install_id or ""),
             }
             user_q = str(param.get("q") or param.get("quality") or "").strip()
-
+            # 有原生 AES：优先 1080；纯 Python AES 很慢：先 720 保证能播，再尝试更高
             if user_q:
                 order = [user_q, "1080", "480"]
             elif _aes_is_fast():
@@ -7314,6 +7574,8 @@ class Spider(_BaseSpider):
                     seen_q.add(q)
                     quals.append(q)
 
+            # 缓存命中直接返回。用户指定线路清晰度(user_q)时，只认该清晰度缓存，
+            # 不能回退命中其它清晰度缓存（否则请求480会拿到360内容）。
             if user_q:
                 primary = [user_q]
             else:
@@ -7351,13 +7613,13 @@ class Spider(_BaseSpider):
             last_err = None
             for wanted in quals:
                 try:
-
+                    # 再查一次该清晰度缓存（model 解析后）
                     cached = _hg_cache_get(vid, wanted)
                     if cached and _hg_cached_ok(cached):
                         return [200, "video/mp4", cached]
 
                     if _hg_is_bytevc2(rows):
-
+                        # 只认这一档自己验过的标准 hvc1 直通流；encv 是加密壳，不能直接回吐
                         try:
                             plain_sess = _hg_plain_session(model, wanted, True)
                         except Exception:
@@ -7395,7 +7657,7 @@ class Spider(_BaseSpider):
                     except Exception:
                         pass
 
-
+                    # 下载超时：纯 AES 环境更短，避免壳端空等后失败
                     dl_timeout = 150 if _aes_is_fast() else 90
                     media_headers = {
                         "User-Agent": MEDIA_UA,
@@ -7415,7 +7677,7 @@ class Spider(_BaseSpider):
                         last_err = "empty body q=%s" % wanted
                         continue
 
-
+                    # 纯 AES 且体积过大时跳过超大 1080，减少必超时
                     if (not _aes_is_fast()) and wanted in ("1080", "4k") and len(body) > 45 * 1024 * 1024:
                         last_err = "skip large %s without native AES size=%s" % (wanted, len(body))
                         continue
@@ -7424,7 +7686,7 @@ class Spider(_BaseSpider):
                     if len(plain) < 64 or (b"ftyp" not in plain[:64] and b"moov" not in plain[:4096]):
                         last_err = "bad mp4 after decrypt q=%s" % wanted
                         continue
-
+                    # 视轨校验：个别清晰度解出来只有音轨，换下一个清晰度，避免播出「只有声音」的片
                     _mo, _ms = _find_box(memoryview(plain), b"moov", 0)
                     if _mo >= 0 and _ms > 8 and not _moov_has_video_track(bytes(plain[_mo : _mo + _ms])):
                         last_err = "no video track q=%s" % wanted

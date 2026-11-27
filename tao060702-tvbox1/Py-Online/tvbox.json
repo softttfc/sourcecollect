@@ -1,0 +1,408 @@
+{
+  "spider": "",
+  "logo": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/icon.gif",
+  "icon": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/icon.gif",
+  "sites": [
+    {
+      "key": "Kishuto",
+      "name": "Kishuto 聚合",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261117.181436/Kishuto.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    },
+    {
+      "key": "xifan_dm",
+      "name": "稀饭动漫",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261111.231907/xifan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "lines": [
+          "xf"
+        ],
+        "detail_budget": 3
+      }
+    },
+    {
+      "key": "dmghg",
+      "name": "动漫共和",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261119.014513/dmghg.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    },
+    {
+      "key": "muou",
+      "name": "木偶「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/muou.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "wanou",
+      "name": "玩偶「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/wanou.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "duoduo",
+      "name": "多多「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/duoduo.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "ouge",
+      "name": "欧歌「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/ouge.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "erxiao",
+      "name": "二小「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/erxiao.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "huban",
+      "name": "虎斑「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/huban.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "kuaiying",
+      "name": "快映「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/kuaiying.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "huajuan",
+      "name": "花卷「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/huajuan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "kuafu",
+      "name": "夸父「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/kuafu.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "夸父cookie": ""
+      }
+    },
+    {
+      "key": "pan123",
+      "name": "123「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/pan123.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "123cookie": ""
+      }
+    },
+    {
+      "key": "kaka",
+      "name": "卡卡「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/kaka.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96",
+        "fast": "1"
+      }
+    },
+    {
+      "key": "jike",
+      "name": "即刻「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/jike.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "zhinan",
+      "name": "指南「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/zhinan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "shuangxing",
+      "name": "双星「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/shuangxing.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "aipan",
+      "name": "爱盼「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/aipan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "mipan",
+      "name": "觅盘「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/mipan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "qupan",
+      "name": "趣盘「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/qupan.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "pansou",
+      "name": "盘搜「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/pansou.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "pansou2",
+      "name": "盘搜2「免扫网盘」",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261125.224800/pansou2.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "changeable": 1,
+      "ext": {
+        "uc_cookie": "",
+        "quark_cookie": "",
+        "accel": "1",
+        "accel_thread": "96"
+      }
+    },
+    {
+      "key": "lieshou",
+      "name": "猎手影视",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261120.172256/lieshou.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    },
+    {
+      "key": "mifun",
+      "name": "MiFun动漫",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261120.172256/mifun.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    }
+  ],
+  "parses": [
+    {
+      "name": "聚合",
+      "type": 3,
+      "url": "Web"
+    }
+  ],
+  "flags": [
+    "youku",
+    "qq",
+    "iqiyi",
+    "qiyi",
+    "letv",
+    "sohu",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "wasu",
+    "bilibili"
+  ],
+  "lives": [
+    {
+      "name": "默认直播",
+      "type": 0,
+      "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/live.m3u",
+      "playerType": 0,
+      "ua": "",
+      "epg": "",
+      "logo": ""
+    }
+  ]
+}

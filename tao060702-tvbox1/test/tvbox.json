@@ -1,0 +1,85 @@
+{
+  "spider": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/test/spider-20261117c.jar;md5;dacb25969d2e4fb9c8af056879b9f8d6",
+  "logo": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/test/icon.gif",
+  "icon": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/test/icon.gif",
+  "sites": [
+    {
+      "key": "agg4k",
+      "name": "Kishuto 4K",
+      "type": 3,
+      "api": "csp_Agg4K",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "timeout": 60
+      }
+    },
+    {
+      "key": "kishuto_py",
+      "name": "Kishuto 4K .py（Win和Android可用）",
+      "type": 3,
+      "api": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/test/Kishuto.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": ""
+    },
+    {
+      "key": "xifan",
+      "name": "稀饭动漫",
+      "type": 3,
+      "api": "csp_XifanTemplate",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "timeout": 10
+      }
+    },
+    {
+      "key": "girigiri",
+      "name": "GiriGiri爱",
+      "type": 3,
+      "api": "csp_GiriGiriLove",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "timeout": 10
+      }
+    },
+    {
+      "key": "aki",
+      "name": "Aki动漫",
+      "type": 3,
+      "api": "csp_AkiAnime",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": {
+        "timeout": 15
+      }
+    }
+  ],
+  "parses": [
+    {
+      "name": "聚合",
+      "type": 3,
+      "url": "Web"
+    }
+  ],
+  "flags": [
+    "qq",
+    "qiyi",
+    "youku",
+    "mgtv",
+    "bilibili",
+    "优酷",
+    "腾讯",
+    "爱奇艺",
+    "芒果",
+    "哔哩"
+  ],
+  "lives": []
+}

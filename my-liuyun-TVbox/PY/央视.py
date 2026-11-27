@@ -29,7 +29,8 @@ class Spider(Spider):  # 元类 默认的元类 type
 			"电视剧": "电视剧",
 			"动画片": "动画片",
 			"纪录片": "纪录片",
-			"特别节目": "特别节目"
+			"特别节目": "特别节目",
+			"直播大全": "直播大全"
 		}
 		classes = []
 		for k in cateManual:
@@ -105,17 +106,50 @@ class Spider(Spider):  # 元类 默认的元类 type
 				fl=extend['fl']
 			url = 'https://api.cntv.cn/lanmu/columnSearch?&fl={0}&fc={1}&cid={2}&p={3}&n=20&serviceId=tvcctv&t=json&cb=ko'.format(fl,fc,cid,pg)
 			pagecount=20
+		elif tid=='直播大全':
+			url = ''
 		else:
 			url = 'https://tv.cctv.com/epg/index.shtml'
 
 		videos=[]
-		htmlText =self.webReadFile(urlStr=url,header=self.header)
-		if tid=='栏目大全':
+		if tid=='直播大全':
+			channelList=[
+				('CCTV-1','CCTV-1 综合','cctv1','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-2','CCTV-2 财经','cctv2','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-3','CCTV-3 综艺','cctv3','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-4','CCTV-4 中文国际','cctv4','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-5','CCTV-5 体育','cctv5','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-5+','CCTV-5+ 体育赛事','cctv5plus','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-6','CCTV-6 电影','cctv6','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-7','CCTV-7 国防军事','cctv7','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-8','CCTV-8 电视剧','cctv8','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-9','CCTV-9 纪录','cctvjilu','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-10','CCTV-10 科教','cctv10','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-11','CCTV-11 戏曲','cctv11','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-12','CCTV-12 社会与法','cctv12','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-13','CCTV-13 新闻','cctv13','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-14','CCTV-14 少儿','cctvchild','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-15','CCTV-15 音乐','cctv15','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-16','CCTV-16 奥林匹克','cctv16','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg'),
+				('CCTV-17','CCTV-17 农业农村','cctv17','//p4.img.cctvpic.com/photoAlbum/page/performance/img/2021/11/19/1637293545457_544.jpg')
+			]
+			for cid,cname,slug,pic in channelList:
+				liveUrl='https://tv.cctv.com/live/{0}/'.format(slug)
+				vod={
+					'vod_id':'直播大全###{0}###{1}###{2}#######{3}######'.format(cname,liveUrl,pic,cid),
+					'vod_name':cname,
+					'vod_pic':'https:'+pic,
+					'vod_remarks':'高清直播'
+				}
+				videos.append(vod)
+		elif tid=='栏目大全':
+			htmlText =self.webReadFile(urlStr=url,header=self.header)
 			index=htmlText.rfind(');')
 			if index>-1:
 				htmlText=htmlText[3:index]
 				videos =self.get_list1(html=htmlText,tid=tid)
 		else:
+			htmlText =self.webReadFile(urlStr=url,header=self.header)
 			videos =self.get_list(html=htmlText,tid=tid)
 		#print(videos)
 		
@@ -129,6 +163,47 @@ class Spider(Spider):  # 元类 默认的元类 type
 		result={}
 		aid = array[0].split('###')
 		tid = aid[0]
+		if tid=="直播大全":
+			title = aid[1]
+			id = aid[4]
+			channelSlug={
+				'CCTV-1':'cctv1','CCTV-2':'cctv2','CCTV-3':'cctv3','CCTV-4':'cctv4',
+				'CCTV-5':'cctv5','CCTV-5+':'cctv5plus','CCTV-6':'cctv6','CCTV-7':'cctv7',
+				'CCTV-8':'cctv8','CCTV-9':'cctvjilu','CCTV-10':'cctv10','CCTV-11':'cctv11',
+				'CCTV-12':'cctv12','CCTV-13':'cctv13','CCTV-14':'cctvchild','CCTV-15':'cctv15',
+				'CCTV-16':'cctv16','CCTV-17':'cctv17'
+			}
+			slug=channelSlug.get(id,'cctv1')
+			# liveplayer.js 硬编码的 6 路 CDN fallback
+			cdn_hosts=[
+				('myqcloud-txy','ldn{0}wbndtxy.liveplay.myqcloud.com'),
+				('myhwcdn-hwy','ldn{0}wbndhwy.cntv.myhwcdn.cn'),
+				('bdydns-bd','ldn{0}wbndbd.a.bdydns.com'),
+				('wscdns-cnc','ldn{0}wbndcnc.v.wscdns.com'),
+				('kcdnvip-ks','ldn{0}wbndks.v.kcdnvip.com'),
+				('myalicdn-ali','ldn{0}wbndali.v.myalicdn.com'),
+			]
+			cdn_urls=[]
+			for cname,chost in cdn_hosts:
+				u='http://{0}/ldn{1}wbnd/ld{1}_2/index.m3u8'.format(chost.format(slug),slug)
+				cdn_urls.append('{0}${1}'.format(cname,u))
+			playUrl='#'.join(cdn_urls)
+			vod={
+				"vod_id":array[0],
+				"vod_name":title,
+				"vod_pic":aid[3],
+				"type_name":"直播",
+				"vod_year":"",
+				"vod_area":"",
+				"vod_remarks":'高清直播',
+				"vod_actor":"",
+				"vod_director":"",
+				"vod_content":"中央电视台 {0} 24小时不间断高清直播".format(title)
+			}
+			vod['vod_play_from']='CCTV直播'
+			vod['vod_play_url']=playUrl
+			result={'list':[vod]}
+			return result
 		logo = aid[3]
 		lastVideo = aid[2]
 		title = aid[1]
@@ -227,7 +302,10 @@ class Spider(Spider):  # 元类 默认的元类 type
 		headers = {
 			'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 		}
-		if flag=='CCTV':
+		if flag=='CCTV直播':
+			url=id
+			parse=0
+		elif flag=='CCTV':
 			url=self.get_m3u8(urlTxt=id)
 		else:
 			try:
@@ -237,7 +315,7 @@ class Spider(Spider):  # 元类 默认的元类 type
 			except :
 				url=id
 				parse=1
-		if url.find('https:')<0:
+		if url.find('https:')<0 and flag!='CCTV直播':
 			url=id
 			parse=1
 		result["parse"] = parse#1=嗅探,0=播放
@@ -269,7 +347,8 @@ class Spider(Spider):  # 元类 默认的元类 type
 		{"key":"datafl-sc","name":"类型","value":[{"n":"全部","v":""},{"n":"全部","v":"全部"},{"n":"新闻","v":"新闻"},{"n":"经济","v":"经济"},{"n":"综艺","v":"综艺"},{"n":"体育","v":"体育"},{"n":"军事","v":"军事"},{"n":"影视","v":"影视"},{"n":"科教","v":"科教"},{"n":"戏曲","v":"戏曲"},{"n":"青少","v":"青少"},{"n":"音乐","v":"音乐"},{"n":"社会","v":"社会"},{"n":"公益","v":"公益"},{"n":"其他","v":"其他"}]},
 		{"key":"dataszm-letter","name":"字母","value":[{"n":"全部","v":""},{"n":"A","v":"A"},{"n":"C","v":"C"},{"n":"E","v":"E"},{"n":"F","v":"F"},{"n":"G","v":"G"},{"n":"H","v":"H"},{"n":"I","v":"I"},{"n":"J","v":"J"},{"n":"K","v":"K"},{"n":"L","v":"L"},{"n":"M","v":"M"},{"n":"N","v":"N"},{"n":"O","v":"O"},{"n":"P","v":"P"},{"n":"Q","v":"Q"},{"n":"R","v":"R"},{"n":"S","v":"S"},{"n":"T","v":"T"},{"n":"U","v":"U"},{"n":"V","v":"V"},{"n":"W","v":"W"},{"n":"X","v":"X"},{"n":"Y","v":"Y"},{"n":"Z","v":"Z"},{"n":"0-9","v":"0-9"}]}
 		],
-		"栏目大全":[{"key":"cid","name":"频道","value":[{"n":"全部","v":""},{"n":"CCTV-1综合","v":"EPGC1386744804340101"},{"n":"CCTV-2财经","v":"EPGC1386744804340102"},{"n":"CCTV-3综艺","v":"EPGC1386744804340103"},{"n":"CCTV-4中文国际","v":"EPGC1386744804340104"},{"n":"CCTV-5体育","v":"EPGC1386744804340107"},{"n":"CCTV-6电影","v":"EPGC1386744804340108"},{"n":"CCTV-7国防军事","v":"EPGC1386744804340109"},{"n":"CCTV-8电视剧","v":"EPGC1386744804340110"},{"n":"CCTV-9纪录","v":"EPGC1386744804340112"},{"n":"CCTV-10科教","v":"EPGC1386744804340113"},{"n":"CCTV-11戏曲","v":"EPGC1386744804340114"},{"n":"CCTV-12社会与法","v":"EPGC1386744804340115"},{"n":"CCTV-13新闻","v":"EPGC1386744804340116"},{"n":"CCTV-14少儿","v":"EPGC1386744804340117"},{"n":"CCTV-15音乐","v":"EPGC1386744804340118"},{"n":"CCTV-16奥林匹克","v":"EPGC1634630207058998"},{"n":"CCTV-17农业农村","v":"EPGC1563932742616872"},{"n":"CCTV-5+体育赛事","v":"EPGC1468294755566101"}]},{"key":"fc","name":"分类","value":[{"n":"全部","v":""},{"n":"新闻","v":"新闻"},{"n":"体育","v":"体育"},{"n":"综艺","v":"综艺"},{"n":"健康","v":"健康"},{"n":"生活","v":"生活"},{"n":"科教","v":"科教"},{"n":"经济","v":"经济"},{"n":"农业","v":"农业"},{"n":"法治","v":"法治"},{"n":"军事","v":"军事"},{"n":"少儿","v":"少儿"},{"n":"动画","v":"动画"},{"n":"纪实","v":"纪实"},{"n":"戏曲","v":"戏曲"},{"n":"音乐","v":"音乐"},{"n":"影视","v":"影视"}]},{"key":"fl","name":"字母","value":[{"n":"全部","v":""},{"n":"A","v":"A"},{"n":"B","v":"B"},{"n":"C","v":"C"},{"n":"D","v":"D"},{"n":"E","v":"E"},{"n":"F","v":"F"},{"n":"G","v":"G"},{"n":"H","v":"H"},{"n":"I","v":"I"},{"n":"J","v":"J"},{"n":"K","v":"K"},{"n":"L","v":"L"},{"n":"M","v":"M"},{"n":"N","v":"N"},{"n":"O","v":"O"},{"n":"P","v":"P"},{"n":"Q","v":"Q"},{"n":"R","v":"R"},{"n":"S","v":"S"},{"n":"T","v":"T"},{"n":"U","v":"U"},{"n":"V","v":"V"},{"n":"W","v":"W"},{"n":"X","v":"X"},{"n":"Y","v":"Y"},{"n":"Z","v":"Z"}]},{"key":"year","name":"年份","value":[{"n":"全部","v":""},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"},{"n":"2018","v":"2018"},{"n":"2017","v":"2017"},{"n":"2016","v":"2016"},{"n":"2015","v":"2015"},{"n":"2014","v":"2014"},{"n":"2013","v":"2013"},{"n":"2012","v":"2012"},{"n":"2011","v":"2011"},{"n":"2010","v":"2010"},{"n":"2009","v":"2009"},{"n":"2008","v":"2008"},{"n":"2007","v":"2007"},{"n":"2006","v":"2006"},{"n":"2005","v":"2005"},{"n":"2004","v":"2004"},{"n":"2003","v":"2003"},{"n":"2002","v":"2002"},{"n":"2001","v":"2001"},{"n":"2000","v":"2000"}]},{"key":"month","name":"月份","value":[{"n":"全部","v":""},{"n":"12","v":"12"},{"n":"11","v":"11"},{"n":"10","v":"10"},{"n":"09","v":"09"},{"n":"08","v":"08"},{"n":"07","v":"07"},{"n":"06","v":"06"},{"n":"05","v":"05"},{"n":"04","v":"04"},{"n":"03","v":"03"},{"n":"02","v":"02"},{"n":"01","v":"01"}]}]
+		"栏目大全":[{"key":"cid","name":"频道","value":[{"n":"全部","v":""},{"n":"CCTV-1综合","v":"EPGC1386744804340101"},{"n":"CCTV-2财经","v":"EPGC1386744804340102"},{"n":"CCTV-3综艺","v":"EPGC1386744804340103"},{"n":"CCTV-4中文国际","v":"EPGC1386744804340104"},{"n":"CCTV-5体育","v":"EPGC1386744804340107"},{"n":"CCTV-6电影","v":"EPGC1386744804340108"},{"n":"CCTV-7国防军事","v":"EPGC1386744804340109"},{"n":"CCTV-8电视剧","v":"EPGC1386744804340110"},{"n":"CCTV-9纪录","v":"EPGC1386744804340112"},{"n":"CCTV-10科教","v":"EPGC1386744804340113"},{"n":"CCTV-11戏曲","v":"EPGC1386744804340114"},{"n":"CCTV-12社会与法","v":"EPGC1386744804340115"},{"n":"CCTV-13新闻","v":"EPGC1386744804340116"},{"n":"CCTV-14少儿","v":"EPGC1386744804340117"},{"n":"CCTV-15音乐","v":"EPGC1386744804340118"},{"n":"CCTV-16奥林匹克","v":"EPGC1634630207058998"},{"n":"CCTV-17农业农村","v":"EPGC1563932742616872"},{"n":"CCTV-5+体育赛事","v":"EPGC1468294755566101"}]},{"key":"fc","name":"分类","value":[{"n":"全部","v":""},{"n":"新闻","v":"新闻"},{"n":"体育","v":"体育"},{"n":"综艺","v":"综艺"},{"n":"健康","v":"健康"},{"n":"生活","v":"生活"},{"n":"科教","v":"科教"},{"n":"经济","v":"经济"},{"n":"农业","v":"农业"},{"n":"法治","v":"法治"},{"n":"军事","v":"军事"},{"n":"少儿","v":"少儿"},{"n":"动画","v":"动画"},{"n":"纪实","v":"纪实"},{"n":"戏曲","v":"戏曲"},{"n":"音乐","v":"音乐"},{"n":"影视","v":"影视"}]},{"key":"fl","name":"字母","value":[{"n":"全部","v":""},{"n":"A","v":"A"},{"n":"B","v":"B"},{"n":"C","v":"C"},{"n":"D","v":"D"},{"n":"E","v":"E"},{"n":"F","v":"F"},{"n":"G","v":"G"},{"n":"H","v":"H"},{"n":"I","v":"I"},{"n":"J","v":"J"},{"n":"K","v":"K"},{"n":"L","v":"L"},{"n":"M","v":"M"},{"n":"N","v":"N"},{"n":"O","v":"O"},{"n":"P","v":"P"},{"n":"Q","v":"Q"},{"n":"R","v":"R"},{"n":"S","v":"S"},{"n":"T","v":"T"},{"n":"U","v":"U"},{"n":"V","v":"V"},{"n":"W","v":"W"},{"n":"X","v":"X"},{"n":"Y","v":"Y"},{"n":"Z","v":"Z"}]},{"key":"year","name":"年份","value":[{"n":"全部","v":""},{"n":"2022","v":"2022"},{"n":"2021","v":"2021"},{"n":"2020","v":"2020"},{"n":"2019","v":"2019"},{"n":"2018","v":"2018"},{"n":"2017","v":"2017"},{"n":"2016","v":"2016"},{"n":"2015","v":"2015"},{"n":"2014","v":"2014"},{"n":"2013","v":"2013"},{"n":"2012","v":"2012"},{"n":"2011","v":"2011"},{"n":"2010","v":"2010"},{"n":"2009","v":"2009"},{"n":"2008","v":"2008"},{"n":"2007","v":"2007"},{"n":"2006","v":"2006"},{"n":"2005","v":"2005"},{"n":"2004","v":"2004"},{"n":"2003","v":"2003"},{"n":"2002","v":"2002"},{"n":"2001","v":"2001"},{"n":"2000","v":"2000"}]},{"key":"month","name":"月份","value":[{"n":"全部","v":""},{"n":"12","v":"12"},{"n":"11","v":"11"},{"n":"10","v":"10"},{"n":"09","v":"09"},{"n":"08","v":"08"},{"n":"07","v":"07"},{"n":"06","v":"06"},{"n":"05","v":"05"},{"n":"04","v":"04"},{"n":"03","v":"03"},{"n":"02","v":"02"},{"n":"01","v":"01"}]}],
+		"直播大全":[]
 		}
 		}
 	header = {

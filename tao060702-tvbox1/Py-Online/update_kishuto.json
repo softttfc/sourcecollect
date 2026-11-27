@@ -1,0 +1,8 @@
+{
+  "version": "20261117.181436",
+  "url": "https://gh-proxy.org/https://raw.githubusercontent.com/tao200672/API/main/Py-Online/tv/20261117.181436/Kishuto.py",
+  "sha256": "d232ec1406de8169ba37ce7614f98858bfd1c9946c8921516861b46638779db0",
+  "size": 534983,
+  "note": "纯py版改为明文源码，移除封装层；功能与 20261117.062521 一致",
+  "at": "2026-11-17 18:14:36"
+}

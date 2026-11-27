@@ -98,13 +98,6 @@
     "indexs": 0
 },
 {
-    "key": "csp_飞娱",
-    "name": "🍬┃影視┃飞娱",
-    "type": 3,
-    "api": "csp_Feiyu",
-    "indexs": 0
-},
-{
     "key": "csp_瓜子",
     "name": "🥑┃影視┃瓜子",
     "type": 3,
@@ -123,39 +116,6 @@
     "name": "🦓┃影視┃马猴",
     "type" : 3 , 
     "api" : "https://testingcf.jsdelivr.net/gh/LIUJEI/TS@main/TS/mahou.js"
-},
-{
-    "key": "js_腾讯视频",
-    "name": "🐧┃影視┃企鹅4K",
-    "type": 3,
-    "api": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/YS/qq4K.js"
-},
-{
-    "key": "fengyei",
-    "name": "🍁┃影視┃枫叶",
-    "type": 3,
-    "api": "csp_XBPQ",
-    "ext": "https://testingcf.jsdelivr.net/gh/LIUJEI/TS@main/TS/fengyei.php",
-    "indexs": 0
-},
-{
-    "key": "师兄",
-    "name": "🐒┃师兄┃APP",
-    "type": 3,
-    "api": "csp_AppV7",
-    "ext": {
-    "host": "http://app2.dsx.ac/ndsx.php",
-    "version": "4.0.6",
-    "version_number": "4006",
-    "pk_id": "com.qdsj.zxt.hzjc",
-    "build_time": "1790053427039",
-    "sign_md5": "56a4bb80bd67422e9c5b48f003d445c8",
-    "apk_length": "59954699",
-    "platform": "",
-    "platform_version": "TP1A.220624.014",
-    "user_agent": "Dart/3.11 (dart:io)",
-    "private_key": "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAO9omsi+ys7fmBH3w1d0DfvRAQlj0wLB1BI3Xsb9WSiu4lEc1Me+XubnzTxaQPCBbnuZURerRrO981n9GhsQkDcWmtW+X1mpCllOWt8bbnWwKPsHqemRFxncDWE/d0nA9yrZn6nLVy/J7DJ3cVJlIs9bNLArqEiR8KVrAf1PNSLXAgMBAAECgYBGPn3z2q8s5cP7uaOSHFYiBZ/1PlniXDa6JY7ked9YJX/35qqz9LJps6evRpf5OTDOiRyXAkUbZedqBu5K9KArSGVyxp/Vym4b0siEVeM8qq9Gbf74lHPH+L+X/NmXemydwZHR1lU9PiLJVMsh8o6aAazkB8ijZcsNMyYZUSH36QJBAPvHq511Uz45lx5BtVSZClcUnqPRFSmNnRdjATikDzFTObemnGJU3eL/7VIPWtjEj9LvGP/WyX6gyo1zKc8BRtUCQQDza9oFnSmMHPkvrll/zMxcy3FeOTW0hctBhdIMbBmjJJyhlfTmBOvxwm8I91F05ydkSZ1yLuLhAjLxbjqs2fD7AkB/KOHQvW+UTqu22ULGfiCNyFkyrSc9/EqphBQa0ijmJX1R9nCm7Ou/eLgYKK8eKW/l/WGn3IeZT4XdGJu185QdAkBthqmivQRktuSoP5qlllCdsCxiaPtxLoI2CTBpxnoCngab7g0zMiO3s/Sh5CYSo69lwHnHVrFe7M5fM2nTPHzhAkEAiJETUvYFwCVKNGTYMzUg7v3QblqYXB+IhzcU37sHZOn6a46V5eJDadavIvuEmoxJHWTybi+1ZkN7LeUUg4ylCw=="
-}
 },
 {
     "key": "csp_蓝鸟",
@@ -178,18 +138,6 @@
     "url": "http://103.217.190.91:5566",
     "dataKey": "hagYExMdMkeWfemK",
     "dataIv": "hagYExMdMkeWfemK",
-    "init": "initV122",
-    "ua": "okhttp/3.10.0"}
-},
-{
-    "key": "王子",
-    "name": "🤵🏻┃王子┃APP",
-    "type": 3,
-    "api": "csp_AppGet",
-    "ext": {
-    "url": "https://app.95112475.xyz",
-    "dataKey": "5a9w6x58dsq6z3a6",
-    "dataIv": "5a9w6x58dsq6z3a6",
     "init": "initV122",
     "ua": "okhttp/3.10.0"}
 },
@@ -249,22 +197,6 @@
     "site": "https://1851089669.cdn.123clouddisk.com/1851089669/44107727",
     "version": "6.0.0.1",
     "decrypt": "0"}
-},
-{
-    "key": "橘汁",
-    "name": "🍋┃橘汁┃APP",
-    "type": 3,
-    "api": "csp_AppDrama",
-    "ext": {
-    "appName": "橘汁",
-    "publicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCr8SzZhjYy+rsya1K09t8d2K50pWFoBkgUqMpKOiW+3IEVKd4eTdvg9RSOjQ82kypL6R9BnsmrS1V8s4PVDwjQbUtYhTPPC9Hz16qY7rpD6m0d2vr09/UpWQ5uOy9PR0QTrsioveZ+DIe9jc3C+zBCu/kZSY/R8stwJoiitki3gwIDAQAB",
-    "dataKey": "ZU1DSFFWNENKMDYXVUQRN0ZJDUC4PQ==",
-    "dataIv": "OC1A06E197EF10CF3F6058CA7A803B5E",
-    "pkg": "com.asjdhjhd.mgd.p3",
-    "host": "",
-    "site": "https://1848463092.cdn.123clouddisk.com/1848463092/cct/az.txt",
-    "version": "3.0.7.0",
-    "decrypt": "1"}
 },
 {
     "key": "csp_banriys",
@@ -439,42 +371,6 @@
     "indexs" : 0
 },
 {
-    "key": "赏月",
-    "name": "💢┃赏月┃动漫",
-    "type": 3,
-    "api": "csp_AnimeTsukimi"
-},
-{
-    "key": "稀饭",
-    "name": "💢┃稀饭┃动漫",
-    "type": 3,
-    "api": "csp_AnimeXifan"
-},
-{
-    "key": "巴士动漫",
-    "name": "💢┃巴士┃动漫",
-    "type": 3,
-    "api": "csp_AnimeBashi"
-},
-{
-    "key": "吉里动漫",
-    "name": "💢┃吉里┃动漫",
-    "type": 3,
-    "api": "csp_AnimeGiri"
-},
-{
-    "key": "花子动漫",
-    "name": "💢┃花子┃动漫",
-    "type": 3,
-    "api": "csp_AnimeHuazi"
-},
-{
-    "key": "漫国动漫",
-    "name": "💢┃漫国┃动漫",
-    "type": 3,
-    "api": "csp_AnimeGHG"
-},
-{
     "key": "dr_txvm",
     "name": "🆚┃腾讯┃RTV",
     "type": 3,
@@ -510,8 +406,8 @@
     "name": "🇨🇳┣☪公✿告┫信息",
     "type": 3,
     "api": "csp_Notice",
-    "jar": "https://gitee.com/lyun_1_0/TS/raw/main/lib/liuli.php",
-    "ext": "https://gitee.com/lyun_1_0/TS/raw/main/lib/公告.php"
+    "jar": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/lib/liuli.php",
+    "ext": "https://cnb.cool/my-liuyun/TVbox/-/git/raw/main/lib/公告.php"
 }
 ],
 "parses": [	
